@@ -115,7 +115,7 @@ class Users extends ApiCommon
                 exit(json_encode(['code'=>102,'error'=>'无权操作']));
             }            
         }
-        unset($param['username']);
+        // unset($param['username']); // xiul
         $data = $userModel->updateDataById($param, $param['id']);
         if (!$data) {
             return resultArray(['error' => $userModel->getError()]);
