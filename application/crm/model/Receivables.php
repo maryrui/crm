@@ -125,7 +125,9 @@ class Receivables extends Common
         		$list[$k][$val.'_info'] = isset($v[$val]) ? $structureModel->getDataByStr($v[$val]) : [];
         	}
         	$list[$k]['check_status_info'] = $this->statusArr[$v['check_status']];
-
+        	//期数
+        	$plan_num = db('crm_receivables_plan')->where(['plan_id' => $v['plan_id']])->value('num');
+        	$list[$k]['num'] = $plan_num ? : '';
 			//权限
 			$permission = [];
 			$is_read = 0;
@@ -481,9 +483,9 @@ class Receivables extends Common
 	{
 		$doneMoney = $this->where(['contract_id' => $contract_id,'check_status' => 2])->sum('money');
 		$contractMoney = db('crm_contract')->where(['contract_id' => $contract_id])->value('money');
-		$subMoney = $contractMoney-$doneMoney;
+		$unMoney = $contractMoney-$doneMoney;
 		$data['doneMoney'] = $doneMoney ? : '0.00';
-		$data['subMoney'] = $subMoney ? : '0.00';
+		$data['unMoney'] = $unMoney ? : '0.00';
 		$data['contractMoney'] = $contractMoney ? : '0.00';
 		return $data;
 	}

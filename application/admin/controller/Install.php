@@ -151,10 +151,9 @@ class Install extends Controller
         $connect = Db::connect($db_config);
         // 检测数据库连接
         try{
-            $ret = $connect->execute('select version();');
+            $ret = $connect->execute('select version()');
         }catch(\Exception $e){
-            //return resultArray(['error' => '数据库连接失败，请检查数据库配置！']);
-            return resultArray(['error' => $e->getMessage()]);
+            return resultArray(['error' => '数据库连接失败，请检查数据库配置！']);
         }
         $check = $connect->execute("SELECT * FROM information_schema.schemata WHERE schema_name='".$database."'");
         if (!$check && !$connect->execute("CREATE DATABASE IF NOT EXISTS `".$database."` default collate utf8_general_ci ")) {
@@ -177,7 +176,7 @@ class Install extends Controller
                     Db::connect($db_config)->query($temp_sql);
                 } catch(\Exception $e) {
                     // return resultArray(['error' => '请启用InnoDB数据引擎，并检查数据库是否有DROP和CREATE权限']);
-                    return resultArray(['error' => $e->getMessage() . '执行sql:' . $temp_sql]);
+                    return resultArray(['error' => '数据库sql安装出错，请操作数据库手动导入sql文件']);
                 }
             }
         } 

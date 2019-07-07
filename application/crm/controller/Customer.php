@@ -26,7 +26,7 @@ class Customer extends ApiCommon
     public function _initialize()
     {
         $action = [
-            'permission'=>['exceldownload'],
+            'permission'=>['exceldownload','setfollow'],
             'allow'=>['']            
         ];
         Hook::listen('check_auth',$action);
@@ -270,6 +270,7 @@ class Customer extends ApiCommon
         $data = [];
         $data['owner_user_id'] = $param['owner_user_id'];
         $data['update_time'] = time();
+        $data['follow'] = '待跟进';
 
         $ownerUserName = $userModel->getUserNameById($param['owner_user_id']);
         $errorMessage = [];
@@ -478,6 +479,7 @@ class Customer extends ApiCommon
             $data['owner_user_id'] = $userInfo['id'];
             $data['update_time'] = time();
             $data['deal_time'] = time();
+            $data['follow'] = '待跟进';
             $resCustomer = db('crm_customer')->where(['customer_id' => $v])->update($data);
             if (!$resCustomer) {
                 $errorMessage[] = '客户《'.$dataName.'》领取失败，错误原因：数据出错；';
@@ -530,6 +532,7 @@ class Customer extends ApiCommon
             $data['owner_user_id'] = $owner_user_id;
             $data['update_time'] = time();
             $data['deal_time'] = time();
+            $data['follow'] = '待跟进';
             $resCustomer = db('crm_customer')->where(['customer_id' => $v])->update($data);
             if (!$resCustomer) {
                 $errorMessage[] = '客户《'.$dataName.'》分配失败，错误原因：数据出错；';
@@ -610,16 +613,16 @@ class Customer extends ApiCommon
 
         //设置属性
         $objProps = $objPHPExcel->getProperties();
-        $objProps->setCreator("eyemove.net");
-        $objProps->setLastModifiedBy("eyemove.net");
-        $objProps->setTitle("eyemove.net");
-        $objProps->setSubject("eyemove.net");
-        $objProps->setDescription("eyemove.net");
-        $objProps->setKeywords("eyemove.net");
-        $objProps->setCategory("eyemove.net");
+        $objProps->setCreator("5kcrm");
+        $objProps->setLastModifiedBy("5kcrm");
+        $objProps->setTitle("5kcrm");
+        $objProps->setSubject("5kcrm data");
+        $objProps->setDescription("5kcrm data");
+        $objProps->setKeywords("5kcrm data");
+        $objProps->setCategory("5kcrm");
         $objPHPExcel->setActiveSheetIndex(0);
         $objActSheet = $objPHPExcel->getActiveSheet();
-        $objActSheet->setTitle('客户导入模板'.date('Y-m-d',time()));
+        $objActSheet->setTitle('悟空软件客户导入模板'.date('Y-m-d',time()));
 
         //填充边框
         $styleArray = [
@@ -790,5 +793,61 @@ class Customer extends ApiCommon
             return resultArray(['error'=>'操作失败，请重试']);
         }
         return resultArray(['data'=>'跟进成功']);        
-    }        
+    }
+
+    /**
+     * 置顶 / 取消置顶
+     * @return [type] [description]
+     */
+    public function top()
+    {
+        $param = $this->param;
+        $userInfo = $this->userInfo;
+        $param['create_role_id'] = $userInfo['id'];
+        $param['top_time'] = time();
+
+        $top_id = Db::name('crm_top')->where(['module' => ['eq',$param['module']],'create_role_id' => ['eq',$userInfo['id']],'module_id' => ['eq',$param['module_id']]])->column('top_id');
+        if ($top_id) {
+            if ($res = Db::name('crm_top')->where('top_id',$top_id[0])->update($param)) {
+                return resultArray(['data' => $res]);
+            } else {
+                return resultArray(['error' => Db::name('crm_top')->getError()]);
+            }
+        } else {
+            if ($res =  Db::name('crm_top')->data($param)->insert()) {
+                return resultArray(['data' => $res]);
+            } else {
+                return resultArray(['error' => $customerModel->getError()]);
+            }
+        }
+    }
+
+    /**
+     * 客户公海导出
+     * @author Michael_xu
+     * @param 
+     * @return
+     */
+    public function poolExcelExport()
+    {
+        $param = $this->param;
+        $userInfo = $this->userInfo;
+        $param['user_id'] = $userInfo['id'];
+        if ($param['customer_id']) {
+           $param['customer_id'] = ['condition' => 'in','value' => $param['customer_id'],'form_type' => 'text','name' => ''];
+           $param['is_excel'] = 1;
+        }
+        $excelModel = new \app\admin\model\Excel();
+        // 导出的字段列表
+        $fieldModel = new \app\admin\model\Field();
+        $field_list = $fieldModel->getIndexFieldList('crm_customer', $userInfo['id']);
+        // 文件名
+        $file_name = '5kcrm_customer_'.date('Ymd');
+        $param['pageType'] = 'all'; 
+        $param['action'] = 'pool';
+        $excelModel->exportCsv($file_name, $field_list, function($list) use ($param){
+            $list = model('Customer')->getDataList($param);
+            return $list;
+        });
+    }      
 }

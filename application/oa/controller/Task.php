@@ -156,7 +156,6 @@ class Task extends ApiCommon
 				$taskList[$k]['pname'] = $ptask['name'];
 			}
 			$taskList[$k]['task_name'] = $v['name'];
-			$taskList[$k]['mainDetail'] = $mainUserdet;
 			$subcount = Db::name('Task')->where('status=1 and pid = '.$v['task_id'])->count();
 			$subdonecount = Db::name('Task')->where('status = 5 and pid = '.$v['task_id'])->count();
 			$taskList[$k]['subcount'] = $subcount; //子任务
@@ -263,10 +262,10 @@ class Task extends ApiCommon
 			} elseif ($param['type'] == 'myown'){ //我参与的
 				$type = 't.owner_user_id like "%,'.$userInfo['id'].',%"';
 			} else {
-				$type = 't.main_user_id ='.$userInfo['id'].' or  ( t.is_open = 1 and t.owner_user_id like "%,'.$str.',%")';
+				$type = 't.main_user_id ='.$userInfo['id'].' or  ( t.is_open = 1 and t.owner_user_id like "%'.$str.'%")';
 			}
 		} else {
-			$type = 't.main_user_id ='.$userInfo['id'].' or t.create_user_id ='.$userInfo['id'].' or  ( t.is_open = 1 and t.owner_user_id like "%,'.$str.',%")';
+			$type = 't.main_user_id ='.$userInfo['id'].' or t.create_user_id ='.$userInfo['id'].' or  ( t.is_open = 1 and t.owner_user_id like "%'.$str.'%")';
 		}
 		if ($param['stop_type']) {
 			switch ($param['stop_type']) {

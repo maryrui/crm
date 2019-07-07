@@ -23,7 +23,7 @@ class Setting extends ApiCommon
     {
         $action = [
             'permission'=>[''],
-            'allow'=>['config','configdata','team','teamsave','contractday']            
+            'allow'=>['config','configdata','team','teamsave','contractday','recordlist','recordedit']            
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
@@ -34,7 +34,7 @@ class Setting extends ApiCommon
 
         $userInfo = $this->userInfo;
         //权限判断
-        $unAction = ['team','teamsave'];
+        $unAction = ['team','teamsave','recordlist'];
         $adminTypes = adminGroupTypes($userInfo['id']);
         if (!in_array(6,$adminTypes) && !in_array(1,$adminTypes) && !in_array(2,$adminTypes) && !in_array($a, $unAction)) {
             header('Content-Type:application/json; charset=utf-8');
@@ -224,12 +224,66 @@ class Setting extends ApiCommon
     public function contractDay()
     {
         $param = $this->param;
-        $contract_day = $param['contract_day'] ? int($param['contract_day']) : 0; 
-        $res = db('crm_config')->where(['name' => 'contract_day'])->update(['value' => $contract_day]);
-        if ($res) {
-            return resultArray(['data' => '设置成功']);
+        $data = [];
+        $contract_day = $param['contract_day'] ? intval($param['contract_day']) : 0; 
+        $contract_config = $param['contract_config'] ? intval($param['contract_config']) : 0;
+        $res = db('crm_config')->where(['name' => 'contract_config'])->update(['value' => $contract_config]);
+        if ($contract_day && $contract_config == 1) $res = db('crm_config')->where(['name' => 'contract_day'])->update(['value' => $contract_day]);
+        return resultArray(['data' => '设置成功']);        
+    }
+
+    /**
+     * 记录类型编辑
+     * @author zhi
+     * @return
+     */
+    public function recordEdit()
+    {
+        $param = $this->param;
+        $userInfo = $this->userInfo;
+        //权限判断
+        $adminTypes = adminGroupTypes($userInfo['id']);
+        if (!in_array(3,$adminTypes) && !in_array(1,$adminTypes) && !in_array(2,$adminTypes)) {
+            header('Content-Type:application/json; charset=utf-8');
+            exit(json_encode(['code'=>102,'error'=>'无权操作']));
+        }
+        if ($param['value']) {
+            $array = json_encode($param['value']);
+            $record_type = db('crm_config')->where(['name' => 'record_type'])->find();
+            if($record_type){
+                $res = db('crm_config')->where(['name' => 'record_type'])->update(['value' => $array]);
+            }else{
+                $data = array();
+                $data['name'] = 'record_type';
+                $data['value'] = $array;
+                $data['description'] = '跟进记录类型';
+                $res = db('crm_config')->insert($data);
+            }            
+            if ($res) {
+                return resultArray(['data' => '设置成功']);
+            } else {
+                return resultArray(['error' => '设置失败，请重试！']);
+            }
         } else {
-            return resultArray(['error' => '设置失败，请重试！']);
-        }          
-    }     
+            $record_type = db('crm_config')->where(['name' => 'record_type'])->find();
+            $record_type['value'] = json_decode($record_type['value']);
+            return resultArray(['data' => $record_type]);
+        }
+    }
+   
+    /**
+     * 跟进记录 记录方式展示
+     * @author zhi
+     * @return 
+     */
+    public function recordList()
+    {
+        $record_type = db('crm_config')->where(['name' => 'record_type'])->find();
+        if($record_type){
+            $arr = json_decode($record_type['value']);
+            return resultArray(['data' => $arr]);
+        }else{
+            return resultArray(['data' => array()]);
+        }
+    }
 }

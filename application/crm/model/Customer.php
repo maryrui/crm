@@ -43,10 +43,12 @@ class Customer extends Common
     	$user_id = $request['user_id'];
     	$scene_id = (int)$request['scene_id'];
     	$is_excel = $request['is_excel']; //导出
+    	$action = $request['action']; //导出
 		unset($request['scene_id']);
 		unset($request['search']);
 		unset($request['user_id']);	
 		unset($request['is_excel']);	
+		unset($request['action']);	
 
         $request = $this->fmtRequest( $request );
         $requestMap = $request['map'] ? : [];
@@ -59,9 +61,15 @@ class Customer extends Common
 			//默认场景
 			$sceneMap = $sceneModel->getDefaultData('customer', $user_id) ? : [];
 		}
+		$searchMap = [];
 		if ($search) {
 			//普通筛选
-			$sceneMap['name'] = ['condition' => 'contains','value' => $search,'form_type' => 'text','name' => '客户名称'];
+			$searchMap = function($query) use ($search){
+			        $query->where('customer.name',array('like','%'.$search.'%'))
+			        	->whereOr('customer.mobile',array('like','%'.$search.'%'))
+			        	->whereOr('customer.telephone',array('like','%'.$search.'%'));
+			};
+			// $sceneMap['name'] = ['condition' => 'contains','value' => $search,'form_type' => 'text','name' => '客户名称'];
 		}
 		$partMap = [];
 		//优先级：普通筛选>高级筛选>场景
@@ -82,7 +90,7 @@ class Customer extends Common
 		$authMap = [];
 		$poolMap = [];
 		$requestData = $this->requestData();
-		if ($requestData['a'] == 'pool') {
+		if ($requestData['a'] == 'pool' || $action == 'pool') {
 			// unset($map);		
 			//客户公海条件(没有负责人或已经到期)
         	$poolMap = $this->getWhereByPool();	
@@ -137,18 +145,25 @@ class Customer extends Common
 		} else {
 			$order = 'customer.update_time desc';
 		}
+		$tops = Db::name('crm_top')->where(['module' => ['eq','customer'],'create_role_id' => ['eq',$user_id],'set_top' => ['eq',1]])->order('top_time asc')->column('module_id');
+		$top_ids = implode(",", $tops);
+		if ($tops) {
+			$order_t = DB::raw("field(customer_id, $top_ids) desc");
+		}
 		$list = db('crm_customer')
 				->alias('customer')
 				->where($map)
+				->where($searchMap)
 				->where($customerMap)
 				->where($authMap)
 				->where($partMap)
 				->where($poolMap)
         		->limit(($request['page']-1)*$request['limit'], $request['limit'])
         		// ->field('customer_id,'.implode(',',$indexField))
+        		->order($order_t) /*置顶  自定义排序置顶*/
         		->order($order)
         		->select();
-        $dataCount = db('crm_customer')->alias('customer')->where($map)->where($customerMap)->where($authMap)->where($partMap)->where($poolMap)->count('customer_id');
+        $dataCount = db('crm_customer')->alias('customer')->where($map)->where($searchMap)->where($customerMap)->where($authMap)->where($partMap)->where($poolMap)->count('customer_id');
 
         //保护规则
 		$configModel = new \app\crm\model\ConfigData();
@@ -354,11 +369,11 @@ class Customer extends Common
 		$where = [];
 		//时间段
 		$start_time = $map['start_time'];
-		// $end_time = $map['end_time'] ? $map['end_time']+86399 : time();
 		$end_time = $map['end_time'] ? $map['end_time'] : time();
 		$create_time = [];
 		if ($start_time && $end_time) {
 			$create_time = array('between',array($start_time,$end_time));
+			$create_date = array('between',array(date('Y-m-d',$start_time),date('Y-m-d',$end_time)));
 		}
 		
 		//员工IDS
@@ -394,7 +409,11 @@ class Customer extends Common
 			$userList[$k]['deal_customer_rate'] = $customer_num ? round(($deal_customer_num/$customer_num),4)*100 : 0;
 			unset($whereArr['deal_status']);
 			$whereArr['check_status'] = 2;
+			unset($whereArr['create_time']);
+			$whereArr['order_date'] = $create_date;			
 			$userList[$k]['contract_money'] = $contract_money = db('crm_contract')->where($whereArr)->sum('money');
+			unset($whereArr['order_date']);
+			$whereArr['return_time'] = $create_date;
 			$userList[$k]['receivables_money'] = $receivables_money = db('crm_receivables')->where($whereArr)->sum('money');
 			$userList[$k]['un_receivables_money'] = $contract_money-$receivables_money >= 0 ? $contract_money-$receivables_money : '0.00';
 			$userList[$k]['deal_receivables_rate'] = $contract_money ? round(($receivables_money/$contract_money), 2)*100 : 0;

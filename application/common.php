@@ -127,6 +127,7 @@ function money_view($money)
 function where_arr($array = [], $m = '', $c = '', $a = '')
 {
     $userModel = new UserModel();
+    $checkStatusArray = ['待审核' => '0','审核中'=>'1','审核通过'=>'2','审核失败'=>'3','已撤回'=>'4'];
     //查询自定义字段模块多选字段类型
     $check_field_arr = [];
     //特殊字段
@@ -155,7 +156,8 @@ function where_arr($array = [], $m = '', $c = '', $a = '')
             if ($k == 'contacts_name') {
                 $k = 'name';
                 $c = 'contacts.';
-            }       
+            }
+            if ($k == 'check_status' && is_array($v)) $v['value'] = $checkStatusArray[$v['value']] ? : '0';
             if (is_array($v)) {
                 if ($v['state']) {
                     $address_where[] = '%'.$v['state'].'%';
@@ -181,18 +183,15 @@ function where_arr($array = [], $m = '', $c = '', $a = '')
                     }
                 } elseif (!empty($v['start_date']) || !empty($v['end_date'])) {
                     if ($v['start_date'] && $v['end_date']) {
-                        $where[$c.$k] = ['between', [strtotime($v['start_date']), strtotime($v['end_date'])]];
+                        $where[$c.$k] = ['between', [$v['start_date'], $v['end_date']]];
                     } elseif ($v['start_date']) {
-                        $where[$c.$k] = ['egt', strtotime($v['start_date'])];
+                        $where[$c.$k] = ['egt', $v['start_date']];
                     } else {
-                        $where[$c.$k] = ['elt', strtotime($v['end_date']+86399)];
+                        $where[$c.$k] = ['elt', $v['end_date']];
                     }                                     
-                } elseif (!empty($v['value'])) {
+                } elseif (!empty($v['value']) || $v['value'] === '0') {
                     if (in_array($k, $check_field_arr)) {
                         $where[$c.$k] = field($v['value'], 'contains');
-                    } elseif (($c == 'business' || $c == 'business.') && $k == 'type_id') {
-                        $where[$c.'type_id'] = field($v['type_id'], 'eq');
-                        $where[$c.'status_id'] = field($v['status_id'], 'eq');
                     } else {
                         $where[$c.$k] = field($v['value'], $v['condition']);
                     }
@@ -451,7 +450,7 @@ function getSubUser($userId)
     if ($sub_user) {
         foreach ($sub_user as $v) {
             $son_user = [];
-            $son_user = getSubUser($v, $sub);
+            $son_user = getSubUser($v);
             if (!empty($son_user)) {
                 $sub_user = array_merge($sub_user, $son_user);
             }
@@ -590,12 +589,10 @@ function updateActionLog($user_id, $types, $action_id, $oldData = [], $newData =
         $structureModel = new \app\admin\model\Structure();
         $field_arr = $fieldModel->getField(['types' => $types,'unFormType' => ['file','form']]); //获取字段属性
         $newFieldArr = array();
-        $unField = ['update_time','create_time']; //定义过滤字段
         foreach ($field_arr as $k=>$v) {
-            if (!in_array($v['field'],$unField)) {
-                $newFieldArr[$v['field']] = $v;
-            }
+            $newFieldArr[$v['field']] = $v;
         }
+        $unField = ['update_time']; //定义过滤字段
         $message = [];
         $un_form_type = ['file','form'];
         foreach ($differentData as $k=>$v) {
@@ -862,8 +859,8 @@ function getTimeBySec($time){
  */
 function getmonthByYM($param)
 {
-    $month = $param['month']?$param['month']:1; date('m',$time);
-    $year = $param['year']?$param['year']:date('Y',$time);
+    $month = $param['month'] ? $param['month'] : date('m',time());
+    $year = $param['year'] ? $param['year'] : date('Y',time());
     if (in_array($month, array('1', '3', '5', '7', '8', '01', '03', '05', '07', '08', '10', '12'))) {  
         $days = '31';  
     } elseif ($month == 2) { 
@@ -1342,4 +1339,27 @@ function setconfig($pat, $rep)
     } else {
         return flase;
     }
+}
+
+/**
+ * 处理 字符串转数组  入库
+ * @author zhi
+ * @param  [type] $data 字符串
+ * @return [type] $setting  转数组后
+ */
+function setting($data)
+{
+    $setting = 'array(';
+    $i = 0;
+    $options = explode(' ',$data);
+    $s = array();
+    foreach($options as $v){
+        $v = trim(str_replace(chr(13),'',trim($v)));
+        if($v != '' && !in_array($v ,$s)){
+            $setting .= "$i=>'$v',";
+            $i++;
+            $s[] = $v;
+        }
+    }
+    return $setting = substr($setting,0,strlen($setting) -1 ) .')';
 }

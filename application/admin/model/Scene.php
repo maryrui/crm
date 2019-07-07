@@ -130,11 +130,11 @@ class Scene extends Common
 	 * @param  array   $param  [description]
 	 * @author Michael_xu
 	 */ 
-	public function getDataById($id = '', $user_id, $types = '')
+	public function getDataById($id = '', $user_id = '', $types = '')
 	{
 		$where = [];
 		$where['scene_id'] = $id;
-		$where['user_id'] = [['=',$user_id],['=',0],'or'];
+		// $where['user_id'] = [['=',$user_id],['=',0],'or'];
 		$data = db('admin_scene')->where($where)->find();
 		if (!$types) {
 			$types = $data['types'] ? : '';

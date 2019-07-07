@@ -10,6 +10,7 @@ namespace app\crm\controller;
 use app\admin\controller\ApiCommon;
 use think\Hook;
 use think\Request;
+use think\Db;
 
 class Contacts extends ApiCommon
 {
@@ -23,7 +24,7 @@ class Contacts extends ApiCommon
     {
         $action = [
             'permission'=>['exceldownload'],
-            'allow'=>['']            
+            'allow'=>['relation']            
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
@@ -62,7 +63,18 @@ class Contacts extends ApiCommon
         $param['create_user_id'] = $userInfo['id'];
         $param['owner_user_id'] = $userInfo['id'];
         
-        if ($contactsModel->createData($param)) {
+        if ($data = $contactsModel->createData($param)) {
+            //关联 联系人与商机  客户添加与商机添加联系人可共用此接口
+            $business_id = $param['business_id']?$param['business_id']:0;
+            if($business_id != 0){
+                $data['cancel_or_relation'] = 1;// 1:关联 0取消
+                $data['business_id'] = $business_id;
+                if ($res =  Db::name('crm_contacts_business')->data($data)->insert()) {
+                    return resultArray(['data' => '添加成功']);
+                } else {
+                    return resultArray(['error' => Db::name('crm_contacts_business')->getError()]);
+                }
+            }
             return resultArray(['data' => '添加成功']);
         } else {
             return resultArray(['error' => $contactsModel->getError()]);
@@ -300,5 +312,59 @@ class Contacts extends ApiCommon
             return resultArray(['error'=>$excelModel->getError()]);
         }
         return resultArray(['data'=>'导入成功']);
-    }          
+    }  
+
+    /**
+     * 联系人  关联/取消关联  商机
+     * @return [type] [description]
+     */
+    public function relation()
+    {
+        $param = $this->param;
+        if (!$param['contacts_id'] || !$param['contacts_id']) {
+            return resultArray(['error' => '参数错误!']);
+        }
+        $res = 1;
+        if ($param['is_relation'] == 1) {//关联
+            $data = [];
+            if (is_array($param['contacts_id'])) {//商机关联联系人
+                foreach ($param['contacts_id'] as $key => $value) {
+                    $data['contacts_id'] = $value;
+                    $data['business_id'] = $param['business_id'];
+                    $ret = Db::name('crm_contacts_business')->where(['contacts_id' => $value,'business_id' => $param['business_id']])->find();
+                    if (!$ret) {
+                        if (!Db::name('crm_contacts_business')->insert($data)) {
+                            $res = 0;
+                        }
+                    }
+                }
+            } else {//联系人关联商机
+                foreach ($param['business_id'] as $key => $value) {
+                    $data['business_id'] = $value;
+                    $data['contacts_id'] = $param['contacts_id'];
+                    $ret = Db::name('crm_contacts_business')->where(['contacts_id' => $param['contacts_id'],'business_id' => $value])->find();
+                    if (!$ret) {
+                        if (!Db::name('crm_contacts_business')->insert($data)) {
+                            $res = 0;
+                        }
+                    }
+                }
+            }
+        } else {//取消关联
+            $where = array();
+            if (is_array($param['contacts_id'])) {
+                $where['contacts_id'] = array('in',$param['contacts_id']);
+                $where['business_id'] = array('eq',$param['business_id']);
+            } else {
+                $where['business_id'] = array('in',$param['business_id']);
+                $where['contacts_id'] = array('eq',$param['contacts_id']);
+            }
+            Db::name('crm_contacts_business')->where($where)->delete();
+        }
+        if ($res == 1) {
+            return resultArray(['data' => '操作成功!']);
+        } else {
+            return resultArray(['error' => '操作失败，请重试!']);
+        }
+    }
 }
