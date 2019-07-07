@@ -1,7 +1,7 @@
 <template>
   <div>
     <c-r-m-list-head title="客户管理"
-                     placeholder="请输入客户名称"
+                     placeholder="请输入客户名称/手机/电话"
                      @on-handle="listHeadHandle"
                      @on-search="crmSearch"
                      main-title="新建客户"
@@ -182,5 +182,13 @@ export default {
 @import '../styles/table.scss';
 .customer-lock {
   color: #f15e64;
+}
+
+.el-table /deep/ tbody tr td:nth-child(2) {
+  border-right-width: 0;
+}
+
+.el-table /deep/ tbody tr td:nth-child(3) {
+  border-right: 1px solid #E6E6E6;
 }
 </style>

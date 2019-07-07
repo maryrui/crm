@@ -84,7 +84,8 @@ export function crmLeadsExcelExport(data) {
     url: 'crm/leads/excelExport',
     method: 'post',
     data: data,
-    responseType: 'blob'
+    responseType: 'blob',
+    timeout: 60000
   })
 }
 
@@ -104,7 +105,8 @@ export function crmLeadsExcelImport(data) {
     data: param,
     headers: {
       'Content-Type': 'multipart/form-data'
-    }
+    },
+    timeout: 60000
   })
 }
 
@@ -114,3 +116,16 @@ export function crmLeadsExcelImport(data) {
  *
  */
 export const crmLeadsExcelDownloadURL = 'crm/leads/excelDownload'
+
+/**
+ * 线索标记跟进
+ * @param {*} data
+ * id 客户IDs
+ */
+export function crmLeadsSetFollowAPI(data) {
+  return request({
+    url: 'crm/leads/setFollow',
+    method: 'post',
+    data: data
+  })
+}
