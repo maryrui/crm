@@ -229,8 +229,6 @@ return [
 	'crm/achievement/datalist' => ['crm/achievement/datalist', ['method' => 'POST']],
 	'crm/achievement/indexForuser' => ['crm/achievement/indexForuser', ['method' => 'POST']],	
 
-	// 【工作台】销售简报
-	'crm/index/index' => ['crm/index/index', ['method' => 'POST']],	
 	// 【工作台】业绩指标
 	'crm/index/achievementData' => ['crm/index/achievementData', ['method' => 'POST']],
 	// 【工作台】销售漏斗
@@ -238,7 +236,31 @@ return [
 	// 【工作台】销售趋势
 	'crm/index/saletrend' => ['crm/index/saletrend', ['method' => 'POST']],	
 	// 【工作台】查重
-	'crm/index/search' => ['crm/index/search', ['method' => 'POST']],				
+	'crm/index/search' => ['crm/index/search', ['method' => 'POST']],	
+
+	// 【代办事项】今日需联系
+	'crm/message/todayCustomer' => ['crm/message/todayCustomer', ['method' => 'POST']],				
+	'crm/message/num' => ['crm/message/num', ['method' => 'POST']],		
+	'crm/message/followleads' => ['crm/message/followleads', ['method' => 'POST']],				
+	'crm/message/followcustomer' => ['crm/message/followcustomer', ['method' => 'POST']],				
+	'crm/message/checkcontract' => ['crm/message/checkcontract', ['method' => 'POST']],				
+	'crm/message/checkreceivables' => ['crm/message/checkreceivables', ['method' => 'POST']],				
+	'crm/message/remindreceivablesplan' => ['crm/message/remindreceivablesplan', ['method' => 'POST']],				
+	'crm/message/endContract' => ['crm/message/endContract', ['method' => 'POST']],
+
+	// 【客户】标记跟进
+	'crm/customer/setFollow' => ['crm/customer/setFollow', ['method' => 'POST']],					
+	'crm/leads/setFollow' => ['crm/leads/setFollow', ['method' => 'POST']],	
+
+	// 【跟进记录类型设置】列表
+	'crm/setting/recordList' => ['crm/setting/recordList', ['method' => 'POST']],	
+	// 【跟进记录类型设置】记录类型编辑
+	'crm/setting/recordEdit' => ['crm/setting/recordEdit', ['method' => 'POST']],
+	// 【客户】联系人商机关联/取消关联
+	'crm/contacts/relation' => ['crm/contacts/relation', ['method' => 'POST']],	
+
+	// 【公海】数据统计 导出
+	'crm/customer/poolExcelExport' => ['crm/customer/poolExcelExport', ['method' => 'POST']],	
 
 	// MISS路由
 	'__miss__'  => 'admin/base/miss',
