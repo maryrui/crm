@@ -105,7 +105,7 @@ export default {
     },
     // 展示转移
     showTransfer() {
-      if (this.crmType === 'receivables' || this.crmType === 'product' || this.isSeas) {
+      if (this.crmType === 'receivables' || this.crmType === 'product') {
         return false
       }
       return this.crm[this.crmType].transfer

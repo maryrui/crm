@@ -106,11 +106,6 @@ export default {
       if (this.crm[this.crmType].excelexport) {
         this.moreTypes.push({ type: 'out', name: '导出' })
       }
-    } else {
-      // 客户池的导出关键字不同
-      if (this.crm[this.crmType].poolexcelexport) {
-        this.moreTypes.push({ type: 'out', name: '导出' })
-      }
     }
   },
   methods: {

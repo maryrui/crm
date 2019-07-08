@@ -138,7 +138,6 @@
                 <el-tree :data="showTreeData"
                          show-checkbox
                          node-key="id"
-                         style="height: 0;"
                          ref="tree"
                          :indent="0"
                          empty-text=""
@@ -662,9 +661,11 @@ export default {
 
 <style lang="scss" scoped>
 .role-authorization {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  /* padding: 20px; */
   box-sizing: border-box;
-  overflow: hidden;
 }
 .title {
   font-size: 18px;
@@ -675,18 +676,19 @@ export default {
   color: #333;
 }
 .role-box {
-  height: calc(100% - 60px);
-  overflow: hidden;
-  position: relative;
+  flex: 1;
+  display: flex;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .nav {
-  width: 200px;
+  min-width: 200px;
   background: #fff;
+  margin-right: 10px;
   border: 1px solid #e6e6e6;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
 }
 .nav-new-btn {
   text-align: center;
@@ -701,16 +703,16 @@ export default {
   border-radius: 2px;
 }
 .content-box {
+  flex: 1;
   background: #fff;
   border: 1px solid #e6e6e6;
-  margin-left: 215px;
-  height: 100%;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .content-table {
   padding-bottom: 15px;
-  height: calc(100% - 61px);
   overflow: hidden;
+  flex: 1;
 }
 .content-table > .el-button {
   float: right;
@@ -732,25 +734,24 @@ export default {
 
 /* 权限管理 */
 .jurisdiction-content {
-  height: calc(100% - 61px);
-  position: relative;
+  display: flex;
+  flex: 1;
   overflow: hidden;
 }
 .content-left {
-  height: 100%;
-  margin-right: 250px;
-  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .content-right {
   width: 250px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .jurisdiction-box {
-  padding-bottom: 15px;
-  height: calc(100% - 61px);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   overflow: hidden;
 }
 .jurisdiction-title {
@@ -759,9 +760,10 @@ export default {
 }
 .jurisdiction-content-checkbox {
   border-right: 1px dashed #e6e6e6;
-  height: calc(100% - 47px);
-  overflow-y: scroll;
+  flex: 1;
+  overflow: auto;
   padding: 20px;
+  max-height:600px;
 }
 .jurisdiction-content-checkbox
   .el-tree
@@ -802,9 +804,9 @@ export default {
 }
 .role-nav-box {
   line-height: 30px;
-  overflow-y: auto;
+  flex: 1;
+  overflow: auto;
   padding: 5px 0 20px 0;
-  height: calc(100% - 65px);
 }
 .role-nav-box .item-list {
   color: #333;

@@ -274,11 +274,6 @@ export default {
           line-height: 18px;
           white-space: pre-wrap;
           word-wrap: break-word;
-          background-color: #f0f7ff;
-          padding: 15px;
-          border-radius: 3px;
-          color: #333;
-          letter-spacing: 0.5px;
         }
         .load-more {
           text-align: left;

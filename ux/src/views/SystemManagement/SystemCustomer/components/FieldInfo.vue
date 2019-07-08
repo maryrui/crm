@@ -29,42 +29,39 @@
                       v-model="field.default_value"
                       :disabled="disabled">
         <draggable :list="field.showSetting">
-          <div class="radio"
-               v-for="(item, index) in field.showSetting"
-               :key="index">
-            <el-radio @click.native.prevent="radioChange(item.value)"
-                      :label="item.value">
-              <el-input class="input"
-                        v-model="item.value"
-                        :disabled="disabled"></el-input>
-            </el-radio>
+          <el-radio class="radio"
+                    v-for="(item, index) in field.showSetting"
+                    @click.native.prevent="radioChange(item.value)"
+                    :key="index"
+                    :label="item.value">
+            <el-input class="input"
+                      v-model="item.value"
+                      :disabled="disabled"></el-input>
             <i @click="handleRadio('add', item, index)"
                class="el-icon-circle-plus handle"></i>
             <i v-if="field.showSetting.length > 1"
                @click="handleRadio('remove', item, index)"
                class="el-icon-remove handle"></i>
-          </div>
+          </el-radio>
         </draggable>
       </el-radio-group>
       <el-checkbox-group v-if="field.form_type == 'checkbox'"
                          v-model="field.default_value"
                          :disabled="disabled">
         <draggable :list="field.showSetting">
-          <div v-for="(item, index) in field.showSetting"
-               :key="index"
-               class="checkbox">
-            <el-checkbox :label="item.value">
-            </el-checkbox>
+          <el-checkbox class="checkbox"
+                       v-for="(item, index) in field.showSetting"
+                       :key="index"
+                       :label="item.value">
             <el-input class="input"
                       v-model="item.value"
                       :disabled="disabled"></el-input>
-            <i @click.stop="handleCheckbox('add', item, index)"
+            <i @click="handleRadio('add', item, index)"
                class="el-icon-circle-plus handle"></i>
             <i v-if="field.showSetting.length > 1"
-               @click.stop="handleCheckbox('remove', item, index)"
+               @click="handleRadio('remove', item, index)"
                class="el-icon-remove handle"></i>
-          </div>
-
+          </el-checkbox>
         </draggable>
       </el-checkbox-group>
     </div>
@@ -249,27 +246,6 @@ export default {
         ? (this.field.default_value = '')
         : (this.field.default_value = val)
     },
-    /**
-     * 多选
-     */
-    handleCheckbox(type, item, index) {
-      if (this.disabled) {
-        // 不能点击
-        return
-      }
-      if (type == 'add') {
-        this.field.showSetting.push({
-          value: '选' + (this.field.showSetting.length + 1)
-        })
-      } else if (type == 'remove') {
-        let removeIndex = this.field.default_value.indexOf(item.value)
-        if (removeIndex != -1) {
-          this.field.default_value.splice(removeIndex, 1)
-        }
-        this.field.showSetting.splice(index, 1)
-      }
-    },
-
     /*** 输入默认值触发 */
     inputBlur(e) {
       if (this.field.form_type == 'mobile') {
@@ -328,11 +304,7 @@ export default {
 .radio {
   margin-top: 5px;
   margin-left: 0;
-  /deep/.el-radio {
-    margin-right: 10px;
-  }
   .input {
-    display: inline-block;
     width: 180px;
   }
   .handle {
@@ -345,14 +317,7 @@ export default {
   display: block;
   margin-left: 0;
   margin-top: 5px;
-  /deep/.el-checkbox {
-    margin-right: 10px;
-    .el-checkbox__label {
-      display: none;
-    }
-  }
   .input {
-    display: inline-block;
     width: 180px;
   }
   .handle {

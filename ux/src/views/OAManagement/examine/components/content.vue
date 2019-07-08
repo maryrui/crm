@@ -165,22 +165,16 @@ export default {
         by = this.by
         check_status = this.check_status
       }
-
-      let params = {
+      oaExamineIndex({
         by: by,
         limit: 15,
         category_id: this.category_id,
         check_status: check_status,
-        page: this.page
-      }
-
-      if (this.between_time && this.between_time.length > 0) {
-        params.between_time = this.between_time.map(item => {
+        between_time: this.between_time.map(function(item, index, array) {
           return formatTimeToTimestamp(item)
-        })
-      }
-
-      oaExamineIndex(params)
+        }),
+        page: this.page
+      })
         .then(res => {
           this.list = this.list.concat(res.data.list)
           if (res.data.list.length < 15) {

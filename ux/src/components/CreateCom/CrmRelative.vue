@@ -150,13 +150,6 @@ export default {
     this.currentSelectedData = objDeepCopy(this.selectedData)
   },
   methods: {
-    /**
-     * 刷新列表
-     */
-    refreshList() {
-      this.$refs['crm' + this.crmType][0].refreshList()
-    },
-
     sideClick(item) {
       this.leftType = item.type
     },

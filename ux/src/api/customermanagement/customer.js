@@ -109,8 +109,7 @@ export function crmCustomerExcelExport(data) {
     url: 'crm/customer/excelExport',
     method: 'post',
     data: data,
-    responseType: 'blob',
-    timeout: 60000
+    responseType: 'blob'
   })
 }
 
@@ -130,8 +129,7 @@ export function crmCustomerExcelImport(data) {
     data: param,
     headers: {
       'Content-Type': 'multipart/form-data'
-    },
-    timeout: 60000
+    }
   })
 }
 
@@ -141,21 +139,6 @@ export function crmCustomerExcelImport(data) {
  *
  */
 export const crmCustomerExcelDownloadURL = 'crm/customer/excelDownload'
-
-
-/**
- * 公海导出
- * @param {*} data
- */
-export function crmCustomerPoolExcelExportAPI(data) {
-  return request({
-    url: 'crm/customer/poolExcelExport',
-    method: 'post',
-    data: data,
-    responseType: 'blob',
-    timeout: 60000
-  })
-}
 
 /**
  * 客户分配
@@ -179,19 +162,6 @@ export function crmCustomerDistribute(data) {
 export function crmCustomerReceive(data) {
   return request({
     url: 'crm/customer/receive',
-    method: 'post',
-    data: data
-  })
-}
-
-/**
- * 客户标记跟进
- * @param {*} data
- * id 客户IDs
- */
-export function crmCustomerSetFollowAPI(data) {
-  return request({
-    url: 'crm/customer/setFollow',
     method: 'post',
     data: data
   })

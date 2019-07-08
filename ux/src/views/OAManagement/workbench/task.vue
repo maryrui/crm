@@ -133,7 +133,6 @@ export default {
           if (item.checked) {
             this.list.splice(index, 1)
           }
-          this.$store.dispatch('GetOAMessageNum', 'task')
         })
         .catch(err => {
           item.checked = !item.checked

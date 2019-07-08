@@ -16,8 +16,7 @@ import {
 import {
   crmCustomerIndex,
   crmCustomerPool,
-  crmCustomerExcelExport,
-  crmCustomerPoolExcelExportAPI
+  crmCustomerExcelExport
 } from '@/api/customermanagement/customer'
 import {
   crmContactsIndex,
@@ -47,7 +46,6 @@ export default {
     CRMTableHead,
     FieldsSet
   },
-
   data() {
     return {
       loading: false, // 加载动画
@@ -88,7 +86,9 @@ export default {
       var removeHeight = Object.keys(self.filterObj).length > 0 ? 310 : 240
       self.tableHeight = offsetHei - removeHeight
     }
-
+    // document.getElementById('crm-table').addEventListener('click', e => {
+    //   e.stopPropagation()
+    // })
     if (this.crm[this.crmType].index) {
       if (this.isSeas) {
         this.getFieldList()
@@ -122,10 +122,6 @@ export default {
               return element
             })
           } else {
-            if (this.crmType === 'contract') {
-              // 合同列表展示金额信息
-              this.moneyData = res.data.data
-            }
             this.list = res.data.list
           }
 
@@ -319,90 +315,63 @@ export default {
         return // 多选布局不能点击
       }
       if (this.crmType === 'leads') {
-        if (column.property === 'name') {
-          this.rowID = row.leads_id
-          this.showDview = true
-        } else {
-          this.showDview = false
-        }
+        this.rowID = row.leads_id
+        this.showDview = true
       } else if (this.crmType === 'customer') {
         if (column.property === 'business-check' && row.business_count > 0) {
           return // 列表查看商机不展示详情
         }
-        if (column.property === 'name') {
-          this.rowID = row.customer_id
-          this.rowType = 'customer'
-          this.showDview = true
-        } else {
-          this.showDview = false
-        }
+        this.rowID = row.customer_id
+        this.rowType = 'customer'
+        this.showDview = true
       } else if (this.crmType === 'contacts') {
         if (column.property === 'customer_id') {
           this.rowID = row.customer_id_info.customer_id
           this.rowType = 'customer'
-          this.showDview = true
-        } else if (column.property === 'name') {
+        } else {
           this.rowID = row.contacts_id
           this.rowType = 'contacts'
-          this.showDview = true
-        } else {
-          this.showDview = false
         }
+        this.showDview = true
       } else if (this.crmType === 'business') {
         if (column.property === 'customer_id') {
           this.rowID = row.customer_id_info.customer_id
           this.rowType = 'customer'
-          this.showDview = true
-        } else if (column.property === 'name') {
+        } else {
           this.rowID = row.business_id
           this.rowType = 'business'
-          this.showDview = true
-        } else {
-          this.showDview = false
         }
+        this.showDview = true
       } else if (this.crmType === 'contract') {
         if (column.property === 'customer_id') {
           this.rowID = row.customer_id_info.customer_id
           this.rowType = 'customer'
-          this.showDview = true
         } else if (column.property === 'business_id') {
           this.rowID = row.business_id_info.business_id
           this.rowType = 'business'
-          this.showDview = true
         } else if (column.property === 'contacts_id') {
           this.rowID = row.contacts_id_info.contacts_id
           this.rowType = 'contacts'
-          this.showDview = true
-        } else if (column.property === 'num') {
+        } else {
           this.rowID = row.contract_id
           this.rowType = 'contract'
-          this.showDview = true
-        } else {
-          this.showDview = false
         }
+        this.showDview = true
       } else if (this.crmType === 'product') {
-        if (column.property === 'name') {
-          this.rowID = row.product_id
-          this.showDview = true
-        } else {
-          this.showDview = false
-        }
+        this.rowID = row.product_id
+        this.showDview = true
       } else if (this.crmType === 'receivables') {
         if (column.property === 'customer_id') {
           this.rowID = row.customer_id_info.customer_id
           this.rowType = 'customer'
-          this.showDview = true
         } else if (column.property === 'contract_id') {
           this.rowID = row.contract_id
           this.rowType = 'contract'
-          this.showDview = true
-        } else if (column.property === 'number') {
+        } else {
           this.rowID = row.receivables_id
           this.rowType = 'receivables'
-          this.showDview = true
-        } else {
-          this.showDview = false
         }
+        this.showDview = true
       }
     },
     /**
@@ -420,19 +389,12 @@ export default {
       for (var key in this.filterObj) {
         params[key] = this.filterObj[key]
       }
-
-      let request
-      // 公海的请求
-      if (this.isSeas) {
-        request = crmCustomerPoolExcelExportAPI
-      } else {
-        request = {
-          customer: crmCustomerExcelExport,
-          leads: crmLeadsExcelExport,
-          contacts: crmContactsExcelExport,
-          product: crmProductExcelExport
-        }[this.crmType]
-      }
+      var request = {
+        customer: crmCustomerExcelExport,
+        leads: crmLeadsExcelExport,
+        contacts: crmContactsExcelExport,
+        product: crmProductExcelExport
+      }[this.crmType]
       request(params)
         .then(res => {
           var blob = new Blob([res.data], {
@@ -450,7 +412,7 @@ export default {
           document.body.removeChild(downloadElement) //下载完成移除元素
           window.URL.revokeObjectURL(href) //释放掉blob对象
         })
-        .catch(() => { })
+        .catch(() => {})
     },
     /** 筛选操作 */
     handleFilter(data) {
@@ -458,7 +420,6 @@ export default {
       var offsetHei = document.documentElement.clientHeight
       var removeHeight = Object.keys(this.filterObj).length > 0 ? 310 : 240
       this.tableHeight = offsetHei - removeHeight
-      this.currentPage = 1
       this.getList()
     },
     /** 场景操作 */
@@ -504,17 +465,17 @@ export default {
       if (column.property) {
         const crmType = this.isSeas ? this.crmType + '_pool' : this.crmType
         crmFieldColumnWidth({
-          types: 'crm_' + crmType,
-          field: column.property,
-          width: newWidth
-        })
+            types: 'crm_' + crmType,
+            field: column.property,
+            width: newWidth
+          })
           .then(res => {
             this.$message({
               type: 'success',
               message: res.data
             })
           })
-          .catch(() => { })
+          .catch(() => {})
       }
     },
     // 更改每页展示数量
@@ -561,5 +522,5 @@ export default {
     }
   },
 
-  beforeDestroy() { }
+  beforeDestroy() {}
 }

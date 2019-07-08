@@ -8,34 +8,8 @@
              direction="row-reverse">
       <el-button class="rc-head-item"
                  @click.native="createClick"
-                 type="primary">新建联系人</el-button>
-      <el-button v-if="canRelation"
-                 class="rc-head-item"
-                 @click.native="unRelevanceHandleClick"
-                 type="primary">解除关联</el-button>
-      <el-popover v-if="canRelation"
-                  v-model="showRelativeView"
-                  placement="bottom"
-                  width="700"
-                  popper-class="no-padding-popover"
-                  trigger="click"
-                  style="margin-right: 20px;">
-        <crm-relative v-model="showRelativeView"
-                      :show="showRelativeView"
-                      :radio="false"
-                      ref="crmrelative"
-                      :action="{ type: 'condition', data: { form_type: 'customer', customer_id: customer_id } }"
-                      :selectedData="{ 'contacts': list }"
-                      crm-type="contacts"
-                      @close="showRelativeView = false"
-                      @changeCheckout="checkRelativeInfos">
-        </crm-relative>
-        <el-button slot="reference"
-                   class="rc-head-item"
-                   style="margin-right: 0;"
-                   @click.native="showRelativeView = true"
-                   type="primary">关联</el-button>
-      </el-popover>
+                 type="primary">新建联系人
+      </el-button>
     </flexbox>
     <el-table :data="list"
               :height="tableHeight"
@@ -43,14 +17,7 @@
               style="width: 100%;border: 1px solid #E6E6E6;"
               :header-cell-style="headerRowStyle"
               :cell-style="cellStyle"
-              @row-click="handleRowClick"
-              @selection-change="selectionList = $event">
-      <el-table-column v-if="canRelation && fieldList.length > 0"
-                       show-overflow-tooltip
-                       type="selection"
-                       align="center"
-                       width="55">
-      </el-table-column>
+              @row-click="handleRowClick">
       <el-table-column v-for="(item, index) in fieldList"
                        :key="index"
                        show-overflow-tooltip
@@ -74,26 +41,14 @@
 import loading from '../mixins/loading'
 import CRMCreateView from './CRMCreateView'
 import { crmContactsIndex } from '@/api/customermanagement/contacts'
-import { crmContactsRelationAPI } from '@/api/customermanagement/contacts'
-import CrmRelative from '@/components/CreateCom/CrmRelative'
 
 export default {
   name: 'relative-contacts', //相关联系人列表  可能再很多地方展示 放到客户管理目录下
   components: {
     CRMFullScreenDetail: () => import('./CRMFullScreenDetail.vue'),
-    CRMCreateView,
-    CrmRelative
+    CRMCreateView
   },
-  computed: {
-    // 联系人下客户id获取关联商机
-    customer_id() {
-      return this.detail.customer_id
-    },
-    // 是否能关联
-    canRelation() {
-      return this.crmType == 'business'
-    }
-  },
+  computed: {},
   mixins: [loading],
   data() {
     return {
@@ -105,12 +60,7 @@ export default {
       isCreate: false, // 控制新建
       contactsId: '', // 查看全屏联系人详情的 ID
       // 创建的相关信息
-      createActionInfo: { type: 'relative', crmType: this.crmType, data: {} },
-      /**
-       * 关联的逻辑
-       */
-      showRelativeView: false, // 控制关联信息视图
-      selectionList: [] // 取消关联勾选的数据
+      createActionInfo: { type: 'relative', crmType: this.crmType, data: {} }
     }
   },
   watch: {
@@ -146,73 +96,17 @@ export default {
   activated: function() {},
   deactivated: function() {},
   methods: {
-    /**
-     * 关联的数据
-     */
-    checkRelativeInfos(data) {
-      if (data.data.length > 0) {
-        let params = { is_relation: 1 }
-        params[this.crmType + '_id'] = this.id
-        params.contacts_id = data.data.map(item => {
-          return item.contacts_id
-        })
-        crmContactsRelationAPI(params)
-          .then(res => {
-            this.getDetail()
-            this.$message.success(res.data)
-          })
-          .catch(() => {})
-      }
-    },
-
-    /**
-     * 取消关联
-     */
-    unRelevanceHandleClick() {
-      if (this.selectionList.length == 0) {
-        this.$message.error('请先勾选数据')
-      } else {
-        this.$confirm('确认取消关联?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(() => {
-            let params = { is_relation: 0 }
-            params[this.crmType + '_id'] = this.id
-            params.contacts_id = this.selectionList.map(item => {
-              return item.contacts_id
-            })
-            crmContactsRelationAPI(params)
-              .then(res => {
-                this.getDetail()
-                this.$message.success(res.data)
-              })
-              .catch(() => {})
-          })
-          .catch(() => {
-            this.$message.info('已取消操作')
-          })
-      }
-    },
-
-    /**
-     * 表头数据
-     */
     getFieldList() {
       this.fieldList.push({ prop: 'name', width: '200', label: '姓名' })
       this.fieldList.push({ prop: 'mobile', width: '200', label: '手机' })
       this.fieldList.push({ prop: 'post', width: '200', label: '职务' })
     },
-
-    /**
-     * 获取数据
-     */
     getDetail() {
       this.loading = true
-      let params = { pageType: 'all' }
-      params[this.crmType + '_id'] = this.id
-      crmContactsIndex(params)
+      crmContactsIndex({
+        pageType: 'all',
+        customer_id: this.id
+      })
         .then(res => {
           if (this.fieldList.length == 0) {
             this.getFieldList()
@@ -246,21 +140,11 @@ export default {
       /** 客户 下新建联系人 */
       if (this.crmType == 'customer') {
         this.createActionInfo.data['customer'] = this.detail
-      } else if (this.crmType == 'business') {
-        this.createActionInfo.data['customer'] = this.detail.customer_id_info
       }
       this.isCreate = true
     },
-
-    /**
-     * 创建成功刷新相关信息
-     */
     createSaveSuccess() {
-      if (this.canRelation) {
-        this.$refs.crmrelative.refreshList()
-      } else {
-        this.getDetail()
-      }
+      this.getDetail()
     }
   }
 }

@@ -150,6 +150,7 @@ export default {
         })
       })
     },
+    downloadFile(file) {},
     // 编辑 删除 撤回
     handleCommand(command) {
       this.$emit('on-handle', { type: command, data: { item: this.data } })
@@ -218,12 +219,7 @@ export default {
       }
     }
     .row {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      letter-spacing: 0.5px;
-      line-height: 18px;
       cursor: pointer;
-      color: #3e84e9;
       .text {
         padding-bottom: 10px;
       }

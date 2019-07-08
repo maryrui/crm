@@ -58,7 +58,8 @@
                          :headers="httpHeader"
                          name="file[]"
                          multiple
-                         accept="*.*"
+                         accept="*"
+                         :before-upload="beforeAvatarUpload"
                          :on-preview="handleFilePreview"
                          :before-remove="handleFileRemove"
                          :on-success="fileUploadSuccess"
@@ -307,6 +308,15 @@ export default {
     imgFileUploadSuccess(response, file, fileList) {
       this.imageFileList = fileList
     },
+      beforeAvatarUpload(file, fileList){
+        let accept=['jpg','jpeg','png','gif','zip','rar','doc','docx','xls','xlsx','ppt','pptx','txt','pdf','plain','msword'];
+          console.log(file);
+        let ft=file.type.split('/')[1];
+        if(accept.indexOf(ft)<0){
+            this.$message.error('暂不支持该格式');
+            return false;
+        }
+      },
     // 查看图片
     handleFilePreview(file) {
       if (file.response || file.file_id) {

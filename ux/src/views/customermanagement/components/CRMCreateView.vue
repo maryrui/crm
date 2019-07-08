@@ -106,10 +106,7 @@ import {
   crmReceivablesSave,
   crmReceivablesUpdate
 } from '@/api/customermanagement/money'
-import {
-  crmReceivablesPlanSave,
-  crmReceivablesPlanUpdate
-} from '@/api/customermanagement/contract'
+import { crmReceivablesPlanSave } from '@/api/customermanagement/contract'
 
 import {
   regexIsNumber,
@@ -853,9 +850,8 @@ export default {
           ? crmReceivablesUpdate
           : crmReceivablesSave
       } else if (this.crmType == 'receivables_plan') {
-        return this.action.type == 'update'
-          ? crmReceivablesPlanUpdate
-          : crmReceivablesPlanSave
+        // 回款计划 不能编辑
+        return crmReceivablesPlanSave
       }
     },
     /** 拼接上传传输 */

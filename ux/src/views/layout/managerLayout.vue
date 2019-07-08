@@ -6,7 +6,7 @@
     <el-container>
       <el-aside width="auto"
                 class="aside-container">
-        <sidebar :items="managerRouterItems"
+        <sidebar :items="manageRouters.children"
                  createButtonTitle=""
                  mainRouter="manager"></sidebar>
       </el-aside>
@@ -20,7 +20,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import { ManagerNavbar, Sidebar, AppMain } from './components'
-import { managerRouterMenu } from '@/router/modules/manager'
 
 export default {
   name: 'Layout',
@@ -30,16 +29,7 @@ export default {
     AppMain
   },
   computed: {
-    ...mapGetters(['manage']),
-    managerRouterItems() {
-      for (let index = 0; index < managerRouterMenu.length; index++) {
-        const routerMenuItem = managerRouterMenu[index]
-        routerMenuItem.hidden = this.manage[routerMenuItem.meta.subType]
-          ? false
-          : true
-      }
-      return managerRouterMenu
-    }
+    ...mapGetters(['manage', 'manageRouters'])
   },
   data() {
     return {}

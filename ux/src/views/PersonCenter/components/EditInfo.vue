@@ -37,8 +37,7 @@
       <el-form-item label="手机号（登录名）"
                     class="create-item"
                     prop="username">
-        <el-input v-model="ruleForm.username"
-                  :disabled="true"></el-input>
+        <el-input v-model="ruleForm.username"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer"
@@ -141,19 +140,11 @@ export default {
 .create-box {
   display: flex;
   flex-wrap: wrap;
-
-  .el-form-item {
-    margin-bottom: 5px;
-  }
 }
 
 .create-item {
   flex: 0 0 50%;
   flex-shrink: 0;
   padding: 0 10px;
-}
-
-.el-dialog__wrapper /deep/.el-dialog__body {
-  padding: 20px;
 }
 </style>

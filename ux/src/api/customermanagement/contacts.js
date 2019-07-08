@@ -71,8 +71,7 @@ export function crmContactsExcelExport(data) {
     url: 'crm/contacts/excelExport',
     method: 'post',
     data: data,
-    responseType: 'blob',
-    timeout: 60000
+    responseType: 'blob'
   })
 }
 
@@ -92,8 +91,7 @@ export function crmContactsExcelImport(data) {
     data: param,
     headers: {
       'Content-Type': 'multipart/form-data'
-    },
-    timeout: 60000
+    }
   })
 }
 
@@ -103,15 +101,3 @@ export function crmContactsExcelImport(data) {
  *
  */
 export const crmContactsExcelDownloadURL = 'crm/contacts/excelDownload'
-
-/**
- * 关联和取消关联商机/联系人
- * @param {*} data 
- */
-export function crmContactsRelationAPI(data) {
-  return request({
-    url: 'crm/contacts/relation',
-    method: 'post',
-    data: data
-  })
-}

@@ -1,10 +1,11 @@
 <template>
   <div id="app">
     <router-view class="router-view" />
-    <vue-picture-viewer :imgData="previewImgs"
-                        :select-index="previewIndex"
-                        v-if="showPreviewImg"
-                        @close-viewer="showPreviewImg=false"></vue-picture-viewer>
+    <vue-picture-viewer
+        :imgData="previewImgs"
+        :select-index="previewIndex"
+        v-if="showPreviewImg"
+        @close-viewer="showPreviewImg=false"></vue-picture-viewer>
   </div>
 </template>
 
@@ -34,7 +35,8 @@ export default {
       // 如果没有存 获取一下
       let paths = to.path.split('/')
       if (paths.length >= 3) {
-        this.$store.commit('SET_ACTIVEINDEX', paths[2])
+        paths.splice(0, 2)
+        this.$store.commit('SET_ACTIVEINDEX', paths.length == 1 ? paths[0] : paths.join('/'))
       }
     }
   },

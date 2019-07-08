@@ -46,8 +46,6 @@
 </template>
 
 <script type="text/javascript">
-import { formatTimeToTimestamp } from '@/utils'
-
 export default {
   name: 'time-type-select', //时间类型选择
   computed: {
@@ -115,8 +113,8 @@ export default {
 
         this.$emit('change', {
           type: 'custom',
-          startTime: formatTimeToTimestamp(this.startTime),
-          endTime: formatTimeToTimestamp(this.endTime)
+          startTime: this.startTime,
+          endTime: this.endTime
         })
       }
     }

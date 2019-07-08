@@ -61,7 +61,6 @@ import MixAdd from '../../components/MixAdd'
 import RecordLog from '../../components/followLog/RecordLog' // 跟进记录
 import { crmRecordSave } from '@/api/customermanagement/common'
 import { formatTimeToTimestamp } from '@/utils'
-import followLogType from '@/views/customermanagement/mixins/followLogType'
 
 export default {
   /** 线索管理 的 线索详情 的 跟进记录*/
@@ -70,7 +69,6 @@ export default {
     MixAdd,
     RecordLog
   },
-  mixins: [followLogType],
   props: {
     /** 模块ID */
     id: [String, Number],
@@ -84,7 +82,15 @@ export default {
   data() {
     return {
       sendLoading: false,
-
+      /** 记录类型 */
+      followTypes: [
+        { type: '打电话', name: '打电话' },
+        { type: '发邮件', name: '发邮件' },
+        { type: '发短信', name: '发短信' },
+        { type: '见面拜访', name: '见面拜访' },
+        { type: '活动', name: '活动' }
+      ],
+      followType: '打电话',
       /** 下次联系时间 */
       next_time: '',
       /** 是否添加日程提醒 */
@@ -102,8 +108,10 @@ export default {
     }
   },
   mounted() {},
-  activated: function() {},
-  deactivated: function() {},
+  activated: function() {
+  },
+  deactivated: function() {
+  },
   methods: {
     /** 发布 时候的类型选择 */
     handleTypeDrop(command) {

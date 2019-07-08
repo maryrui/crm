@@ -8,7 +8,7 @@ Vue.use(Router)
 
 import workbenchRouter from './modules/workbench'
 import customerRouter from './modules/customer'
-import { managerRouter } from './modules/manager'
+import managerRouter from './modules/manager'
 import personRouter from './modules/person'
 import { biRouter } from './modules/business'
 
@@ -41,6 +41,7 @@ export const constantRouterMap = [{
   },
   workbenchRouter,
   personRouter,
+  biRouter,
   {
     path: '/',
     redirect: '/workbench/index',
@@ -58,7 +59,6 @@ export default new Router({
 
 export const asyncRouterMap = [
   customerRouter,
-  biRouter,
   managerRouter,
   {
     path: '*',

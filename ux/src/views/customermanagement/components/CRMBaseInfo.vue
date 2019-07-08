@@ -281,8 +281,6 @@ export default {
     .b-cell-value {
       font-size: 13px;
       color: #333;
-      white-space: pre-wrap;
-      word-wrap: break-word;
     }
     .b-cell-foot {
       flex-shrink: 0;

@@ -46,7 +46,7 @@
         <el-table :data="list"
                   stripe
                   border
-                  height="400"
+                  max-height="400"
                   highlight-current-row>
           <el-table-column v-for="(item, index) in fieldList"
                            :key="index"
@@ -310,7 +310,6 @@ export default {
             name: '合同金额',
             type: 'bar',
             yAxisIndex: 0,
-            barWidth: 15,
             data: []
           },
           {
@@ -324,6 +323,7 @@ export default {
             name: '完成率',
             type: 'line',
             yAxisIndex: 1,
+            barWidth: 15,
             data: []
           }
         ]
