@@ -77,8 +77,10 @@ class Message extends ApiCommon
             $time = strtotime(date('Y-m-d',time()));
             $announcementWhere['start_time'] = array('elt',$time);
             $announcementWhere['end_time'] = array('egt',$time);
-            $announcementWhere['read_user_ids'] = array('not like','%,'.$user_id.',%');
-            $announcementNum = db('oa_announcement')->where(' ( owner_user_ids LIKE "%,'.$userInfo['id'].',%" OR structure_ids LIKE "%,'.$userInfo['structure_id'].',%" OR create_user_id = '.$user_id.' OR (owner_user_ids = "" AND structure_ids = ""))')->where($announcementWhere)->count();
+//            $announcementWhere['read_user_ids'] = array('not like','%,'.$user_id.',%');
+            $announcementNum = db('oa_announcement')
+                ->where(' ( owner_user_ids LIKE "%,'.$userInfo['id'].',%" OR structure_ids LIKE "%,'.$userInfo['structure_id'].',%" OR create_user_id = '.$user_id.' OR (owner_user_ids = "" AND structure_ids = ""))')
+                ->where($announcementWhere)->count();
             $data['announcementNum'] = $announcementNum ? : 0;
         }
         //日志（发送给自己并未读）
@@ -95,7 +97,7 @@ class Message extends ApiCommon
         }    
         //审批
         if ($type == 'examine' || $type == 'all') {
-            // $examineWhere['check_status'] = array('not in',array('2','3'));
+             $examineWhere['check_status'] = array('not in',array('2','3'));
             $map_str = "( `check_user_id` LIKE '%,".$user_id.",%' OR `check_user_id` = ".$user_id." )";
             $examineNum = db('oa_examine')->where($map_str)->where($examineWhere)->count();
             $data['examineNum'] = $examineNum ? : 0;

@@ -11,7 +11,7 @@ const getters = {
     if (state.app.name) {
       return state.app.name
     }
-    return 'CRM系统'
+    return '悟空CRM系统'
   },
   activeIndex: state => state.app.sidebar.activeIndex,
   navActiveIndex: state => state.app.navbar.activeIndex,
@@ -22,9 +22,13 @@ const getters = {
   manage: state => state.user.manage,
   // 路由
   addRouters: state => state.permission.addRouters,
+  oaRouters: state => state.permission.oaRouters,
   crmRouters: state => state.permission.crmRouters,
   biRouters: state => state.permission.biRouters,
-  manageRouters: state => state.permission.manageRouters
+  manageRouters: state => state.permission.manageRouters,
+  //客户管理信息
+  messageNum: state => state.customer.messageNum,
+  messageOANum: state => state.oa.messageOANum,
 
 }
 /**

@@ -3,9 +3,9 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => 'localhost',
+    'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => '72crm',
+    'database'        => 'crm',
     // 用户名
     'username'        => 'root',
     // 密码
@@ -19,7 +19,7 @@ return [
     // 数据库编码默认采用utf8
     'charset'         => 'utf8',
     // 数据库表前缀
-    'prefix'          => '5kcrm_',
+    'prefix'          => 'crm_',
     // 数据库调试模式
     'debug'           => true,
     // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)

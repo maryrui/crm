@@ -9,23 +9,11 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-        '/api': {
-            target: 'http://218.11.132.35:18790',//后端接口地址
-            changeOrigin: true,//是否允许跨越
-            pathRewrite: {
-                '^/api': '/index.php',//重写,
-            }
-        },
-        onProxyReq: function (proxyReq, req, res) {
-            //实在不知道代理后的路径，可以在这里打印出出来看看
-            console.log("原路径：" + req.originalUrl, "代理路径：" + req.path)
-        }
-    },
+    proxyTable: {},
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
-    port: 1991, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
+    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: false,
@@ -34,7 +22,7 @@ module.exports = {
     // Use Eslint Loader?
     // If true, your code will be linted during bundling and
     // linting errors and warnings will be shown in the console.
-    useEslint: false,
+    useEslint: true,
     // If true, eslint errors and warnings will also be shown in the error overlay
     // in the browser.
     showEslintErrorsInOverlay: false,
