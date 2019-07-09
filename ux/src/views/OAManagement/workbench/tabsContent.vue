@@ -79,12 +79,7 @@ import ScheduleDetails from '../schedule/components/details'
 import ExamineDetail from '../examine/components/examineDetail'
 // 任务详情
 import particulars from '../task/components/particulars'
-import {
-  detailsTask,
-  readLoglist,
-  taskOver,
-  deleteTask
-} from '@/api/oamanagement/task'
+import { detailsTask, readLoglist, deleteTask } from '@/api/oamanagement/task'
 import { crmFileIndex } from '@/api/common'
 import { timestampToFormatTime } from '@/utils'
 
@@ -144,7 +139,8 @@ export default {
             this.titleList = {
               title: val.title,
               create_time: val.create_time,
-              content: val.ann_content
+              content: val.ann_content,
+              announcement_id: val.action_id
             }
           }
           break
@@ -242,9 +238,19 @@ export default {
       .title {
         margin: 20px 0 0;
         color: #3e84e9;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        letter-spacing: 0.5px;
+        line-height: 18px;
+        background-color: #f4f7fd;
+        padding: 10px;
+        border-radius: 2px;
         span {
           cursor: pointer;
         }
+      }
+      .title :hover {
+        text-decoration: underline;
       }
     }
   }

@@ -37,10 +37,10 @@
           </el-button>
         </el-form-item>
       </el-form>
-   <!-- <div class="copyright">
+      <!--<div class="copyright">
         悟空CRM受国家计算机软件著作权保护，未经授权不得进行商业行为，违者必究。<br>
         <a target="_blank"
-           href="http://www.5&ndash;&gt;kcrm.com">©2019 悟空软件</a>
+           href="http://www.5kcrm.com">©2019 悟空软件</a>
       </div>-->
     </div>
 
@@ -108,7 +108,6 @@ export default {
             .dispatch('Login', this.loginForm)
             .then(res => {
               this.loading = false
-              this.$store.dispatch('SystemLogoAndName')
               this.$router.push({ path: this.redirect || '/workbench/index' })
             })
             .catch(() => {

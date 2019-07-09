@@ -237,6 +237,7 @@ export default {
           height: 5px;
           position: absolute;
           bottom: 0;
+          left:50%;
           border-radius: 50%;
         }
       }

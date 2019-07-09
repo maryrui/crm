@@ -1,5 +1,4 @@
 import axios from 'axios'
-// import apiConfig from '../../config/api.config'
 import {
   Message,
   MessageBox
@@ -22,7 +21,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 // process.env.BASE_API 自定义请求地址
 
 window.BASE_URL = process.env.BASE_API
-// console.log(apiConfig.baseUrl)
+
 const service = axios.create({
   baseURL: window.BASE_URL, // api 的 base_url
   timeout: 15000 // 请求超时时间
