@@ -392,8 +392,8 @@ class Examine extends ApiCommon
             ->where(function ($query) {
                 $query->where(['user_ids' => '','structure_ids' => '']);
             })->whereOr(function($query) use ($userInfo){
-                $query->where('structure_ids','like',','.$userInfo['structure_id'].',')
-                      ->whereOr('user_ids','like',','.$userInfo['id'].',');
+                $query->where('structure_ids','like','%,'.$userInfo['structure_id'].',%')
+                      ->whereOr('user_ids','like','%,'.$userInfo['id'].',%');
         })->select();
         return resultArray(['data' => $list]);        
     } 

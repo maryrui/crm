@@ -37,11 +37,20 @@
           </el-button>
         </el-form-item>
       </el-form>
+<<<<<<< .mine
       <!--<div class="copyright">
+=======
+      <div class="copyright">
+>>>>>>> .theirs
         悟空CRM受国家计算机软件著作权保护，未经授权不得进行商业行为，违者必究。<br>
         <a target="_blank"
+<<<<<<< .mine
            href="http://www.5kcrm.com">©2019 悟空软件</a>
       </div>-->
+=======
+           href="http://www.5kcrm.com">©2019 悟空软件</a>
+      </div>
+>>>>>>> .theirs
     </div>
 
     <img class="logo"
@@ -73,8 +82,8 @@ export default {
     }
     return {
       loginForm: {
-        username: '18631416715',
-        password: 'kg123465'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [

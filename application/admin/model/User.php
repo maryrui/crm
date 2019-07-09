@@ -776,7 +776,7 @@ class User extends Common
 		$list = $this
 				->alias('user')
 				->join('__ADMIN_STRUCTURE__ structure', 'structure.id = user.structure_id', 'LEFT')
-				->where(['user.id' => ['in', $id]])->field('user.id,username,img,thumb_img,realname,parent_id,structure.name as structure_name,structure.id as structure_id')->select();
+				->where(['user.id' => ['in', $ids]])->field('user.id,username,img,thumb_img,realname,parent_id,structure.name as structure_name,structure.id as structure_id')->select();
 		return $list ? : [];
 	}
 
@@ -838,7 +838,7 @@ class User extends Common
 	public function getUserListByStructureId($structure_id='')
 	{
 		$map =array();
-		if($structure_id){
+		if($structure_id && $structure_id !=1){
 			$map['structure_id'] = $structure_id;
 		}
 		$list = Db::name('AdminUser')->field('id as user_id,realname,post,structure_id')->where($map)->select();

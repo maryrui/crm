@@ -58,8 +58,7 @@
                          :headers="httpHeader"
                          name="file[]"
                          multiple
-                         accept="*"
-                         :before-upload="beforeAvatarUpload"
+                         accept="*.*"
                          :on-preview="handleFilePreview"
                          :before-remove="handleFileRemove"
                          :on-success="fileUploadSuccess"
@@ -252,9 +251,99 @@
                 : []
             this.relevanceAll = relevanceAll
 
-            this.imageFileList = this.imgFileList.map(function(item, index, array) {
-                item.url = item.file_path_thumb
-                return item
+    this.imageFileList = this.imgFileList.map(function(item, index, array) {
+      item.url = item.file_path_thumb
+      return item
+    })
+    this.fileList = this.accessoryFileList.map(function(item, index, array) {
+      item.url = item.file_path_thumb
+      return item
+    })
+  },
+  methods: {
+    close() {
+      if (this.$route.query.routerKey == 1) {
+        this.$router.go(-1)
+      } else {
+        this.$emit('close')
+      }
+    },
+    tabClick() {
+      switch (this.activeName) {
+        case '1':
+          this.formList = this.dateList
+          break
+        case '2':
+          this.formList = this.weekList
+          break
+        case '3':
+          this.formList = this.monthList
+          break
+      }
+    },
+    // 提交按钮
+    submitBtn() {
+      if (
+        this.formData.content ||
+        this.formData.tomorrow ||
+        this.formData.question
+      ) {
+        this.$emit(
+          'submitBtn',
+          this.activeName,
+          this.fileList,
+          this.imageFileList,
+          this.relevanceAll
+        )
+      } else {
+        this.$message.error('内容至少填写一项')
+      }
+    },
+    beforeRemove() {
+      return this.$confirm('此操作将永久删除该图片, 是否继续？')
+    },
+    // 图片和附件
+    // 上传图片
+    imgFileUploadSuccess(response, file, fileList) {
+      this.imageFileList = fileList
+    },
+    // 查看图片
+    handleFilePreview(file) {
+      if (file.response || file.file_id) {
+        let perviewFile
+        if (file.response) {
+          perviewFile = {
+            url: file.response.data[0].path,
+            name: file.response.data[0].name
+          }
+        } else {
+          perviewFile = {
+            url: file.file_path,
+            name: file.name
+          }
+        }
+        this.$bus.emit('preview-image-bus', {
+          index: 0,
+          data: [perviewFile]
+        })
+      }
+    },
+    beforeRemove(file, fileList) {
+      if (file.response || file.file_id) {
+        let save_name
+        if (file.response) {
+          save_name = file.response.data[0].save_name
+        } else {
+          save_name = file.save_name
+        }
+        this.$confirm('您确定要删除该文件吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            crmFileDelete({
+              save_name: save_name
             })
             this.fileList = this.accessoryFileList.map(function(item, index, array) {
                 item.url = item.file_path_thumb
