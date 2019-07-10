@@ -125,4 +125,5 @@ fabric.properties
 /config/database.php
 /static/*
 /index.html
+/favicon.ico
 
