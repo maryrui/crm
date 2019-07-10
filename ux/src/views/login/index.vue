@@ -37,20 +37,11 @@
           </el-button>
         </el-form-item>
       </el-form>
-<<<<<<< .mine
-      <!--<div class="copyright">
-=======
-      <div class="copyright">
->>>>>>> .theirs
-        悟空CRM受国家计算机软件著作权保护，未经授权不得进行商业行为，违者必究。<br>
-        <a target="_blank"
-<<<<<<< .mine
-           href="http://www.5kcrm.com">©2019 悟空软件</a>
-      </div>-->
-=======
-           href="http://www.5kcrm.com">©2019 悟空软件</a>
-      </div>
->>>>>>> .theirs
+      <!-- <div class="copyright">
+           悟空CRM受国家计算机软件著作权保护，未经授权不得进行商业行为，违者必究。<br>
+           <a target="_blank"
+              href="http://www.5&ndash;&gt;kcrm.com">©2019 悟空软件</a>
+         </div>-->
     </div>
 
     <img class="logo"
@@ -59,195 +50,196 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Lockr from 'lockr'
-import { Loading } from 'element-ui'
+    import { mapGetters } from 'vuex'
+    import Lockr from 'lockr'
+    import { Loading } from 'element-ui'
 
-export default {
-  name: 'Login',
-  data() {
-    const validateUsername = (rule, value, callback) => {
-      if (value.length == 0) {
-        callback(new Error('请输入账号'))
-      } else {
-        callback()
-      }
-    }
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
-      } else {
-        callback()
-      }
-    }
-    return {
-      loginForm: {
-        username: '',
-        password: ''
-      },
-      loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
-        ],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }]
-      },
-      loading: false,
-      redirect: undefined,
-      remember: false
-    }
-  },
-  watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
-      },
-      immediate: true
-    }
-  },
-  computed: {
-    ...mapGetters(['logo', 'name'])
-  },
-  mounted() {},
-  methods: {
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store
-            .dispatch('Login', this.loginForm)
-            .then(res => {
-              this.loading = false
-              this.$router.push({ path: this.redirect || '/workbench/index' })
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          return false
+    export default {
+        name: 'Login',
+        data() {
+            const validateUsername = (rule, value, callback) => {
+                if (value.length == 0) {
+                    callback(new Error('请输入账号'))
+                } else {
+                    callback()
+                }
+            }
+            const validatePass = (rule, value, callback) => {
+                if (value.length < 5) {
+                    callback(new Error('密码不能小于5位'))
+                } else {
+                    callback()
+                }
+            }
+            return {
+                loginForm: {
+                    username: '18631416715',
+                    password: 'kg123465'
+                },
+                loginRules: {
+                    username: [
+                        { required: true, trigger: 'blur', validator: validateUsername }
+                    ],
+                    password: [{ required: true, trigger: 'blur', validator: validatePass }]
+                },
+                loading: false,
+                redirect: undefined,
+                remember: false
+            }
+        },
+        watch: {
+            $route: {
+                handler: function(route) {
+                    this.redirect = route.query && route.query.redirect
+                },
+                immediate: true
+            }
+        },
+        computed: {
+            ...mapGetters(['logo', 'name'])
+        },
+        mounted() {},
+        methods: {
+            handleLogin() {
+                this.$refs.loginForm.validate(valid => {
+                    if (valid) {
+                        this.loading = true
+                        this.$store
+                            .dispatch('Login', this.loginForm)
+                            .then(res => {
+                                this.loading = false
+                                this.$store.dispatch('SystemLogoAndName')
+                                this.$router.push({ path: this.redirect || '/workbench/index' })
+                            })
+                            .catch(() => {
+                                this.loading = false
+                            })
+                    } else {
+                        return false
+                    }
+                })
+            }
         }
-      })
     }
-  }
-}
 </script>
 
 <style lang="scss" scoped>
-$dark_gray: #ccc;
-$light_gray: #333;
-$login_theme: #00aaee;
+  $dark_gray: #ccc;
+  $light_gray: #333;
+  $login_theme: #00aaee;
 
-/deep/ input {
-  border: 0 none;
-  background-color: white;
-  -webkit-appearance: none;
-  &:-webkit-autofill {
-    background-image: none;
-    -webkit-box-shadow: 0 0 0 1000px white inset !important;
-    -webkit-text-fill-color: $light_gray !important;
-  }
-}
-/deep/ .el-input__inner {
-  height: 40px;
-  padding: 0 12px;
-  background-color: white;
-  border: 0 none;
-  border-bottom: 1px solid #e6e6e6 !important;
-}
-/deep/ .el-form-item__error {
-  left: 12px;
-}
-.wrapper {
-  position: relative;
-  width: 100%;
-  min-width: 1300px;
-  display: flex;
-  .left {
-    width: 68%;
-    .left-pic {
-      width: 100%;
-      height: 100%;
-      background: url('../../assets/img/login/login.png') no-repeat center;
-      background-size: cover;
+  /deep/ input {
+    border: 0 none;
+    background-color: white;
+    -webkit-appearance: none;
+    &:-webkit-autofill {
+      background-image: none;
+      -webkit-box-shadow: 0 0 0 1000px white inset !important;
+      -webkit-text-fill-color: $light_gray !important;
     }
   }
-  .right {
+  /deep/ .el-input__inner {
+    height: 40px;
+    padding: 0 12px;
+    background-color: white;
+    border: 0 none;
+    border-bottom: 1px solid #e6e6e6 !important;
+  }
+  /deep/ .el-form-item__error {
+    left: 12px;
+  }
+  .wrapper {
     position: relative;
-    width: 32%;
-    background-color: #fff;
+    width: 100%;
+    min-width: 1300px;
     display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding-top: 6%;
-    .el-form {
-      width: 70%;
-      .title {
-        font-size: 26px;
-        color: $light_gray;
-        margin: 0 auto 50px;
-        text-align: center;
-      }
-      .submit-btn {
+    .left {
+      width: 68%;
+      .left-pic {
         width: 100%;
-        line-height: 2;
-        font-size: 16px;
-        color: white;
-        border-radius: 3px;
-        background-color: $login_theme;
-        display: block;
+        height: 100%;
+        background: url('../../assets/img/login/login.png') no-repeat center;
+        background-size: cover;
       }
-      .el-button {
-        border: 0 none;
-      }
-      .action-control {
-        color: #999;
-        /deep/ .el-checkbox {
-          .el-checkbox__label {
-            color: #999;
+    }
+    .right {
+      position: relative;
+      width: 32%;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      padding-top: 6%;
+      .el-form {
+        width: 70%;
+        .title {
+          font-size: 26px;
+          color: $light_gray;
+          margin: 0 auto 50px;
+          text-align: center;
+        }
+        .submit-btn {
+          width: 100%;
+          line-height: 2;
+          font-size: 16px;
+          color: white;
+          border-radius: 3px;
+          background-color: $login_theme;
+          display: block;
+        }
+        .el-button {
+          border: 0 none;
+        }
+        .action-control {
+          color: #999;
+          /deep/ .el-checkbox {
+            .el-checkbox__label {
+              color: #999;
+            }
+            .el-checkbox__input.is-checked .el-checkbox__inner {
+              background-color: $login_theme;
+              border-color: $login_theme;
+            }
           }
-          .el-checkbox__input.is-checked .el-checkbox__inner {
-            background-color: $login_theme;
-            border-color: $login_theme;
+
+          .forget {
+            cursor: pointer;
+            float: right;
           }
         }
+      }
 
-        .forget {
+      .register {
+        width: 70%;
+        padding-top: 30px;
+        color: $light_gray;
+        border-top: 1px solid #e6e6e6;
+        text-align: center;
+        margin-top: 28px;
+        .register-btn {
+          color: $login_theme;
           cursor: pointer;
-          float: right;
         }
       }
-    }
 
-    .register {
-      width: 70%;
-      padding-top: 30px;
-      color: $light_gray;
-      border-top: 1px solid #e6e6e6;
-      text-align: center;
-      margin-top: 28px;
-      .register-btn {
-        color: $login_theme;
-        cursor: pointer;
+      .copyright {
+        width: 92%;
+        position: absolute;
+        bottom: 2%;
+        color: #d0d0d0;
+        font-size: 12px;
+        text-align: center;
+        line-height: 1.5;
       }
     }
 
-    .copyright {
-      width: 92%;
+    .logo {
       position: absolute;
-      bottom: 2%;
-      color: #d0d0d0;
-      font-size: 12px;
-      text-align: center;
-      line-height: 1.5;
+      left: 60px;
+      top: 50px;
+      width: 180px;
+      height: 48px;
+      z-index: 200;
     }
   }
-
-  .logo {
-    position: absolute;
-    left: 60px;
-    top: 50px;
-    width: 180px;
-    height: 48px;
-    z-index: 200;
-  }
-}
 </style>

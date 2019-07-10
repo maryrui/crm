@@ -10,20 +10,22 @@ import qs from 'qs'
 var showLoginMessageBox = false
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 // 创建axios实例
-// let hrefs = []
-// if (window.location.href.indexOf("index.html") != -1) {
-//   hrefs = window.location.href.split('index.html')
-// } else {
-//   hrefs = window.location.href.split('#')
-// }
-// let baseURL = hrefs.length > 0 ? hrefs[0] : window.location.href
-// baseURL + 'index.php/' 默认请求地址
+let hrefs = []
+if (window.location.href.indexOf("index.html") != -1) {
+  hrefs = window.location.href.split('index.html')
+} else {
+  hrefs = window.location.href.split('#')
+}
+//默认请求地址
+let baseURL = hrefs.length > 0 ? hrefs[0] : window.location.href;
+baseURL +'index.php/'
 // process.env.BASE_API 自定义请求地址
 
-window.BASE_URL = process.env.BASE_API
+// window.BASE_URL = process.env.BASE_API
 
+// console.log(baseURL);
 const service = axios.create({
-  baseURL: window.BASE_URL, // api 的 base_url
+  baseURL:baseURL +'index.php/', // api 的 base_url
   timeout: 15000 // 请求超时时间
 })
 
