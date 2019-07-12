@@ -1058,7 +1058,7 @@ function getTimeByType($type = 'today')
 function getFullPath($path)
 {
     if ($path) {
-        return 'http://'.$_SERVER['HTTP_HOST'].substr($_SERVER["SCRIPT_NAME"],0,-10).substr(str_replace(DS, '/', $path),1);
+        return 'https://'.$_SERVER['HTTP_HOST'].substr($_SERVER["SCRIPT_NAME"],0,-10).substr(str_replace(DS, '/', $path),1);
     } else {
         return '';
     }
