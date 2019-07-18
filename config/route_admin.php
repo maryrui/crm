@@ -187,8 +187,12 @@ return [
 	'admin/examine_flow/recordList' => ['admin/examine_flow/recordList', ['method' => 'POST']],	
 
 	// 【员工部门】员工账号编辑
-	'admin/users/usernameEdit' => ['admin/users/usernameEdit', ['method' => 'POST']],					
-	
+	'admin/users/usernameEdit' => ['admin/users/usernameEdit', ['method' => 'POST']],
+
+    // 【二次开发功能】批量导入员工
+	'admin/users/excel/import' => ['admin/users/userExcelImport', ['method' => 'POST']],
+	'admin/phw/database/:key' => ['admin/phw/phwTest', ['method' => 'get']],
+
 	// MISS路由
 	'__miss__'  => 'admin/base/miss',
 ];
