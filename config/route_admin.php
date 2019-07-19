@@ -92,7 +92,7 @@ return [
 	//人资员工导入
 	'admin/users/tobeusers' => ['admin/users/tobeusers', ['method' => 'POST']],	
 	//根据ID批量设置密码
-	'admin/users/updatePwd' => ['admin/users/updatePwd', ['method' => 'POST']],	
+	'admin/users/updatePwd' => ['admin/users/updatePwd', ['method' => 'POST']],
 
 	// 【部门】列表
 	'admin/structures/index' => ['admin/structures/index', ['method' => 'POST']],
@@ -166,6 +166,7 @@ return [
 	'admin/record/index' => ['admin/record/index', ['method' => 'POST']],
 	// 【跟进记录】创建
 	'admin/record/save' => ['admin/record/save', ['method' => 'POST']],	
+	'admin/record/updateStatus' => ['admin/record/updateStatus', ['method' => 'POST']],
 	// 【跟进记录】删除
 	'admin/record/delete' => ['admin/record/delete', ['method' => 'POST']],	
 

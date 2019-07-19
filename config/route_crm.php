@@ -260,8 +260,13 @@ return [
 	'crm/contacts/relation' => ['crm/contacts/relation', ['method' => 'POST']],	
 
 	// 【公海】数据统计 导出
-	'crm/customer/poolExcelExport' => ['crm/customer/poolExcelExport', ['method' => 'POST']],	
+	'crm/customer/poolExcelExport' => ['crm/customer/poolExcelExport', ['method' => 'POST']],
 
-	// MISS路由
+    // 【客诉】
+    'crm/complaint/index' => ['crm/complaint/index', ['method' => 'POST']],
+    'crm/complaint/read' => ['crm/complaint/read', ['method' => 'POST']],
+    'crm/complaint/update' => ['crm/complaint/update', ['method' => 'POST']],
+
+    // MISS路由
 	'__miss__'  => 'admin/base/miss',
 ];

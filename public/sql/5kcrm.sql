@@ -326,6 +326,7 @@ CREATE TABLE `5kcrm_admin_record` (
   `types_id` int(11) NOT NULL COMMENT '类型ID',
   `content` varchar(1000) NOT NULL COMMENT '跟进内容',
   `category` varchar(30) NOT NULL DEFAULT '' COMMENT '跟进类型',
+  `remind_date` int(11) NOT NULL DEFAULT '0' COMMENT '提醒日期',
   `next_time` int(11) NOT NULL DEFAULT '0' COMMENT '下次联系时间',
   `business_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '商机ID',
   `contacts_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '联系人ID',
@@ -569,6 +570,7 @@ CREATE TABLE `5kcrm_crm_business` (
   `status_time` int(11) NOT NULL DEFAULT '0' COMMENT '阶段推进时间',
   `is_end` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1赢单2输单3无效',
   `next_time` int(11) NOT NULL DEFAULT '0' COMMENT '下次联系时间',
+  `remind_date` int(11) NOT NULL DEFAULT '0' COMMENT '提醒日期',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '商机名称',
   `money` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT '商机金额',
   `total_price` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT '产品总金额',
@@ -680,6 +682,7 @@ CREATE TABLE `5kcrm_crm_contacts` (
   `rw_user_id` varchar(500) NOT NULL DEFAULT '' COMMENT '读写权限',
   `create_user_id` int(11) NOT NULL COMMENT '创建人ID',
   `owner_user_id` int(11) NOT NULL COMMENT '负责人ID',
+  `remind_date` int(11) NOT NULL DEFAULT '0' COMMENT '提醒日期',
   `next_time` int(11) NOT NULL DEFAULT '0' COMMENT '下次联系时间',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   `update_time` int(11) NOT NULL COMMENT '更新时间',
@@ -719,6 +722,7 @@ CREATE TABLE `5kcrm_crm_contract` (
   `owner_user_id` int(10) NOT NULL COMMENT '负责人ID',
   `ro_user_id` varchar(500) NOT NULL DEFAULT '' COMMENT '只读权限',
   `rw_user_id` varchar(500) NOT NULL DEFAULT '' COMMENT '读写权限',
+  `remind_date` int(11) NOT NULL DEFAULT '0' COMMENT '提醒日期',
   `next_time` int(11) NOT NULL DEFAULT '0' COMMENT '下次联系时间',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   `update_time` int(11) NOT NULL COMMENT '更新时间',
@@ -770,6 +774,7 @@ CREATE TABLE `5kcrm_crm_customer` (
   `detail_address` varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址',
   `lng` double(14,11) DEFAULT NULL COMMENT '地理位置经度',
   `lat` double(14,11) DEFAULT NULL COMMENT '地理位置维度',
+  `remind_date` int(11) NOT NULL DEFAULT '0' COMMENT '提醒日期',
   `next_time` int(11) NOT NULL DEFAULT '0' COMMENT '下次联系时间',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   `update_time` int(11) NOT NULL COMMENT '更新时间',
@@ -799,6 +804,7 @@ CREATE TABLE `5kcrm_crm_leads` (
   `remark` text COMMENT '备注',
   `create_user_id` int(10) NOT NULL COMMENT '创建人ID',
   `owner_user_id` int(10) NOT NULL COMMENT '负责人ID',
+  `remind_date` int(11) NOT NULL DEFAULT '0' COMMENT '提醒日期',
   `next_time` int(11) DEFAULT '0' COMMENT '下次联系时间',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   `update_time` int(11) NOT NULL COMMENT '更新时间',
@@ -1235,9 +1241,6 @@ CREATE TABLE `5kcrm_work_task_log` (
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='任务日志表';
 
-ALTER TABLE `5kcrm_crm_leads` ADD `follow` VARCHAR(20) NULL DEFAULT NULL COMMENT '跟进' AFTER `next_time`;
-
-ALTER TABLE `5kcrm_crm_customer` ADD `follow` VARCHAR(20) NULL DEFAULT NULL COMMENT '跟进' AFTER `next_time`;
 
 INSERT INTO `5kcrm_crm_config` (`id`, `name`, `value`, `description`) VALUES (NULL, 'contract_day', '30', '合同到期提醒天数');
 UPDATE `5kcrm_admin_rule` SET `status` = '0' WHERE `5kcrm_admin_rule`.`id` = 67;

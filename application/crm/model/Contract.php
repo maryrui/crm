@@ -42,7 +42,7 @@ class Contract extends Common
     	$scene_id = (int)$request['scene_id'];
 		unset($request['scene_id']);
 		unset($request['search']);
-		unset($request['user_id']);    	
+		unset($request['user_id']);
 
         $request = $this->fmtRequest( $request );
         $requestMap = $request['map'] ? : [];
@@ -75,31 +75,32 @@ class Contract extends Common
 		$map = where_arr($map, 'crm', 'contract', 'index');
 		$order = ['contract.update_time desc'];	
 		$authMap = [];
-		if (!$partMap) {
-			$auth_user_ids = $userModel->getUserByPer('crm', 'contract', 'index');
-			if (isset($map['contract.owner_user_id'])) {
-				if (!is_array($map['contract.owner_user_id'][1])) {
-					$map['contract.owner_user_id'][1] = [$map['contract.owner_user_id'][1]];
-				}				
-				if ($map['contract.owner_user_id'][0] == 'neq') {
-					$auth_user_ids = array_diff($auth_user_ids, $map['contract.owner_user_id'][1]) ? : [];	//取差集	
-				} else {
-					$auth_user_ids = array_intersect($map['contract.owner_user_id'][1], $auth_user_ids) ? : [];	//取交集
-				}
-		        unset($map['contract.owner_user_id']);
-		        $auth_user_ids = array_merge(array_unique(array_filter($auth_user_ids))) ? : ['-1'];
-		        $authMap['contract.owner_user_id'] = array('in',$auth_user_ids); 
-		    } else {
-		    	$authMapData = [];
-		    	$authMapData['auth_user_ids'] = $auth_user_ids;
-		    	$authMapData['user_id'] = $user_id;
-		    	$authMap = function($query) use ($authMapData){
-			        $query->where('contract.owner_user_id',array('in',$authMapData['auth_user_ids']))
-			        	->whereOr('contract.ro_user_id',array('like','%,'.$authMapData['user_id'].',%'))
-			        	->whereOr('contract.rw_user_id',array('like','%,'.$authMapData['user_id'].',%'));
-			    };
-		    }
-		}
+        if (!$partMap) {
+            $auth_user_ids = $userModel->getUserByPer('crm', 'contract', 'index');
+            if (isset($map['contract.owner_user_id'])) {
+                if (!is_array($map['contract.owner_user_id'][1])) {
+                    $map['contract.owner_user_id'][1] = [$map['contract.owner_user_id'][1]];
+                }
+                if ($map['contract.owner_user_id'][0] == 'neq') {
+                    $auth_user_ids = array_diff($auth_user_ids, $map['contract.owner_user_id'][1]) ? : [];	//取差集
+                } else {
+                    $auth_user_ids = array_intersect($map['contract.owner_user_id'][1], $auth_user_ids) ? : [];	//取交集
+                }
+                unset($map['contract.owner_user_id']);
+                $auth_user_ids = array_merge(array_unique(array_filter($auth_user_ids))) ? : ['-1'];
+                $authMap['contract.owner_user_id'] = array('in',$auth_user_ids);
+            } else {
+                $authMapData = [];
+                $authMapData['auth_user_ids'] = $auth_user_ids;
+                $authMapData['user_id'] = $user_id;
+                $authMap = function($query) use ($authMapData){
+                    $query->where('contract.owner_user_id',array('in',$authMapData['auth_user_ids']))
+                        ->whereOr('contract.ro_user_id',array('like','%,'.$authMapData['user_id'].',%'))
+                        ->whereOr('contract.rw_user_id',array('like','%,'.$authMapData['user_id'].',%'));
+                };
+            }
+        }
+
 		//列表展示字段
 		// $indexField = $fieldModel->getIndexField('crm_contract', $user_id);	
 		//人员类型
@@ -176,6 +177,24 @@ class Contract extends Common
         $data['data']['sumMoney'] = $sumMoney ? : 0.00;
         $data['data']['unReceivablesMoney'] = $unReceivablesMoney ? : 0.00;
         return $data;
+    }
+
+
+    /**
+     * 计划任务list
+     * @author Chen
+     * @return    [array]
+     */
+    public function crontabList()
+    {
+        $param['remind_date'] = array('elt',date('Y-m-d',time()));
+        $param['next_time'] = array('egt',date('Y-m-d',time()));
+        $list = Db::name('crm_contract')
+            ->alias('customer')
+            ->where($param)
+            ->select();
+        echo 'contract:'.count($list);
+        return $list;
     }
 
 	//根据IDs获取数组

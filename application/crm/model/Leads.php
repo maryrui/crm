@@ -42,8 +42,7 @@ class Leads extends Common
 		unset($request['scene_id']);
 		unset($request['search']);
 		unset($request['user_id']); 
-		unset($request['is_excel']);	   	
-
+		unset($request['is_excel']);
         $request = $this->fmtRequest( $request );
         $requestMap = $request['map'] ? : [];
 
@@ -87,7 +86,8 @@ class Leads extends Common
 	    }		    
 	    $auth_user_ids = array_merge(array_unique(array_filter($auth_user_ids))) ? : ['-1'];
 	    //负责人
-	    $authMap['leads.owner_user_id'] = ['in',$auth_user_ids];
+        $authMap=[];
+        $authMap['leads.owner_user_id'] = ['in',$auth_user_ids];
 		//列表展示字段
 		// $indexField = $fieldModel->getIndexField('crm_leads', $user_id) ? : array('name');
 		$userField = $fieldModel->getFieldByFormType('crm_leads', 'user'); //人员类型
@@ -145,6 +145,22 @@ class Leads extends Common
         $data['dataCount'] = $dataCount ? : 0;
 
         return $data;
+    }
+
+    /**
+     * 计划任务list
+     * @author Chen
+     * @return    [array]
+     */
+    public function crontabList()
+    {
+        $param['remind_date'] = array('elt',date('Y-m-d',time()));
+        $param['next_time'] = array('egt',date('Y-m-d',time()));
+        $list =  Db::name('crm_leads')
+            ->where($param)
+            ->select();
+        echo 'leads:'.count($list);
+        return $list;
     }
 
 	/**

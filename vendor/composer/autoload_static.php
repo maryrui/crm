@@ -18,6 +18,7 @@ class ComposerStaticInit6583aaa5aa3c0ad17e1bb35631ceae5c
     public static $prefixLengthsPsr4 = array (
         't' => 
         array (
+            'think\\worker\\' => 13,
             'think\\testing\\' => 14,
             'think\\sae\\' => 10,
             'think\\mongo\\' => 12,
@@ -32,6 +33,7 @@ class ComposerStaticInit6583aaa5aa3c0ad17e1bb35631ceae5c
         ),
         'W' => 
         array (
+            'Workerman\\' => 10,
             'Webmozart\\Assert\\' => 17,
         ),
         'S' => 
@@ -52,6 +54,10 @@ class ComposerStaticInit6583aaa5aa3c0ad17e1bb35631ceae5c
     );
 
     public static $prefixDirsPsr4 = array (
+        'think\\worker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-worker/src',
+        ),
         'think\\testing\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-testing/src',
@@ -86,6 +92,11 @@ class ComposerStaticInit6583aaa5aa3c0ad17e1bb35631ceae5c
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+        ),
+        'Workerman\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/workerman',
+            1 => __DIR__ . '/..' . '/workerman/workerman-for-win',
         ),
         'Webmozart\\Assert\\' => 
         array (
@@ -123,6 +134,10 @@ class ComposerStaticInit6583aaa5aa3c0ad17e1bb35631ceae5c
             'Prophecy\\' => 
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
+            ),
+            'PHPExcel' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpoffice/phpexcel/Classes',
             ),
         ),
     );

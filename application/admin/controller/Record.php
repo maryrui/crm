@@ -98,6 +98,22 @@ class Record extends ApiCommon
     }
 
     /**
+     * 变更状态
+     * @param
+     * @return
+     */
+    public function updateStatus()
+    {
+        $recordModel = model('Record');
+        $param = $this->param;
+        $data = $recordModel->updateStatus($param);
+        if (!$data) {
+            return resultArray(['error' => $recordModel->getError()]);
+        }
+        return resultArray(['data' => '状态变更成功']);
+    }
+
+    /**
      * 跟进记录删除
      * @param
      * @return

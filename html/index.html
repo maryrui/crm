@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用户授权</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <style>
+        body {
+            background: #f7f7f7;
+            padding: .32rem;
+        }
+
+        .box {
+            background: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: .45rem;
+        }
+
+        .box img {
+
+            width: 1.6rem;
+            height: 1.6rem;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+        }
+
+        .name {
+            font-size: .32rem;
+            color: #333;
+            font-weight: 600;
+            line-height: .8rem;
+        }
+
+        .box input {
+            border: 0;
+            border-bottom: 1px solid #ccc;
+            width: 100%;
+            padding: .32rem;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .btn {
+            margin-top: 2rem;
+            display: inline-block;
+            width: 100%;
+            height: 1rem;
+            color: #fff;
+            border-radius: 5px;
+            background: #3E84E9;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<!-- 示例 -->
+<div class="box">
+    <p><img src="./img/logo.png" alt=""></p>
+    <p class="name">DRM</p>
+    <input type="text" class="phone" placeholder="请输入手机号">
+</div>
+<button class="btn">提交</button>
+</body>
+<script src="./js/zepto.js"></script>
+<script src="./js/common.js"></script>
+<script src="./js/getUserInfo.js"></script>
+<script>
+    var login = {
+        init: function () {
+            $('.btn').click(function (res) {
+                var phone = $('.phone').val();
+                if (!/^1[0-9]{10}$/.test()) {
+                    alert('请输入正确的手机格式');
+                    return false;
+                }
+                var data = {
+                    mobile: phone,
+                    opendi: ""
+                };
+                $.ajax({
+                    type: 'post',
+                    url: "/index.php/extend/wechat/bind",
+                    data: data,
+                    success: function (res) {
+                        alert(res.data);
+                        return false;
+                    },
+                    error:function () {
+
+                    }
+                })
+            })
+        }
+    };
+    window.onload = function () {
+        login.init();
+        userInfo.init();
+    }
+</script>
+</html>
