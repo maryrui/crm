@@ -16,13 +16,13 @@ class PhwPushData extends Model
     {
         set_time_limit(0);
         try {
-            $this->dbMysql = new \PDO('mysql:host=localhost;dbname=72crm', 'root', 'root');
+            $this->dbMysql = new \PDO('mysql:host=localhost;dbname=72crm;charset=utf8', 'root', 'root');
         } catch (PDOException $e) {
             print $e->getMessage();
         }
 
         try {
-            $this->dbMssql = new \PDO("sqlsrv:server=101.231.197.78;Database=Test", 'test', 'a*1');
+            $this->dbMssql = new \PDO('sqlsrv:server=101.231.197.78;Database=Test;charset=utf8', 'test', 'a*1');
             $sql = <<<EOD
             SELECT TOP 10 
                 c.intCustomerId,
