@@ -226,12 +226,15 @@ class Customer extends Common
      */
     public function crontabList()
     {
-        $param['remind_date'] = array('elt', date('Y-m-d', time()));
-        $param['next_time'] = array('egt', date('Y-m-d', time()));
-        $list = Db::name('crm_customer')
+        $param['customer.remind_date'] = array('elt', time());
+        $param['customer.next_time'] = array('egt', time());
+        $param['record.types'] = "crm_customer";
+        $list = Db::name('crm_customer')->alias('customer')
+            ->join('__ADMIN_RECORD__ record','customer.customer_id=record.types_id')
+            ->join('__ADMIN_USER__ user', 'user.id=record.create_user_id')
+            ->field('customer.name,record.next_time,record.content,record.category,user.openid')
             ->where($param)
             ->select();
-        echo 'customer:' . count($list);
         return $list;
     }
 

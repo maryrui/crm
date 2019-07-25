@@ -184,6 +184,25 @@ class Business extends Common
         return $data;
     }
 
+    /**
+     * 计划任务list
+     * @author Chen
+     * @return    [array]
+     */
+    public function crontabList()
+    {
+        $param['business.remind_date'] = array('elt', time());
+        $param['business.next_time'] = array('egt', time());
+        $param['record.types'] = "crm_business";
+        $list = Db::name('crm_business')->alias('business')
+            ->join('__ADMIN_RECORD__ record','business.business_id=record.types_id')
+            ->join('__ADMIN_USER__ user', 'user.id=record.create_user_id')
+            ->where($param)
+            ->field('business.name,record.next_time,record.content,record.category,user.openid')
+            ->select();
+        return $list;
+    }
+
 	/**
 	 * 创建商机主表信息
 	 * @author Michael_xu

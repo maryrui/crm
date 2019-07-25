@@ -542,7 +542,7 @@ class User extends Common
         if ($flag) {
             return $flag;
         } else {
-            $this->error ='绑定失败，请稍后重试';
+            $this->error ='绑定失败，请联系管理员创建账户!';
             return false;
         }
     }

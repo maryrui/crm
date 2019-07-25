@@ -154,12 +154,15 @@ class Leads extends Common
      */
     public function crontabList()
     {
-        $param['remind_date'] = array('elt',date('Y-m-d',time()));
-        $param['next_time'] = array('egt',date('Y-m-d',time()));
-        $list =  Db::name('crm_leads')
+        $param['leads.remind_date'] = array('elt',time());
+        $param['leads.next_time'] = array('egt',time());
+        $param['record.types'] = "crm_leads";
+        $list =  Db::name('crm_leads')->alias('leads')
+            ->join('__ADMIN_RECORD__ record','leads.leads_id=record.types_id')
+            ->join('__ADMIN_USER__ user', 'user.id=record.create_user_id')
             ->where($param)
+            ->field('leads.name,record.next_time,record.content,record.category,user.openid')
             ->select();
-        echo 'leads:'.count($list);
         return $list;
     }
 
