@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS `5kcrm_crm_complaint`;
+CREATE TABLE `5kcrm_crm_complaint` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `company` varchar(36) NOT NULL COMMENT '公司名称',
+  `name` varchar(36) NOT NULL COMMENT '联系人',
+  `phone` varchar(11) NOT NULL COMMENT '电话',
+  `type` smallint(6) NOT NULL COMMENT '投诉类型',
+  `content` text NOT NULL,
+  `status` smallint(6) NOT NULL DEFAULT '0' COMMENT '状态：1-已处理',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;

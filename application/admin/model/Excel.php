@@ -54,16 +54,16 @@ class Excel extends Common
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);        
 
 		$objProps = $objPHPExcel->getProperties(); // 设置excel文档的属性
-		$objProps->setCreator("5kcrm"); //创建人
-		$objProps->setLastModifiedBy("5kcrm"); //最后修改人
-		$objProps->setTitle("5kcrm"); //标题
-		$objProps->setSubject("5kcrm data"); //题目
-		$objProps->setDescription("5kcrm data"); //描述
-		$objProps->setKeywords("5kcrm data"); //关键字
-		$objProps->setCategory("5kcrm"); //种类
+		$objProps->setCreator("eyemove"); //创建人
+		$objProps->setLastModifiedBy("eyemove"); //最后修改人
+		$objProps->setTitle("eyemove"); //标题
+		$objProps->setSubject("eyemove data"); //题目
+		$objProps->setDescription("eyemove data"); //描述
+		$objProps->setKeywords("eyemove data"); //关键字
+		$objProps->setCategory("eyemove"); //种类
 		$objPHPExcel->setActiveSheetIndex(0); //设置当前的sheet
 		$objActSheet = $objPHPExcel->getActiveSheet();
-		$objActSheet->setTitle('悟空软件导入模板'.date('Y-m-d',time())); //设置sheet的标题	
+		$objActSheet->setTitle('eyemove导入模板'.date('Y-m-d',time())); //设置sheet的标题
 
 		//存储Excel数据源到其他工作薄
 		$objPHPExcel->createSheet();
