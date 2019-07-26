@@ -18,8 +18,6 @@ class Complaint extends Common
      * 我们约定每个模块的数据表都加上相同的前缀，比如CRM模块用crm作为数据表前缀
      */
     protected $name = 'crm_complaint';
-    protected $createTime = 'create_time';
-    protected $updateTime = 'update_time';
     protected $autoWriteTimestamp = true;
 
     public function getDataList($request)
@@ -38,7 +36,9 @@ class Complaint extends Common
     public function createData($param)
     {
         $complaint = new Complaint();
-        $param['create_time'] = time();
+        $param['create_time'] = date('Y-m-d H:i:s',time());
+        $param['update_time'] = date('Y-m-d H:i:s',time());
+        $param['type'] = isset($param['type'])?$param['type']:0;
         $complaint->data($param);
         $data = $complaint->save();
         if (!$data) {

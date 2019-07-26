@@ -382,7 +382,7 @@ class Record extends Common
 		$param['business_ids'] = arrayToString($param['business_ids']);
 		$param['contacts_ids'] = arrayToString($param['contacts_ids']);
 		$remind = $param['remind'] ? $param['remind'] : 7;
-        $param['remind_date'] = strtotime($param['next_time']) - 86400 * $remind;
+        $param['remind_date'] = $param['next_time'] - 86400 * $remind;
 		$fileArr = $param['file_id']; //接收表单附件
 		unset($param['file_id']);
 

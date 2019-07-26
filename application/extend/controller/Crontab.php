@@ -32,7 +32,7 @@ class Crontab
                 $data = array(
                     'keyword1'=>"计划回款",
                     'keyword2'=>$item['return_date'],
-                    'keyword'=>"合同名称：".$item['name']."，回款金额：".$item['money']."，回款方式：".$item['return_type']
+                    'keyword3'=>"合同名称：".$item['name']."，回款金额：".$item['money']."，回款方式：".$item['return_type']
                 );
                 print_r($data);
                 $templateId ="";
@@ -53,7 +53,7 @@ class Crontab
                 $data = array(
                     'keyword1'=>"客户跟进",
                     'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword'=>"客户名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'keyword3'=>"客户名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
                 );
                 print_r($data);
                 $templateId ="";
@@ -73,7 +73,7 @@ class Crontab
                 $data = array(
                     'keyword1'=>"商机跟进",
                     'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword'=>"商机名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'keyword3'=>"商机名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
                 );
                 print_r($data);
                 $templateId ="";
@@ -93,7 +93,7 @@ class Crontab
                 $data = array(
                     'keyword1'=>"线索跟进",
                     'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword'=>"线索名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'keyword3'=>"线索名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
                 );
                 print_r($data);
                 $templateId ="";
@@ -113,7 +113,7 @@ class Crontab
                 $data = array(
                     'keyword1'=>"联系人跟进",
                     'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword'=>"联系人名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'keyword3'=>"联系人名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
                 );
                 print_r($data);
                 $templateId ="";
@@ -133,7 +133,7 @@ class Crontab
                 $data = array(
                     'keyword1'=>"合同跟进",
                     'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword'=>"合同名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'keyword3'=>"合同名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
                 );
                 print_r($data);
                 $templateId ="";
