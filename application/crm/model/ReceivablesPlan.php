@@ -86,14 +86,14 @@ class ReceivablesPlan extends Common
      * @return    [array]
      */
     public function crontabList(){
-        $param['remind_date'] = array('elt',date('Y-m-d',time()));
-        $param['return_date'] = array('egt',date('Y-m-d',time()));
+        $param['plan.remind_date'] = array('elt',date('Y-m-d',time()));
+        $param['plan.return_date'] = array('egt',date('Y-m-d',time()));
         $list = Db::name('crm_receivables_plan')->alias('plan')
             ->join('__CRM_CONTRACT__ contract', 'plan.contract_id=contract.contract_id')
-            ->field('plan.return_date,plan.money,contract.name')
+            ->join('__ADMIN_USER__ user', 'user.id=plan.create_user_id')
+            ->field('plan.return_date,plan.money,contract.name,user.openid')
             ->where($param)
             ->select();
-        echo 'Plan:'.count($list);
         return $list;
     }
 

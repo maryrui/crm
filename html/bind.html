@@ -60,7 +60,7 @@
 <!-- 示例 -->
 <div class="box">
     <p><img src="./img/logo.png" alt=""></p>
-    <p class="name">eyemove</p>
+    <p class="name">Eyemove</p>
     <input type="text" class="phone" placeholder="请输入手机号">
 </div>
 <button class="btn">提交</button>
@@ -73,20 +73,25 @@
         init: function () {
             $('.btn').click(function (res) {
                 var phone = $('.phone').val();
-                if (!/^1[0-9]{10}$/.test()) {
+                /*if (!/^1[0-9]{9}$/.test()) {
                     alert('请输入正确的手机格式');
                     return false;
-                }
+                }*/
+                var user = JSON.parse(localStorage.getItem('user'));
                 var data = {
                     mobile: phone,
-                    opendi: ""
+                    openid:user.openid
                 };
                 $.ajax({
                     type: 'post',
                     url: "/index.php/extend/wechat/bind",
                     data: data,
                     success: function (res) {
-                        alert(res.data);
+                        if(res.code==200){
+                            alert("绑定成功");
+                        }else {
+                            alert(res.error);
+                        }
                         return false;
                     },
                     error:function () {

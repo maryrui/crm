@@ -15,8 +15,10 @@ class Crontab
     {
         $this->receivablesPlan();
         $this->customer();
-        $this->leads();
-        $this->contract();
+//        $this->business();
+//        $this->leads();
+//        $this->contacts();
+//        $this->contract();
     }
 
     public function receivablesPlan()
@@ -27,7 +29,12 @@ class Crontab
         foreach ($list as $item){
             $openId = $item["openid"];
             if($openId){
-                $data = array('name'=>$item['name'],'return_date'=>$item['return_date']);
+                $data = array(
+                    'keyword1'=>"计划回款",
+                    'keyword2'=>$item['return_date'],
+                    'keyword3'=>"合同名称：".$item['name']."，回款金额：".$item['money']."，回款方式：".$item['return_type']
+                );
+                print_r($data);
                 $templateId ="";
                 $message->template($openId,$templateId,$data);
             }
@@ -43,7 +50,32 @@ class Crontab
         foreach ($list as $item){
             $openId = $item["openid"];
             if($openId){
-                $data = array('name'=>$item['name'],'next_time'=>$item['next_time']);
+                $data = array(
+                    'keyword1'=>"客户跟进",
+                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
+                    'keyword3'=>"客户名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                );
+                print_r($data);
+                $templateId ="";
+                $message->template($openId,$templateId,$data);
+            }
+        }
+    }
+
+    public function business()
+    {
+        $model = new \app\crm\model\Business();
+        $list=$model->crontabList();
+        $message = new Message();
+        foreach ($list as $item){
+            $openId = $item["openid"];
+            if($openId){
+                $data = array(
+                    'keyword1'=>"商机跟进",
+                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
+                    'keyword3'=>"商机名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                );
+                print_r($data);
                 $templateId ="";
                 $message->template($openId,$templateId,$data);
             }
@@ -58,7 +90,32 @@ class Crontab
         foreach ($list as $item){
             $openId = $item["openid"];
             if($openId){
-                $data = array('name'=>$item['name'],'next_time'=>$item['next_time']);
+                $data = array(
+                    'keyword1'=>"线索跟进",
+                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
+                    'keyword3'=>"线索名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                );
+                print_r($data);
+                $templateId ="";
+                $message->template($openId,$templateId,$data);
+            }
+        }
+    }
+
+    public function contacts()
+    {
+        $model = new \app\crm\model\Contacts();
+        $list=$model->crontabList();
+        $message = new Message();
+        foreach ($list as $item){
+            $openId = $item["openid"];
+            if($openId){
+                $data = array(
+                    'keyword1'=>"联系人跟进",
+                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
+                    'keyword3'=>"联系人名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                );
+                print_r($data);
                 $templateId ="";
                 $message->template($openId,$templateId,$data);
             }
@@ -73,7 +130,12 @@ class Crontab
         foreach ($list as $item){
             $openId = $item["openid"];
             if($openId){
-                $data = array('name'=>$item['name'],'next_time'=>$item['next_time']);
+                $data = array(
+                    'keyword1'=>"合同跟进",
+                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
+                    'keyword3'=>"合同名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                );
+                print_r($data);
                 $templateId ="";
                 $message->template($openId,$templateId,$data);
             }

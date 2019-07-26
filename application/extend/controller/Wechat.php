@@ -12,7 +12,7 @@ use think\Controller;
 use \app\crm\model\Complaint;
 use \app\admin\model\User;
 use think\Request;
-use wechat\Base as WechatBase;
+use wechat\Web;
 class Wechat extends Controller
 {
     /**
@@ -56,11 +56,17 @@ class Wechat extends Controller
         }
     }
 
-    public function webAccessToken()
+    public function getUserInfo()
     {
         $param = Request::instance()->param();
         $code = $param['code'];
-        $data =WechatBase::getWebToken($code);
-        return resultArray(['data'=>$data]);
+        $weChat = new Web();
+        $data =$weChat->getUser($code);
+        if($data){
+            return resultArray(['data'=>$data]);
+        }else{
+            return resultArray(['error'=>$data['errmsg']]);
+        }
+
     }
 }
