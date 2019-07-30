@@ -44,7 +44,6 @@ class Complaint extends ApiCommon
         $complaintModel = model("complaint");
         $param = $this->param;
         $data = $complaintModel->getDataList($param);
-
         return resultArray(['data' => $data]);
     }
 

@@ -106,7 +106,7 @@ class Message extends ApiCommon
         switch ($type) {
             case '1' : $param['next_time'] = ['between',array($todayTime[0],$todayTime[1])]; break;
             case '2' : $param['next_time'] = ['between',array(1,time())]; break;
-            case '3' : $param['next_time'] = ['between',array($todayTime[0],$todayTime[1])]; $param['follow'] = ['eq','已联系']; break;
+            case '3' : $param['next_time'] = ['between',array($todayTime[0],$todayTime[1])]; break;
         }
         $data = $customerModel->getDataList($param);
         if ($types == 'list') {
