@@ -137,7 +137,7 @@ class Message extends ApiCommon
             $param['owner_user_id'] = array('in',getSubUserId(false));
         }        
         switch ($type) {
-            case '1' : $param['follow'] = ['neq','已跟进']; break;
+            case '1' : $param['follow'] = ['NULL']; break;
             case '2' : $param['follow'] = ['eq','已跟进']; break;
         }
         $data = $leadsModel->getDataList($param);
