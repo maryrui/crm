@@ -142,10 +142,20 @@ class Task extends Common
     //根据任务ID 获取操作记录
 	public function getTaskLogList($param)
 	{
+	    $subTasks = Db::name("Task")->where('pid = '.$param['task_id'])->field('task_id')->select();
+	    $subIds = [];
+	    if($subTasks){
+	        foreach ($subTasks as $task){
+                $subIds[]=$task['task_id'];
+            }
+	        $temp = ','.implode(',',$subIds).',';
+            $param['task_id'] .= substr($temp,0,strlen($temp)-1);
+        }
+
 		$list = Db::name('WorkTaskLog')->alias('l')
 				->join('AdminUser u','u.id = l.user_id','LEFT')
 				->field('l.*,u.realname,u.thumb_img')
-				->where('l.task_id ='.$param['task_id'])
+				->where('l.task_id in('.$param['task_id'].')')
 				->order('l.log_id desc')
 				->select();
 		foreach ($list as $key => $value) {
@@ -246,18 +256,14 @@ class Task extends Common
 			$rdata['create_time'] = time();
 			$rdata['task_id'] = $task_id;
 			Db::name('TaskRelation')->insert($rdata);
-			
-			if(!$param['pid']){
-				$taskLog = new LogModel();// model('TaskLog'); 
-				$datalog['name'] = $param['name'];
-				$datalog['user_id'] = $param['create_user_id']; 
-				$datalog['task_id'] = $task_id;//添加任务ID
-				$datalog['work_id'] = $param['work_id']?:'';//添加任务ID
-				
-				$ret = $taskLog->newTaskLog($datalog);
-				//操作日志
-				actionLog($task_id,'','','新建了任务');
-			}
+
+            $log['user_id'] = $param['create_user_id'];
+            $log['content'] = '新建了任务:'.$param['name'];
+            $log['create_time'] = time();
+            $log['task_id'] = $task_id;
+            Db::name('WorkTaskLog')->insert($log);
+            //操作日志
+            actionLog($task_id,'','','新建了任务:'.$param['name']);
 			return $task_id;
 		} else {
 			$this->error = '添加失败';
@@ -456,16 +462,14 @@ class Task extends Common
 			$temp['hidden_time'] = time();
 			$flag = $this->where($map)->update($temp);
 			if ($flag) {
-				if(!$taskInfo['pid']){
-					// 添加删除日志
-					/* $logModel = new LogModel();
-					$data = array();
-					$data['type'] = 3;
-					$data['create_user_id'] = $param['create_user_id'];
-					$data['task_id'] = $param['task_id'];
-					$a = $logModel->workLogAdd($data); */
-					actionLog( $taskInfo['task_id'],$taskInfo['owner_user_id'],$taskInfo['structure_ids'],'删除了任务');
-				}
+                // 添加删除日志
+                $log['user_id'] = $param['create_user_id'];
+                $log['content'] = '删除了任务:'.$taskInfo['name'];
+                $log['create_time'] = time();
+                $log['task_id'] = $param['task_id'];
+                Db::name('WorkTaskLog')->insert($log);
+
+                actionLog( $taskInfo['task_id'],$taskInfo['owner_user_id'],$taskInfo['structure_ids'],'删除了任务');
 				return true;
 			} else {
 				$this->error = '删除失败';

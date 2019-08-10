@@ -45,6 +45,7 @@ class Event extends Common
 		$CustomerModel = new \app\crm\model\Customer();
 
 		$user_id = $param['user_id'];
+		$structure_id = $param['structure_id'];
 		if ($param['start_time'] && $param['end_time']) {
 			$start_time = $param['start_time'];
 			$end_time = $param['end_time'];
@@ -52,8 +53,9 @@ class Event extends Common
 			$start_time = mktime(0,0,0,date('m'),1,date('Y'));
 			$end_time = mktime(23,59,59,date('m'),date('t'),date('Y'));
 		}
-		$where = '( ( start_time BETWEEN '.$start_time.' AND '.$end_time.' ) AND ( create_user_id = '.$user_id.' or owner_user_ids like "%,'.$user_id.',%" ) ) OR ( ( end_time BETWEEN '.$start_time.' AND '.$end_time.' ) AND  ( create_user_id = '.$user_id.' or owner_user_ids like "%,'.$user_id.',%" ) ) OR ( start_time < '.$start_time.' AND end_time > '.$end_time.' AND ( create_user_id = '.$user_id.' or owner_user_ids like "%,'.$user_id.',%" ) )';
-		$event_date = Db::name('OaEvent')->where($where)->select();  
+		$where = '( ( start_time BETWEEN '.$start_time.' AND '.$end_time.' ) AND ( create_user_id = '.$user_id.' or owner_user_ids like "%,'.$user_id.',%" or owner_structure_ids like "%,'.$structure_id.',%" ) ) OR ( ( end_time BETWEEN '.$start_time.' AND '.$end_time.' ) AND  ( create_user_id = '.$user_id.' or owner_user_ids like "%,'.$user_id.',%" or owner_structure_ids like "%,'.$structure_id.',%" ) ) OR ( start_time < '.$start_time.' AND end_time > '.$end_time.' AND ( create_user_id = '.$user_id.' or owner_user_ids like "%,'.$user_id.',%" or owner_structure_ids like "%,'.$structure_id.',%" ) )';
+
+		$event_date = Db::name('OaEvent')->where($where)->select();
 	
 		foreach ($event_date as $k=>$v) {
 			$event_date[$k]['create_user_info'] = $userModel->getDataById($v['create_user_id']);
@@ -107,11 +109,19 @@ class Event extends Common
 		$param['start_time'] = $param['start_time'] ? : $today_time[0];
 		$param['end_time'] = $param['end_time'] ?$param['end_time'] : $today_time[1];
 		$param['create_time'] = time();
+
+
 		if (count($param['owner_user_ids'])) {
 			$param['owner_user_ids'] = ','.implode(',',$param['owner_user_ids']).','; //参与人
-		} else {
-			$param['owner_user_ids'] = '';
-		}
+		}else{
+            $param['owner_user_ids'] = '';
+        }
+
+        if (count($param['owner_structure_ids'])) {
+            $param['owner_structure_ids'] = ','.implode(',',$param['owner_structure_ids']).','; //参与组织
+        }else{
+            $param['owner_structure_ids'] = '';
+        }
 		
 		$rdata['customer_ids'] = count($param['customer_ids']) ? arrayToString($param['customer_ids']) : ''; 
 		$rdata['contacts_ids'] = count($param['contacts_ids']) ? arrayToString($param['contacts_ids']) : ''; 
