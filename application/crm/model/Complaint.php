@@ -41,7 +41,6 @@ class Complaint extends Common
         $complaint = new Complaint();
         $param['create_time'] = time();
         $param['update_time'] = time();
-        $param['type'] = isset($param['type'])?$param['type']:0;
         $complaint->data($param);
         $data = $complaint->save();
         if (!$data) {
@@ -71,4 +70,26 @@ class Complaint extends Common
         }
     }
 
+
+    public function getComplaintTypeList(){
+        $list = db('admin_complaint_type')->select();
+        return $list;
+    }
+
+    public function saveComplaintType($data){
+        $types = [];
+        foreach ($data as $k=>$v) {
+            $types[$k]['type'] = $v['type'];
+            $types[$k]['depart'] = $v['depart'];
+            $types[$k]['create_time'] = time();
+        }
+
+        try {
+            db('admin_complaint_type')->delete();
+            db('admin_complaint_type')->insertAll($types);
+            return true;
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
 }

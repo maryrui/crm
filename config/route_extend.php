@@ -16,6 +16,7 @@ return [
 
     // 【客诉】
     'extend/wechat/complaint/save' => ['extend/wechat/complaintSave', ['method' => 'POST']],
+    'extend/wechat/complaint/types' => ['extend/wechat/complaintTypes', ['method' => 'get']],
     // 【绑定微信】
     'extend/wechat/bind' => ['extend/wechat/bindWecaht', ['method' => 'POST']],
     'extend/wechat/user' => ['extend/wechat/getUserInfo', ['method' => 'POST']],

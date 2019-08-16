@@ -33,6 +33,13 @@ class Wechat extends Controller
         }
     }
 
+    public function complaintTypes()
+    {
+        $model = new \app\crm\model\Complaint();
+        $list = $model->getComplaintTypeList();
+        return resultArray(['data' => $list]);
+    }
+
     /**
      * auth Chen
      * 绑定用户微信的openid

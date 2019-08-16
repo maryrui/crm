@@ -293,5 +293,21 @@ class ExamineFlow extends ApiCommon
         $examineRecordModel = model('ExamineRecord');
         $list = $examineRecordModel->getDataList($param) ? : [];
         return resultArray(['data' => $list]);
-    }        
+    }
+
+    public function complaintTypes(){
+        $model = new \app\crm\model\Complaint();
+        $list = $model->getComplaintTypeList();
+        return resultArray(['data' => $list]);
+    }
+
+    public function complaintTypeSave(){
+        $model = new \app\crm\model\Complaint();
+        $res = $model->saveComplaintType();
+        if (!$res) {
+            return resultArray(['error' =>"数据提交失败"]);
+        }
+        return resultArray(['data' => "数据提交成功"]);
+    }
+
 }
