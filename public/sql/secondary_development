@@ -11,3 +11,11 @@ CREATE TABLE `5kcrm_crm_complaint` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `5kcrm_oa_event`
+ADD COLUMN `owner_structure_ids`  varchar(255) NOT NULL DEFAULT '' COMMENT '参与部门' AFTER `remindtype`;
+
+-- 回款计划添加发票字段
+ALTER TABLE `5kcrm_crm_receivables_plan`
+ADD COLUMN `invoice_code`  varchar(255) NULL COMMENT '发票编号' AFTER `file`;
