@@ -692,18 +692,6 @@ class Customer extends ApiCommon
             $create_time = array('between',array($param['start_time'],$param['end_time']));
         }
 
-        $map_user_ids = [];
-        if ($param['user_id']) {
-            $map_user_ids = array($param['user_id']);
-        } else {
-            if ($param['structure_id']) {
-                $map_user_ids = $userModel->getSubUserByStr($param['structure_id'], 2);
-            }
-        }
-        $perUserIds = $userModel->getUserByPer('crm', 'contract', 'read'); //权限范围内userIds
-        $userIds = $map_user_ids ? array_intersect($map_user_ids, $perUserIds) : $perUserIds; //数组交集
-        $whereArr['owner_user_id'] = array('in',$userIds);
-        $whereArr['check_status'] = array('eq',2);
         $whereArr['create_time'] = $create_time;
 
         $data = $model->complaintSummary($whereArr);
