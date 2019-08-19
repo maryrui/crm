@@ -493,7 +493,7 @@ class Customer extends Common
 
     function complaintSummary($whereArr){
         $summary = Db::name("crm_complaint")->where($whereArr)->count();
-        $list = Db::name("crm_complaint")->field(['type','count(id)'=>'count'])->group('type');
+        $list = Db::name("crm_complaint")->field(['type','count(id)'=>'count'])->group('type')->select();
         foreach ($list as $i=>$v){
             $list[$i]['rate'] = sprintf("%.2f",$v['count'] / $summary);
         }

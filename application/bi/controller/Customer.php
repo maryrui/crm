@@ -680,7 +680,6 @@ class Customer extends ApiCommon
 
 
     public function complaint(){
-        $userModel = new \app\admin\model\User();
         $model = new \app\bi\model\Customer();
         $param = $this->param;
         $create_time = [];
