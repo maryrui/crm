@@ -18,4 +18,8 @@ ADD COLUMN `owner_structure_ids`  varchar(255) NOT NULL DEFAULT '' COMMENT '参�
 
 -- 回款计划添加发票字段
 ALTER TABLE `5kcrm_crm_receivables_plan`
-ADD COLUMN `invoice_code`  varchar(255) NULL COMMENT '发票编号' AFTER `file`;
+ADD COLUMN `invoice_code` varchar(255) NULL COMMENT '发票编号' AFTER `file`;
+
+-- 回款添加发票字段
+ALTER TABLE `5kcrm_crm_receivables`
+ADD COLUMN `invoice_code` varchar(255) NULL COMMENT '发票编号' AFTER `update_time`;
