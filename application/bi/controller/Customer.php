@@ -677,4 +677,36 @@ class Customer extends ApiCommon
         }
         return resultArray(['data' => $datas]);
     }
+
+
+    public function complaint(){
+        $userModel = new \app\admin\model\User();
+        $model = new \app\bi\model\Customer();
+        $param = $this->param;
+        $create_time = [];
+        if(isset($param['type'])){
+            $paramTime = getTimeByType($param['type']);
+            $create_time = array('between',array($paramTime[0],$paramTime[1]));
+        }
+        if(isset($param['start_time']) && isset($param['end_time']) ){
+            $create_time = array('between',array($param['start_time'],$param['end_time']));
+        }
+
+        $map_user_ids = [];
+        if ($param['user_id']) {
+            $map_user_ids = array($param['user_id']);
+        } else {
+            if ($param['structure_id']) {
+                $map_user_ids = $userModel->getSubUserByStr($param['structure_id'], 2);
+            }
+        }
+        $perUserIds = $userModel->getUserByPer('crm', 'contract', 'read'); //权限范围内userIds
+        $userIds = $map_user_ids ? array_intersect($map_user_ids, $perUserIds) : $perUserIds; //数组交集
+        $whereArr['owner_user_id'] = array('in',$userIds);
+        $whereArr['check_status'] = array('eq',2);
+        $whereArr['create_time'] = $create_time;
+
+        $data = $model->complaintSummary($whereArr);
+        return resultArray(['data' => $data]);
+    }
 }

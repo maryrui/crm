@@ -52,7 +52,9 @@ return [
 	// 【商业智能】合同数量分析/金额分析/回款金额分析
 	'bi/contract/analysis' => ['bi/contract/analysis', ['method' => 'POST']],
 	// 【商业智能】合同汇总表
-	'bi/contract/summary' => ['bi/contract/summary', ['method' => 'POST']],	
+	'bi/contract/summary' => ['bi/contract/summary', ['method' => 'POST']],
+    // 【商业智能】合同到账明细
+    'bi/contract/accounts' => ['bi/contract/accounts', ['method' => 'POST']],
 	// 【商业智能】员工客户总量分析
 	'bi/customer/total' => ['bi/customer/total', ['method' => 'POST']],
 	// 【商业智能】员工客户跟进次数分析
@@ -78,7 +80,9 @@ return [
 	// 【商业智能】客户所在城市分析
 	'bi/customer/addressAnalyse' => ['bi/customer/addressAnalyse', ['method' => 'POST']],
 	// 【商业智能】客户行业/级别/来源分析
-	'bi/customer/portrait' => ['bi/customer/portrait', ['method' => 'POST']],	
+	'bi/customer/portrait' => ['bi/customer/portrait', ['method' => 'POST']],
+    // 【商业智能】客户投诉
+	'bi/customer/complaint' => ['bi/customer/complaint', ['method' => 'POST']],
 
 	// MISS路由
 	'__miss__'  => 'admin/base/miss',
