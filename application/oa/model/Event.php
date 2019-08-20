@@ -61,7 +61,7 @@ class Event extends Common
 		foreach ($event_date as $k=>$v) {
 			$event_date[$k]['create_user_info'] = $userModel->getDataById($v['create_user_id']);
 			$event_date[$k]['ownerList'] = $userModel->getDataByStr($v['owner_user_ids']) ? : [];
-			$event_date[$k]['structureList'] = $structureModel->getDataByStr($v['owner_structure_ids']) ? : [];
+			$event_date[$k]['structureList'] = $structureModel->getListByStr($v['owner_structure_ids']) ? : [];
 			$relation = Db::name('OaEventRelation')->where('event_id ='.$v['event_id'])->find();
 			$event_date[$k]['businessList'] = $relation['business_ids'] ? $BusinessModel->getDataByStr($relation['business_ids']) : []; //商机
 			$event_date[$k]['contactsList'] = $relation['contacts_ids'] ? $ContactsModel->getDataByStr($relation['contacts_ids']) : []; //联系人
