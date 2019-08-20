@@ -23,3 +23,5 @@ ADD COLUMN `invoice_code` varchar(255) NULL COMMENT '发票编号' AFTER `file`;
 -- 回款添加发票字段
 ALTER TABLE `5kcrm_crm_receivables`
 ADD COLUMN `invoice_code` varchar(255) NULL COMMENT '发票编号' AFTER `update_time`;
+
+-- admin_field 表的数据需要拷备到生产库，调整了字段循序，新增了字段
