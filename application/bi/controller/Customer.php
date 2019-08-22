@@ -683,8 +683,9 @@ class Customer extends ApiCommon
         $model = new \app\bi\model\Customer();
         $param = $this->param;
         $create_time = [];
+        $timeType = isset($param['type']) ? $param['type']:'today';
         if(isset($param['type'])){
-            $paramTime = getTimeByType($param['type']);
+            $paramTime = getTimeByType($timeType);
             $create_time = array('between',array($paramTime[0],$paramTime[1]));
         }
         if(isset($param['start_time']) && isset($param['end_time']) ){
