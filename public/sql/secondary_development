@@ -7,10 +7,13 @@ CREATE TABLE `5kcrm_crm_complaint` (
   `type` smallint(6) NOT NULL COMMENT '投诉类型',
   `content` text NOT NULL,
   `status` smallint(6) NOT NULL DEFAULT '0' COMMENT '状态：1-已处理',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
+  `flow_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `check_user_id` varchar(255) NOT NULL,
+  `flow_user_id` varchar(255) NOT NULL,
+  `create_time` datetime NOT NULL
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `5kcrm_oa_event`
