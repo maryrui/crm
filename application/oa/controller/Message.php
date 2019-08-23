@@ -102,6 +102,7 @@ class Message extends ApiCommon
             $examineNum = db('oa_examine')->where($map_str)->where($examineWhere)->count();
             $data['examineNum'] = $examineNum ? : 0;
         }
+        $data['totalNum'] = $eventNum + $taskNum + $announcementNum + $logNum + $examineNum;
         return resultArray(['data'=>$data]);	
     }          
 }

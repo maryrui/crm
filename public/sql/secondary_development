@@ -23,8 +23,14 @@ ADD COLUMN `owner_structure_ids`  varchar(255) NOT NULL DEFAULT '' COMMENT '参�
 ALTER TABLE `5kcrm_crm_receivables_plan`
 ADD COLUMN `invoice_code` varchar(255) NULL COMMENT '发票编号' AFTER `file`;
 
+ALTER TABLE `5kcrm_crm_receivables_plan`
+ADD COLUMN `name`  varchar(255) NULL COMMENT '订单名称' AFTER `invoice_code`;
+
 -- 回款添加发票字段
 ALTER TABLE `5kcrm_crm_receivables`
 ADD COLUMN `invoice_code` varchar(255) NULL COMMENT '发票编号' AFTER `update_time`;
+
+ALTER TABLE `5kcrm_crm_receivables`
+ADD COLUMN `contract_name` varchar(255) NULL AFTER `invoice_code`;
 
 -- admin_field 表的数据需要拷备到生产库，调整了字段循序，新增了字段
