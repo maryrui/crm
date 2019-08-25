@@ -42,7 +42,10 @@ class Complaint extends ApiCommon
     function index()
     {
         $complaintModel = model("complaint");
+        $userInfo = $this->userInfo;
         $param = $this->param;
+        $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
+        unset($param['status']);
         $data = $complaintModel->getDataList($param);
         return resultArray(['data' => $data]);
     }
@@ -107,5 +110,85 @@ class Complaint extends ApiCommon
             return resultArray(['error' => $complaintModel->getError()]);
         }
         return resultArray(['data' => $data]);
+    }
+
+    public function check(){
+        $param = $this->param;
+        $userInfo = $this->userInfo;
+        $user_id = $userInfo['id'];
+        $complaintModel = model('Complaint');
+        $examineStepModel = new \app\admin\model\ExamineStep();
+        $examineRecordModel = new \app\admin\model\ExamineRecord();
+        $examineFlowModel = new \app\admin\model\ExamineFlow();
+
+        $complaintData = [];
+        $complaintData['update_time'] = time();
+        $complaintData['check_status'] = 1; //0待审核，1审核通中，2审核通过，3审核未通过
+        //权限判断
+        if (!$examineStepModel->checkExamine($user_id, 'crm_complaint', $param['id'])) {
+            return resultArray(['error' => $examineStepModel->getError()]);
+        };
+
+        $dataInfo = $complaintModel->getDataById($param['id']);
+        $flowInfo = $examineFlowModel->getDataById($dataInfo['flow_id']);
+        $is_end = 0; // 1审批结束
+
+        $status = $param['status'] ? 1 : 0; //1通过，0驳回
+
+        $checkData = [];
+        $checkData['check_user_id'] = $user_id;
+        $checkData['types'] = 'crm_complaint';
+        $checkData['types_id'] = $param['id'];
+        $checkData['check_time'] = time();
+        $checkData['content'] = $param['content'];
+        $checkData['flow_id'] = $dataInfo['flow_id'];
+        $checkData['order_id'] = $dataInfo['order_id'] ? : 1;
+        $checkData['status'] = $status;
+
+        if ($status == 1) {
+            if ($flowInfo['config'] == 1) {
+                //固定流程
+                //获取下一审批信息
+                $nextStepData = $examineStepModel->nextStepUser($dataInfo['owner_user_id'], $dataInfo['flow_id'], 'crm_complaint', $param['id'], $dataInfo['order_id'], $user_id);
+                $next_user_ids = $nextStepData['next_user_ids'] ? : [];
+                //
+                $complaintData['order_id'] = $nextStepData['order_id'] ? : '';
+                if (!$next_user_ids) {
+                    $is_end = 1;
+                    //审批结束
+                    $checkData['check_status'] = !empty($status) ? 2 : 3;
+                    $complaintData['check_user_id'] = '';
+                } else {
+                    //修改主体相关审批信息
+                    $complaintData['check_user_id'] = arrayToString($next_user_ids);
+                }
+            } else {
+                //自选流程
+                $is_end = $param['is_end'] ? 1 : '';
+                $check_user_id = $param['check_user_id'] ? : '';
+                if ($is_end !== 1 && empty($check_user_id)) {
+                    return resultArray(['error' => '请选择下一审批人']);
+                }
+                $complaintData['check_user_id'] = arrayToString($param['check_user_id']);
+            }
+            if ($is_end == 1) {
+                $checkData['check_status'] = !empty($status) ? 2 : 3;
+                $complaintData['check_user_id'] = '';
+                $complaintData['check_status'] = 2;
+            }
+        }else{
+            //审批驳回
+            $is_end = 1;
+            $complaintData['check_status'] = 3;
+        }
+        //已审批人ID
+        $resUpdate = db('crm_contract')->where(['contract_id' => $param['id']])->update($complaintData);
+        if ($resUpdate) {
+            //审批记录
+            $resRecord = $examineRecordModel->createData($checkData);
+            return resultArray(['data' => '审批成功']);
+        } else {
+            return resultArray(['error' => '审批失败，请重试！']);
+        }
     }
 }

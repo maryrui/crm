@@ -18,16 +18,11 @@ class Complaint extends Common
      * 我们约定每个模块的数据表都加上相同的前缀，比如CRM模块用crm作为数据表前缀
      */
     protected $name = 'crm_complaint';
-//    protected $createTime = 'create_time';
-//    protected $updateTime = 'update_time';
     protected $autoWriteTimestamp = true;
 
     public function getDataList($request)
     {
-        $param = array();
-        if($request['status']>=0){
-            $param['status'] = $request['status'];
-        }
+        $param['check_user_id'] = $request['check_user_id'];
         $list =$this->where($param)->limit(($request['page']-1)*$request['limit'], $request['limit'])
             ->order("create_time desc")->select();
         $dataCount = $this->where($param)->count();
@@ -40,7 +35,6 @@ class Complaint extends Common
     {
         $complaint = new Complaint();
         $param['create_time'] = time();
-        $param['update_time'] = time();
         $complaint->data($param);
         $data = $complaint->save();
         if (!$data) {
@@ -80,12 +74,12 @@ class Complaint extends Common
         $types = [];
         foreach ($data as $k=>$v) {
             $types[$k]['type'] = $v['type'];
-            $types[$k]['depart'] = $v['depart'];
+            $types[$k]['depart'] = $v['depart']? arrayToString($v['depart']) : '';
             $types[$k]['create_time'] = time();
         }
 
         try {
-            db('admin_complaint_type')->delete();
+            db('admin_complaint_type')->where('1=1')->delete();
             db('admin_complaint_type')->insertAll($types);
             return true;
         }catch(\Exception $e) {

@@ -209,7 +209,7 @@ class ExamineFlow extends ApiCommon
         $flow_id = $param['flow_id'];
         $types = $param['types'];
         $types_id = $param['types_id'];
-        $typesArr = ['crm_contract','crm_receivables','oa_examine'];
+        $typesArr = ['crm_contract','crm_complaint','crm_receivables','oa_examine'];
         if (!$types || !in_array($types,$typesArr)) {
             return resultArray(['error' => '参数错误']);
         }
@@ -224,9 +224,12 @@ class ExamineFlow extends ApiCommon
             if ($types == 'oa_examine') {
                 $user_id = $typesInfo['dataInfo']['create_user_id'];
             }
-            if (!$user_id) {
-                return resultArray(['error' => '参数错误']);    
-            }      
+            if($types !== 'crm_complaint'){
+                if (!$user_id) {
+                    return resultArray(['error' => '参数错误']);
+                }
+            }
+
         } else {
             $user_id = $check_user_id;
             //获取符合条件的审批流
@@ -302,8 +305,10 @@ class ExamineFlow extends ApiCommon
     }
 
     public function complaintTypeSave(){
+        $a = $this->request;
+        $param = $this->param;
         $model = new \app\crm\model\Complaint();
-        $res = $model->saveComplaintType();
+        $res = $model->saveComplaintType($param);
         if (!$res) {
             return resultArray(['error' =>"数据提交失败"]);
         }

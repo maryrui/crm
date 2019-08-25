@@ -179,6 +179,12 @@ class ExamineStep extends Common
     		case 'oa_examine' : $dataInfo = db('oa_examine')->where(['examine_id' => intval($types_id)])->field('create_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
             case 'crm_contract' : $dataInfo = db('crm_contract')->where(['contract_id' => intval($types_id)])->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
             case 'crm_receivables' : $dataInfo = db('crm_receivables')->where(['receivables_id' => intval($types_id)])->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
+            case 'crm_complaint' :
+                $dataInfo = db('crm_complaint')
+                    ->where(['id' => intval($types_id)])
+                    ->field('create_user_id,check_user_id,flow_id,order_id,check_status,update_time')
+                    ->find();
+                break;
     	}
         $stepInfo = [];
         if ($dataInfo['flow_id']) {
