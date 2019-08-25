@@ -77,7 +77,6 @@ class Complaint extends Common
             $types[$k]['depart'] = $v['depart']? arrayToString($v['depart']) : '';
             $types[$k]['create_time'] = time();
         }
-
         try {
             db('admin_complaint_type')->where('1=1')->delete();
             db('admin_complaint_type')->insertAll($types);
@@ -85,5 +84,9 @@ class Complaint extends Common
         }catch(\Exception $e) {
             return false;
         }
+    }
+
+    public function getComplaintType($type){
+        return db('admin_complaint_type')->where(['type'=>$type])->find();
     }
 }

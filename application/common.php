@@ -1282,9 +1282,13 @@ function nextCheckData($user_id, $flow_id, $types, $types_id, $order_id, $check_
         $stepInfo = $examineStepModel->getStepByOrder($flow_id, $next_order_id); //审批步骤
         $next_step_user_ids = $examineStepModel->getUserByStep($stepInfo['step_id'], $user_id);
         $next_user_ids = stringToArray($next_step_user_ids);
+        if($types === 'crm_complaint' && $stepInfo['status'] === 9){
+            $next_user_ids = $examineStepModel->getComplaintStepUser($types_id, $next_user_ids);
+        }
     } else {
         $next_user_ids = array_unique(array_filter($sub_user_ids));
     }
+
     if (!$next_user_ids && $next_order_id <= $max_order_id) {
         $newRes = [];
         $newRes = nextCheckData($user_id, $flow_id, $types, $types_id, $next_order_id, $check_user_id);

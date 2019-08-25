@@ -24,7 +24,7 @@ class Complaint extends ApiCommon
     {
         $action = [
             'permission'=>[''],
-            'allow'=>['index','read','update']
+            'allow'=>['index','read','update','check']
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
@@ -149,7 +149,7 @@ class Complaint extends ApiCommon
             if ($flowInfo['config'] == 1) {
                 //固定流程
                 //获取下一审批信息
-                $nextStepData = $examineStepModel->nextStepUser($dataInfo['owner_user_id'], $dataInfo['flow_id'], 'crm_complaint', $param['id'], $dataInfo['order_id'], $user_id);
+                $nextStepData = $examineStepModel->nextStepUser(0, $dataInfo['flow_id'], 'crm_complaint', $param['id'], $dataInfo['order_id'], $user_id);
                 $next_user_ids = $nextStepData['next_user_ids'] ? : [];
                 //
                 $complaintData['order_id'] = $nextStepData['order_id'] ? : '';
@@ -182,7 +182,7 @@ class Complaint extends ApiCommon
             $complaintData['check_status'] = 3;
         }
         //已审批人ID
-        $resUpdate = db('crm_contract')->where(['contract_id' => $param['id']])->update($complaintData);
+        $resUpdate = db('crm_complaint')->where(['id' => $param['id']])->update($complaintData);
         if ($resUpdate) {
             //审批记录
             $resRecord = $examineRecordModel->createData($checkData);

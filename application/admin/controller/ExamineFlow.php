@@ -305,7 +305,6 @@ class ExamineFlow extends ApiCommon
     }
 
     public function complaintTypeSave(){
-        $a = $this->request;
         $param = $this->param;
         $model = new \app\crm\model\Complaint();
         $res = $model->saveComplaintType($param);
