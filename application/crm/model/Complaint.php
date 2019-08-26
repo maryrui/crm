@@ -22,10 +22,20 @@ class Complaint extends Common
 
     public function getDataList($request)
     {
-        $param['check_user_id'] = $request['check_user_id'];
-        $list =$this->where($param)->limit(($request['page']-1)*$request['limit'], $request['limit'])
-            ->order("create_time desc")->select();
-        $dataCount = $this->where($param)->count();
+        $params['examine.user_ids'] = $request['user_ids'];
+        $params['examine.structure_ids'] = $request['structure_ids'];
+
+        $list =$this
+            ->alias('complaint')
+            ->join('admin_examine_flow examine','complaint.flow_id=examine.flow_id')
+            ->whereOr($params)
+            ->limit(($request['page']-1)*$request['limit'], $request['limit'])
+            ->order("complaint.create_time desc")->select();
+        $dataCount = $this
+            ->alias('complaint')
+            ->join('admin_examine_flow examine','complaint.flow_id=examine.flow_id')
+            ->whereOr($params)
+            ->count();
         $data['list'] = $list;
         $data['dataCount'] = $dataCount ? : 0;
         return $data;

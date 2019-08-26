@@ -44,8 +44,10 @@ class Complaint extends ApiCommon
         $complaintModel = model("complaint");
         $userInfo = $this->userInfo;
         $param = $this->param;
-        $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
         unset($param['status']);
+        $param['user_ids'] = ['like','%,'.$userInfo['id'].',%'];
+        $param['structure_ids'] = ['like','%,'.$userInfo['structure_id'].',%'];
+
         $data = $complaintModel->getDataList($param);
         return resultArray(['data' => $data]);
     }
