@@ -25,13 +25,15 @@ class Complaint extends Common
         $params['examine.user_ids'] = $request['user_ids'];
         $params['examine.structure_ids'] = $request['structure_ids'];
 
-        $list =$this
+        $list =db('crm_complaint')
             ->alias('complaint')
-            ->join('admin_examine_flow examine','complaint.flow_id=examine.flow_id')
+            ->join('__ADMIN_EXAMINE_FLOW__ examine','complaint.flow_id=examine.flow_id')
             ->whereOr($params)
-            ->limit(($request['page']-1)*$request['limit'], $request['limit'])
-            ->order("complaint.create_time desc")->select();
-        $dataCount = $this
+            ->field('complaint.*')
+            ->order("complaint.create_time desc")
+            ->select();
+        Db::table('crm_complaint')->getLastSql();
+        $dataCount =db('crm_complaint')
             ->alias('complaint')
             ->join('admin_examine_flow examine','complaint.flow_id=examine.flow_id')
             ->whereOr($params)
