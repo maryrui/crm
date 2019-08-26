@@ -55,7 +55,7 @@ class ExamineStep extends Common
                 $resSuccess = false;
             }
             $dataStep[$k]['relation'] = 1;
-            if (in_array($v['status'],[2,3])) {
+            if (in_array($v['status'],[2,3,9])) {
                 $dataStep[$k]['user_id'] = $v['user_id'] ? arrayToString($v['user_id']) : ''; //处理user_id
                 $dataStep[$k]['relation'] = ($v['status'] == 3) ? 1 : 2;
             }
