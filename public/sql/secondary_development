@@ -34,3 +34,28 @@ ALTER TABLE `5kcrm_crm_receivables`
 ADD COLUMN `contract_name` varchar(255) NULL AFTER `invoice_code`;
 
 -- admin_field 表的数据需要拷备到生产库，调整了字段循序，新增了字段
+
+-- crm_complaint
+ALTER TABLE `5kcrm_crm_complaint`
+CHANGE COLUMN `status` `check_status`  smallint(6) NOT NULL DEFAULT 0 COMMENT '状态：1-已处理' AFTER `content`,
+ADD COLUMN `flow_id`  int(11) NOT NULL AFTER `check_status`,
+ADD COLUMN `order_id`  int(11) NOT NULL AFTER `flow_id`,
+ADD COLUMN `create_user_id`  int(11) NOT NULL AFTER `order_id`,
+ADD COLUMN `check_user_id`  varchar(255) NOT NULL AFTER `create_user_id`,
+ADD COLUMN `flow_user_id`  varchar(255) NOT NULL AFTER `check_user_id`;
+
+-- crm_admin_complaint_type
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for 5kcrm_admin_complaint_type
+-- ----------------------------
+DROP TABLE IF EXISTS `5kcrm_admin_complaint_type`;
+CREATE TABLE `crm_admin_complaint_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(10) NOT NULL COMMENT '客诉类型',
+  `depart` varchar(255) NOT NULL COMMENT '处理部门',
+  `create_time` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+SET FOREIGN_KEY_CHECKS=1;
