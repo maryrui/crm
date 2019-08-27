@@ -266,6 +266,7 @@ return [
     'crm/complaint/index' => ['crm/complaint/index', ['method' => 'POST']],
     'crm/complaint/read' => ['crm/complaint/read', ['method' => 'POST']],
     'crm/complaint/check' => ['crm/complaint/check', ['method' => 'POST']],
+    'crm/complaint/save' => ['crm/complaint/save', ['method' => 'POST']],
 
     // MISS路由
 	'__miss__'  => 'admin/base/miss',
