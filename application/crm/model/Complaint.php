@@ -30,6 +30,7 @@ class Complaint extends Common
             ->join('__ADMIN_EXAMINE_FLOW__ examine','complaint.flow_id=examine.flow_id')
             ->whereOr($params)
             ->field('complaint.*')
+            ->limit(($request['page']-1)*$request['limit'], $request['limit'])
             ->order("complaint.create_time desc")
             ->select();
         Db::table('crm_complaint')->getLastSql();
