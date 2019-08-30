@@ -35,10 +35,10 @@ export default {
       this.typeName = '回款金额'
       this.typeUnit = '(元)'
     } else if (this.type == 'count') {
-      this.typeName = '合同数量'
+      this.typeName = '订单数量'
       this.typeUnit = '（个）'
     } else if (this.type == 'money') {
-      this.typeName = '合同金额'
+      this.typeName = '订单金额'
       this.typeUnit = '(元)'
     }
     this.initAxis()

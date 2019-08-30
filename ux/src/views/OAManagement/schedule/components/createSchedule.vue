@@ -33,26 +33,51 @@
                         placeholder="请输入内容"
                         v-model="formData[item.field]"> </el-input>
             </template>
-            <template v-else-if="item.type == 'participant'">
-              <el-popover placement="bottom-end"
-                          width="280"
-                          trigger="click">
-                <xh-user ref="xhuser"
-                         :selectedData="colleaguesList"
-                         @changeCheckout="changeCheckout">
-                </xh-user>
-                <div class="select-box"
-                     slot="reference">
-                  <span v-for="(item, index) in colleaguesList"
-                        :key="index"
-                        class="select-box-span">
-                    {{item.realname}}
-                    <span class="el-icon-close"
-                          @click.stop="selectDelect(item, index)"> </span>
-                  </span>
-                  <span class="el-icon-plus"></span>
-                </div>
-              </el-popover>
+            <!--<template v-else-if="item.type == 'participant'">-->
+              <!--<el-popover placement="bottom-end"-->
+                          <!--width="280"-->
+                          <!--trigger="click">-->
+                <!--<xh-user ref="xhuser"-->
+                         <!--:selectedData="colleaguesList"-->
+                         <!--@changeCheckout="changeCheckout">-->
+                <!--</xh-user>-->
+                <!--<div class="select-box"-->
+                     <!--slot="reference">-->
+                  <!--<span v-for="(item, index) in colleaguesList"-->
+                        <!--:key="index"-->
+                        <!--class="select-box-span">-->
+                    <!--{{item.realname}}-->
+                    <!--<span class="el-icon-close"-->
+                          <!--@click.stop="selectDelect(item, index)"> </span>-->
+                  <!--</span>-->
+                  <!--<span class="el-icon-plus"></span>-->
+                <!--</div>-->
+              <!--</el-popover>-->
+            <!--</template>-->
+            <template v-else-if="item.type =='participant'">
+              <members-dep :popoverDisplay="'block'"
+                           :title="'通知部门'"
+                           :userCheckedData="formData[item.field].staff"
+                           :depCheckedData="formData[item.field].dep"
+                           @popoverSubmit="popoverSubmit">
+                <flexbox slot="membersDep"
+                         wrap="wrap"
+                         class="user-container">
+                  <div v-for="(item, index) in formData[item.field].staff"
+                       :key="'user' + index"
+                       @click.stop="deleteuser(index)"
+                       class="user-item">{{item.realname}}
+                    <i class="delete-icon el-icon-close"></i>
+                  </div>
+                  <div v-for="(item, index) in formData[item.field].dep"
+                       :key="'dep' + index"
+                       @click.stop="deleteDepuser(index)"
+                       class="user-item">{{item.name}}
+                    <i class="delete-icon el-icon-close"></i>
+                  </div>
+                  <div class="add-item">+添加</div>
+                </flexbox>
+              </members-dep>
             </template>
             <template v-else-if="item.type == 'select'">
               <el-select v-model="formData[item.field]"
@@ -107,11 +132,14 @@ import { usersList } from '@/api/common'
 import relatedBusiness from '@/components/relatedBusiness'
 import XhUser from '@/components/CreateCom/XhUser'
 import { getMaxIndex } from '@/utils/index'
-
+import membersDep from '@/components/selectEmployee/membersDep'
+// 验证时间
+import { validateFirstTimeOrEndTime } from '@/utils/index'
 export default {
   components: {
     relatedBusiness,
-    XhUser
+    XhUser,
+    membersDep
   },
   data() {
     return {
@@ -120,6 +148,7 @@ export default {
         { label: '主题', field: 'title', type: 'color' },
         { label: '开始时间', field: 'start_time', type: 'time' },
         { label: '结束时间', field: 'end_time', type: 'time' },
+        // { label: '参与人', field: 'dep', type: 'plus' },
         { label: '参与人', field: 'owner_user_ids', type: 'participant' },
         { label: '备注', field: 'remark', type: 'textarea', width: '100%' }
       ],
@@ -215,7 +244,9 @@ export default {
       default: false
     }
   },
-  created() {},
+  created() {
+      console.log(this.formData)
+  },
   mounted() {
     if (this.appendToBody) {
       document.body.appendChild(this.$el)
@@ -254,18 +285,23 @@ export default {
     onSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
+          let data = this.formData;
+          console.log(data);
+            if (!validateFirstTimeOrEndTime(data.start_time, data.end_time)) {
+                return false;
+            }
           this.loading = true
-          let data = this.formData
-          let owner_user_ids = []
-          for (let item of this.colleaguesList) {
-            owner_user_ids.push(item.id)
-          }
           if (this.text == '创建日程') {
             scheduleAdd({
               title: data.title,
               start_time: new Date(data.start_time).getTime() / 1000,
               end_time: new Date(data.end_time).getTime() / 1000,
-              owner_user_ids: owner_user_ids,
+              owner_user_ids: this.formData.owner_user_ids.staff.map(item => {
+                  return item.id
+              }),
+              owner_structure_ids: this.formData.owner_user_ids.dep.map(item => {
+                  return item.id
+              }),
               remark: data.remark,
               color: data.color,
               customer_ids: this.relevanceAll.customer_ids,
@@ -297,7 +333,7 @@ export default {
                 list.customer_ids.push(item.customer_id)
               }
             }
-            // 合同
+            // 订单
             if (this.allData.contract) {
               for (let item of this.allData.contract) {
                 list.contract_ids.push(item.contract_id)
@@ -309,7 +345,7 @@ export default {
                 list.contacts_ids.push(item.contacts_id)
               }
             }
-            // 关联商机
+            // 关联合同
             if (this.allData.business) {
               for (let item of this.allData.business) {
                 list.business_ids.push(item.business_id)
@@ -324,7 +360,12 @@ export default {
               title: data.title,
               start_time: new Date(data.start_time).getTime() / 1000,
               end_time: new Date(data.end_time).getTime() / 1000,
-              owner_user_ids: owner_user_ids,
+              owner_user_ids: this.formData.owner_user_ids.staff.map(item => {
+                  return item.id
+              }),
+              owner_structure_ids: this.formData.owner_user_ids.dep.map(item => {
+                  return item.id
+              }),
               remark: data.remark,
               color: data.color,
               customer_ids: ids.customer_ids,
@@ -367,7 +408,17 @@ export default {
     selectDelect(value, index) {
       this.$refs.xhuser[0].cancelCheckItem(value)
       this.colleaguesList.splice(index, 1)
-    }
+    },
+    popoverSubmit(members, dep) {
+        this.$set(this.formData, 'owner_user_ids', { staff: members, dep: dep })
+    },
+      // 删除部门和用户
+      deleteuser(index) {
+          this.formData.owner_user_ids.staff.splice(index, 1)
+      },
+      deleteDepuser(index) {
+          this.formData.owner_user_ids.dep.splice(index, 1)
+      }
   },
 
   beforeDestroy() {
@@ -604,6 +655,38 @@ export default {
       text-align: right;
       padding-right: 20px;
     }
+  }
+}
+.user-container {
+  margin-top: 3px;
+  min-height: 34px;
+  position: relative;
+  border-radius: 3px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  color: #333333;
+  padding: 5px;
+  line-height: 15px;
+  max-height: 105px;
+  overflow-y: auto;
+  .user-item {
+    padding: 5px;
+    background-color: #e2ebf9;
+    border-radius: 3px;
+    margin: 3px;
+    cursor: pointer;
+  }
+  .add-item {
+    padding: 5px;
+    color: #3e84e9;
+    cursor: pointer;
+  }
+  .delete-icon {
+    color: #999;
+    cursor: pointer;
+  }
+  &:hover {
+    border-color: #c0c4cc;
   }
 }
 </style>

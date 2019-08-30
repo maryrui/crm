@@ -51,10 +51,12 @@ import {
   oaExamineCheck,
   oaExamineRevokeCheck
 } from '@/api/oamanagement/examine'
+
+import { checkComplaintOne } from '@/api/oamanagement/complaint'
 import { XhUserCell } from '@/components/CreateCom'
 
 export default {
-  name: 'examine-handle', // 合同审核操作
+  name: 'examine-handle', // 订单审核操作
   components: {
     XhUserCell
   },
@@ -198,6 +200,8 @@ export default {
         return crmReceivablesCheck
       } else if (this.examineType == 'oa_examine') {
         return oaExamineCheck
+      } else if (this.examineType == 'crm_complaint') {
+        return checkComplaintOne
       }
     },
     handleClick(type) {

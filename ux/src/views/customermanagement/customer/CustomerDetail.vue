@@ -57,8 +57,8 @@ import CRMDetailHead from '../components/CRMDetailHead'
 import CustomerFollow from './components/CustomerFollow' // 跟进记录
 import CRMBaseInfo from '../components/CRMBaseInfo' // 基本信息
 import RelativeContacts from '../components/RelativeContacts' //相关联系人
-import RelativeBusiness from '../components/RelativeBusiness' //相关商机
-import RelativeContract from '../components/RelativeContract' //相关合同
+import RelativeBusiness from '../components/RelativeBusiness' //相关合同
+import RelativeContract from '../components/RelativeContract' //相关订单
 import RelativeReturnMoney from '../components/RelativeReturnMoney' //相关回款
 import RelativeFiles from '../components/RelativeFiles' //相关附件
 import RelativeHandle from '../components/RelativeHandle' //相关操作
@@ -160,10 +160,10 @@ export default {
       }
       tempsTabs.push({ label: '相关团队', name: 'team' })
       if (this.crm.business && this.crm.business.index) {
-        tempsTabs.push({ label: '商机', name: 'business' })
+        tempsTabs.push({ label: '合同', name: 'business' })
       }
       if (this.crm.contract && this.crm.contract.index) {
-        tempsTabs.push({ label: '合同', name: 'contract' })
+        tempsTabs.push({ label: '订单', name: 'contract' })
       }
       if (this.crm.receivables && this.crm.receivables.index) {
         tempsTabs.push({ label: '回款信息', name: 'returnedmoney' })

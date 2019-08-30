@@ -37,7 +37,7 @@
 import achievementMixins from '../mixins/achievement'
 
 export default {
-  /** 合同数量分析 */
+  /** 订单数量分析 */
   name: 'achievement-count-statistics',
   data() {
     return {}

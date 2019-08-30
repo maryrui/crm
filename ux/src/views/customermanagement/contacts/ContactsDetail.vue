@@ -54,7 +54,7 @@ import CRMDetailHead from '../components/CRMDetailHead'
 import ContactsFollow from './components/ContactsFollow' // 跟进记录
 import CRMBaseInfo from '../components/CRMBaseInfo' // 联系人基本信息
 
-import RelativeBusiness from '../components/RelativeBusiness' //相关商机
+import RelativeBusiness from '../components/RelativeBusiness' //相关合同
 import RelativeHandle from '../components/RelativeHandle' //相关操作
 import RelativeFiles from '../components/RelativeFiles' //相关附件
 import CRMCreateView from '../components/CRMCreateView' // 新建页面
@@ -137,7 +137,7 @@ export default {
         tempsTabs.push({ label: '基本信息', name: 'basicinfo' })
       }
       if (this.crm.business && this.crm.business.index) {
-        tempsTabs.push({ label: '商机', name: 'business' })
+        tempsTabs.push({ label: '合同', name: 'business' })
       }
       tempsTabs.push({ label: '附件', name: 'file' })
       tempsTabs.push({ label: '操作记录', name: 'operationlog' })

@@ -179,7 +179,7 @@ export default {
           {
             field: 'contract_id',
             form_type: 'contract_id',
-            name: '合同编号'
+            name: '订单编号'
           },
           {
             field: 'money',
@@ -291,7 +291,7 @@ export default {
             type: 'crm',
             formatter: fieldFormatter
           }
-          /** 联系人 客户 商机 合同*/
+          /** 联系人 客户 合同 订单*/
         } else if (element.field === 'contacts_id' || element.field === 'customer_id' || element.field === 'business_id' || element.field === 'contract_id') {
           function fieldFormatter(info) {
             return info ? info.name : ''

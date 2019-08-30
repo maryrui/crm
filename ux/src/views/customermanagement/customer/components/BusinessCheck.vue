@@ -5,7 +5,7 @@
        xs-empty-text="暂无权限">
     <flexbox class="header">
       <div class="name">{{data.row.name}}</div>
-      <div class="detail">商机（{{list.length}}）</div>
+      <div class="detail">合同（{{list.length}}）</div>
       <img @click="hidenView"
            class="close"
            src="@/assets/img/task_close.png" />
@@ -37,7 +37,7 @@ import { mapGetters } from 'vuex'
 import { crmBusinessIndex } from '@/api/customermanagement/business'
 
 export default {
-  /** 客户管理 的 客户列表  相关商机列表*/
+  /** 客户管理 的 客户列表  相关合同列表*/
   name: 'business-check',
   components: {},
   computed: {
@@ -86,21 +86,21 @@ export default {
     }
   },
   mounted() {
-    this.fieldList.push({ prop: 'name', width: '200', label: '商机名称' })
+    this.fieldList.push({ prop: 'name', width: '200', label: '合同名称' })
     this.fieldList.push({
       prop: 'money',
       width: '200',
-      label: '商机金额'
+      label: '合同金额'
     })
     this.fieldList.push({
       prop: 'customer_id',
       width: '200',
       label: '客户名称'
     })
-    this.fieldList.push({ prop: 'type_id', width: '200', label: '商机状态组' })
+    this.fieldList.push({ prop: 'type_id', width: '200', label: '合同状态组' })
     this.fieldList.push({ prop: 'status_id', width: '200', label: '状态' })
 
-    // 为客户名称 商机状态组 状态 加入字段格式化展示规则
+    // 为客户名称 合同状态组 状态 加入字段格式化展示规则
     function crmFieldFormatter(info) {
       return info ? info.name : ''
     }

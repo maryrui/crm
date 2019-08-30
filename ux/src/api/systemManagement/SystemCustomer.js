@@ -16,7 +16,7 @@ export function businessGroupAdd(data) {
   })
 }
 
-/** 商机状态组详情 */
+/** 合同状态组详情 */
 export function businessGroupRead(data) {
   return request({
     url: 'crm/business_status/read',
@@ -25,7 +25,7 @@ export function businessGroupRead(data) {
   })
 }
 
-// 商机状态组编辑
+// 合同状态组编辑
 export function businessGroupUpdate(data) {
   return request({
     url: 'crm/business_status/update',
@@ -34,7 +34,7 @@ export function businessGroupUpdate(data) {
   })
 }
 
-/** 商机状态组删除 */
+/** 合同状态组删除 */
 export function businessGroupDelete(data) {
   return request({
     url: 'crm/business_status/delete',
@@ -193,7 +193,7 @@ export function crmSettingRecordEditAPI(data) {
 }
 
 /**
- * 合同到期提醒 设置
+ * 订单到期提醒 设置
  * @param {*} data 
  */
 export function crmSettingContractDayAPI(data) {

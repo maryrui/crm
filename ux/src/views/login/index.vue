@@ -73,8 +73,8 @@
             }
             return {
                 loginForm: {
-                    username: '18631416715',
-                    password: 'kg123465'
+                    username: '',
+                    password: ''
                 },
                 loginRules: {
                     username: [

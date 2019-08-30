@@ -1,14 +1,14 @@
 <template>
   <div v-loading="loading">
     <div class="content-title">
-      <span>合同到期提醒设置</span>
+      <span>订单到期提醒设置</span>
       <el-button type="primary"
                  class="rt"
                  size="medium"
                  @click="save">保存</el-button>
     </div>
     <div class="content-body">
-      <div class="tips">设置提前提醒天数之后，根据合同的”合同到期时间”计算提醒时间</div>
+      <div class="tips">设置提前提醒天数之后，根据订单的”订单到期时间”计算提醒时间</div>
       <div class="set-content">
         <el-radio v-model="contractConfig"
                   label="0">不提醒</el-radio>
@@ -38,7 +38,7 @@ export default {
     return {
       loading: false, // 展示加载中效果
 
-      contractDay: 0, // 合同到期提醒天数
+      contractDay: 0, // 订单到期提醒天数
       contractConfig: '0'
     }
   },
@@ -109,7 +109,7 @@ export default {
   overflow-y: auto;
 }
 
-/* 合同 样式*/
+/* 订单 样式*/
 .tips {
   font-size: 13px;
   color: #999;

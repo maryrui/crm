@@ -6,8 +6,8 @@
              placeholder="请选择">
     <el-option v-for="(item, index) in option"
                :key="index"
-               :label="item.num"
-               :value="item.plan_id">
+               :label="item.invoice_code"
+               :value="item.invoice_code">
     </el-option>
   </el-select>
 </template>

@@ -14,26 +14,26 @@
         </el-select>
       </div>
       <el-button type="primary"
-                 class="new-btn"
-                 @click="newBtn">新建审批</el-button>
+         class="new-btn"
+         @click="newBtn">新建审批</el-button>
     </div>
     <el-tabs v-model="activeName"
-             @tab-click="tabClick">
+       @tab-click="tabClick">
       <el-tab-pane :name="item.key"
-                   v-for="(item, index) in tabsData"
-                   :key="index">
+         v-for="(item, index) in tabsData"
+         :key="index">
         <el-badge slot="label"
-                  :hidden="item.key != 'examine' || messageOANum.examineNum == 0"
-                  :max="99"
-                  :value="messageOANum.examineNum">
+          :hidden="item.key != 'examine' || messageOANum.examineNum == 0"
+          :max="99"
+          :value="messageOANum.examineNum">
           <span>{{item.label}}</span>
         </el-badge>
         <v-content :by="item.key"
-                   :category_id="categoryType"
-                   :ref="'tabcontent' + item.key"
-                   id="examine-list-box"
-                   @reset="reset"
-                   @edit="editDetail">
+             :category_id="categoryType"
+             :ref="'tabcontent' + item.key"
+             id="examine-list-box"
+             @reset="reset"
+             @edit="editDetail">
         </v-content>
       </el-tab-pane>
     </el-tabs>

@@ -34,7 +34,7 @@
               </el-select>
             </el-col>
 
-            <!-- 商机组 -->
+            <!-- 合同组 -->
             <el-col :span="1"
                     v-if="formItem.form_type == 'business_type'">&nbsp;</el-col>
             <el-col :span="4"
@@ -202,7 +202,7 @@ export default {
   },
   methods: {
     /**
-     * 商机组状态
+     * 合同组状态
      */
     typeOptionsChange(formItem) {
       if (formItem.type_id) {

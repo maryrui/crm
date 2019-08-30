@@ -58,7 +58,7 @@ export default {
     /** 获取不同的员工展示列表 */
     infoType: {
       type: String,
-      default: 'default' //返回全部  crm_contract crm_receivables oa_examine 合同审核人自选列表
+      default: 'default' //返回全部  crm_contract crm_receivables oa_examine 订单审核人自选列表
     },
     /** 请求辅助参数 */
     infoParams: {

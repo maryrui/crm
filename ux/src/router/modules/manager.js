@@ -107,6 +107,7 @@ const systemOtherRouter = {
     {
       name: 'system-examine',
       path: 'system-examine',
+      hidden: true,
       component: () => import('@/views/SystemManagement/SystemExamine/SystemExamine'),
       meta: {
         requiresAuth: true,

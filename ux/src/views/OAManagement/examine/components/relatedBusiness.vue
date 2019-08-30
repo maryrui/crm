@@ -96,9 +96,9 @@ export default {
       } else if (type == 'contacts') {
         return '联系人'
       } else if (type == 'business') {
-        return '商机'
-      } else if (type == 'contract') {
         return '合同'
+      } else if (type == 'contract') {
+        return '订单'
       }
     },
     crmrelativeClose() {

@@ -8,7 +8,7 @@
                           @change="getDataList">
     </filtrate-handle-view>
     <div class="content">
-      <div class="content-title">产品销量排行（按签订的审核通过的合同关联产品统计）</div>
+      <div class="content-title">产品销量排行（按签订的审核通过的订单关联产品统计）</div>
       <div class="axis-content"
            v-empty="list.length === 0"
            xs-empty-text="暂无排行">

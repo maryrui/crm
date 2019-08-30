@@ -38,7 +38,7 @@ export default {
   },
   mixins: [arrayMixin],
   computed: {
-    // 如果有相关ID  展示相关效果 例如客户下的商机和合同
+    // 如果有相关ID  展示相关效果 例如客户下的合同和订单
     isRelationShow() {
       return this.item && this.item.data && this.item.data.relation_id
     }

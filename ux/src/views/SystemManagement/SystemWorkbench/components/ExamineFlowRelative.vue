@@ -148,7 +148,7 @@ export default {
     fieldFormatter(row, column) {
       // 如果需要格式化
       if (column.property === 'types') {
-        return { crm_contract: '合同', crm_receivables: '回款' }[
+        return { crm_contract: '订单', crm_receivables: '回款' }[
           row[column.property]
         ]
       } else if (column.property === 'update_time') {

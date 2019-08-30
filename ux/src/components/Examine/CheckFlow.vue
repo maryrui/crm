@@ -42,7 +42,7 @@ import { crmExamineFlowRecordList } from '@/api/customermanagement/common' // �
 import Nzhcn from 'nzh/cn'
 
 export default {
-  /** 客户管理 的 合同详情  查看审批流程*/
+  /** 客户管理 的 订单详情  查看审批流程*/
   name: 'check-flow',
   components: {},
   filters: {

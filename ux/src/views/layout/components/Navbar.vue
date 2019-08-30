@@ -15,6 +15,9 @@
              style="margin-right: 10px;"
              :style="{ 'color': item.type == navIndexChild ? '#3E84E9' : '#333333'}"></i>
           <div class="nav-item-title">{{item.title}}</div>
+            <el-badge
+                    :max="99"
+                    :value="item.type == 1 ? messageNum.totalNum : messageOANum.totalNum " v-if="item.type == 1 || item.type == 0 "></el-badge>
         </router-link>
       </flexbox>
     </div>
@@ -79,7 +82,7 @@ export default {
   },
   components: {},
   computed: {
-    ...mapGetters(['userInfo', 'lang', 'logo', 'crm', 'bi', 'manage']),
+    ...mapGetters(['userInfo', 'lang', 'logo', 'crm', 'bi', 'manage', 'messageOANum', 'messageNum']),
     items() {
       var tempsItems = []
       tempsItems.push({
@@ -109,6 +112,8 @@ export default {
   },
   mounted() {
     this.navIndexChild = this.navIndex
+      console.log(this.messageOANum)
+      console.log(this.messageNum)
   },
   methods: {
     navItemsClick(type) {

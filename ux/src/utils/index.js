@@ -118,7 +118,8 @@ export function regexIsCRMMoneyNumber(nubmer) {
 
 /** 判断输入长度为 6~11 的数字电话*/
 export function regexIsCRMMobile(mobile) {
-  var regex = /^(\+?0?\d{2,4}\-?)?\d{6,11}$/
+  // var regex = /^(\+?0?\d{2,4}\-?)?\d{6,11}$/
+  var regex = /^[1][0-9]{10}$/
   if (!regex.test(mobile)) {
     return false
   }
@@ -174,6 +175,19 @@ export function formatTimeToTimestamp(format) {
     return timeValue.length > 10 ? timeValue.substr(0, 10) : timeValue
   }
   return ''
+}
+/**
+ *  开始时间结束时间判断
+ *
+ * *
+ * */
+import { Message } from  'element-ui'
+export function validateFirstTimeOrEndTime(newTime, oldTime) {
+  if (oldTime < newTime) {
+      Message('结束时间不能小于开始时间')
+      return false
+  }
+  return true
 }
 
 /** image 下载 */

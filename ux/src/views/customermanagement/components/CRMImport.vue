@@ -172,8 +172,7 @@ export default {
     // 下载模板操作
     download() {
       var a = document.createElement('a')
-      a.href =
-        window.BASE_URL +
+      a.href = window.BASE_URL +
         {
           customer: crmCustomerExcelDownloadURL,
           leads: crmLeadsExcelDownloadURL,
@@ -182,6 +181,7 @@ export default {
         }[this.crmType]
       a.target = '_black'
       document.body.appendChild(a)
+
       a.click()
       document.body.removeChild(a)
     },

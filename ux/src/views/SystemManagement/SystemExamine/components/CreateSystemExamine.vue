@@ -63,6 +63,7 @@
                   <el-option v-for="itemOption in item.options"
                              :key="itemOption.value"
                              :label="itemOption.name"
+                             :disabled="!isComplaint && itemOption.value == 9"
                              :value="itemOption.value">
                   </el-option>
                 </el-select>
@@ -80,7 +81,7 @@
             <div class="examine-items-add"><span @click="examineItemsAdd">+ 添加审批层级</span></div>
             <div class="examine-add-des">
               <p><span class="examine-add-required">*</span>当选择“负责人主管”审批时。系统仅会通知负责人主管，但负责人所有上级（主管、主管的主管）均可审批。</p>
-              <p><span class="examine-add-required">*</span>当选择多个“指定用户”审批时。如果指定用户没有权限查看对应的合同，系统不会通知其审批。 </p>
+              <p><span class="examine-add-required">*</span>当选择多个“指定用户”审批时。如果指定用户没有权限查看对应的订单，系统不会通知其审批。 </p>
               <p><span class="examine-add-required">*</span>当选择“指定用户（任意一人）”表示指定用户中任意一人审批即可。当选择“指定用户（多人会签）”表示 指定用户中所有人都要审批。</p>
             </div>
             <el-radio v-model="examineType"
@@ -167,6 +168,8 @@ export default {
       crmForm: {
         crmFields: []
       },
+      // 判断是不是客诉  添加各级 根据客诉类型指定
+        isComplaint: false,
       // 总两页 当前页
       currentPage: 1,
       examineType: 1, // 1 固定 0 授权
@@ -178,7 +181,8 @@ export default {
           options: [
             { name: '负责人主管', value: 1 },
             { name: '指定用户（任意一人）', value: 2 },
-            { name: '指定用户（多人会签）', value: 3 }
+            { name: '指定用户（多人会签）', value: 3 },
+            { name: '根据客诉类型指定', value: 9 }
           ]
         }
       ]
@@ -216,7 +220,7 @@ export default {
   },
   mounted() {
     document.body.appendChild(this.$el)
-
+    console.log(this.handle.data)
     this.getField()
     if (this.handle.data) {
       // data 存在就处理 save
@@ -226,9 +230,10 @@ export default {
         this.examineList = []
         for (let index = 0; index < this.handle.data.stepList.length; index++) {
           const element = this.handle.data.stepList[index]
+            console.log(element)
           var item = {}
           item['type'] = element.status
-          if (element.status === 2 || element.status === 3) {
+          if (element.status === 2 || element.status === 3 || element.status === 9) {
             item['show'] = true
             item['value'] = element.user_id_info
           } else {
@@ -246,7 +251,8 @@ export default {
               { name: '负责人主管', value: 1 },
               { name: '指定用户（任意一人）', value: 2 },
               { name: '指定用户（多人会签）', value: 3 },
-              { name: '上一级审批人主管', value: 4 }
+              { name: '上一级审批人主管', value: 4 },
+              { name: '根据客诉类型指定', value: 9 }
             ]
           }
           this.examineList.push(item)
@@ -310,8 +316,9 @@ export default {
           is_null: 0,
           name: '关联对象',
           setting: [
-            { name: '合同', value: 'crm_contract' },
-            { name: '回款', value: 'crm_receivables' }
+            { name: '订单', value: 'crm_contract' },
+            { name: '回款', value: 'crm_receivables' },
+            { name: '客诉', value: 'crm_complaint' }
           ],
           value: this.handle.data ? this.handle.data.types : 'crm_contract'
         })
@@ -498,11 +505,12 @@ export default {
       this.$refs.crmForm.validate(valid => {
         if (valid) {
           this.currentPage = 2
+          this.crmForm.crmFields[1].value == 'crm_complaint' ? this.isComplaint = true : this.isComplaint = false
         }
       })
     },
     selectOptionsChange(item) {
-      if (item.type == 2 || item.type == 3) {
+      if (item.type == 2 || item.type == 3 || item.type == 9) {
         item.show = true
       } else {
         item.show = false
@@ -519,10 +527,11 @@ export default {
         var removeTwo = false
         var removeThree = false
         var removeFour = false
+        var removeFive = false
         // 第一级 不能选上一级主管
 
         // 任一 会签 的下面不能是 上一级
-        if (lastItem && (lastItem.type === 2 || lastItem.type === 3)) {
+        if (lastItem && (lastItem.type === 2 || lastItem.type === 3 || lastItem.type === 9)) {
           removeFour = true
         }
 
@@ -543,7 +552,9 @@ export default {
         if (!removeFour) {
           options.push({ name: '上一级审批人主管', value: 4 })
         }
-
+        if (!removeFive) {
+            options.push({ name: '根据客诉类型指定', value: 9 })
+        }
         item.options = options
       }
     },
@@ -556,7 +567,8 @@ export default {
           { name: '负责人主管', value: 1 },
           { name: '指定用户（任意一人）', value: 2 },
           { name: '指定用户（多人会签）', value: 3 },
-          { name: '上一级审批人主管', value: 4 }
+          { name: '上一级审批人主管', value: 4 },
+          { name: '根据客诉类型指定', value: 9 }
         ]
       })
     },

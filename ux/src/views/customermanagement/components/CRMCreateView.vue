@@ -34,7 +34,7 @@
                       </span>
                     </div>
                   </div>
-                  <!-- 员工 和部门 为多选（radio=false）  relation 相关合同商机使用-->
+                  <!-- 员工 和部门 为多选（radio=false）  relation 相关订单合同使用-->
                   <component :is="item.data.form_type | typeToComponentName"
                              :value="item.value"
                              :index="index"
@@ -92,7 +92,7 @@ import {
 import {
   crmBusinessSave,
   crmBusinessUpdate,
-  crmBusinessProduct // 商机下产品
+  crmBusinessProduct // 合同下产品
 } from '@/api/customermanagement/business'
 import {
   crmContractSave,
@@ -104,7 +104,8 @@ import {
 } from '@/api/customermanagement/product'
 import {
   crmReceivablesSave,
-  crmReceivablesUpdate
+  crmReceivablesUpdate,
+  crmReceivablesPlanIndex
 } from '@/api/customermanagement/money'
 import {
   crmReceivablesPlanSave,
@@ -162,7 +163,7 @@ export default {
     XhReceivablesPlan
   },
   computed: {
-    /** 合同 回款 下展示审批人信息 */
+    /** 订单 回款 下展示审批人信息 */
     showExamine() {
       if (this.crmType === 'contract' || this.crmType === 'receivables') {
         return true
@@ -194,7 +195,10 @@ export default {
         crmFields: []
       },
       // 审批信息
-      examineInfo: {}
+      examineInfo: {},
+
+      //发票选值
+        invoiceSettting:[]
     }
   },
   filters: {
@@ -235,7 +239,7 @@ export default {
         // 产品类别
         return 'XhProuctCate'
       } else if (form_type == 'business_type') {
-        // 商机类别
+        // 合同类别
         return 'XhBusinessStatus'
       } else if (form_type == 'product') {
         return 'XhProduct'
@@ -264,6 +268,10 @@ export default {
           id: ''
         }
       }
+    },
+    detail: {
+        type: Object,
+        default: null
     }
   },
   mounted() {
@@ -271,6 +279,7 @@ export default {
     document.body.appendChild(this.$el)
     this.title = this.getTitle()
     this.getField()
+    console.log(this.action)
   },
   methods: {
     // 审批信息值更新
@@ -281,7 +290,7 @@ export default {
     fieldValueChange(data) {
       var item = this.crmForm.crmFields[data.index]
       item.value = data.value
-      //商机下处理商机状态
+      //合同下处理合同状态
       if (
         this.crmType == 'business' &&
         item.data.form_type == 'business_type'
@@ -312,11 +321,11 @@ export default {
         }
       } else if (this.crmType == 'contract') {
         if (item.data.form_type == 'customer') {
-          // 新建合同 选择客户 要将id交于 商机
+          // 新建订单 选择客户 要将id交于 合同
           for (let index = 0; index < this.crmForm.crmFields.length; index++) {
             const element = this.crmForm.crmFields[index]
             if (element.key === 'business_id') {
-              // 如果是商机 改变商机样式和传入客户ID
+              // 如果是合同 改变合同样式和传入客户ID
               if (item.value.length > 0) {
                 element.disabled = false
                 var customerItem = item.value[0]
@@ -356,13 +365,13 @@ export default {
           }
         }
       } else if (this.crmType == 'receivables') {
-        // 新建回款 选择客户 要将id交于 合同
+        // 新建回款 选择客户 要将id交于 订单
         if (item.data.form_type == 'customer') {
-          var planItem = null // 合同更改 重置回款计划
+          var planItem = null // 订单更改 重置回款计划
           for (let index = 0; index < this.crmForm.crmFields.length; index++) {
             const element = this.crmForm.crmFields[index]
             if (element.key === 'contract_id') {
-              // 如果是合同 改变合同样式和传入客户ID
+              // 如果是订单 改变订单样式和传入客户ID
               if (item.value.length > 0) {
                 element.disabled = false
                 var customerItem = item.value[0]
@@ -386,6 +395,12 @@ export default {
         } else if (item.data.form_type == 'contract') {
           for (let index = 0; index < this.crmForm.crmFields.length; index++) {
             const element = this.crmForm.crmFields[index]
+            if (element.key === 'contract_name') {
+                var contractItem = item.value[0]
+                contractItem['form_type'] = 'contract'
+                element['relation'] = contractItem
+                element.value = contractItem.name
+            }
             if (element.key === 'plan_id') {
               // 如果是回款 改变回款样式和传入客户ID
               if (item.value.length > 0) {
@@ -443,6 +458,7 @@ export default {
     },
     // 根据自定义字段获取自定义字段规则
     getcrmRulesAndModel(list) {
+        // console.log(list)
       let showStyleIndex = -1
       for (let index = 0; index < list.length; index++) {
         const item = list[index]
@@ -450,7 +466,6 @@ export default {
         /**
          * 规则数据
          */
-
         this.crmRules[item.field] = this.getItemRulesArrayFromItem(item)
 
         /**
@@ -504,7 +519,6 @@ export default {
         } else if (item.form_type == 'map_address') {
           // 关联产品信息比较多 用字典接收
           var params = {}
-
           if (this.action.type == 'update') {
             params['value'] = item.value // 编辑的值 在value字段
           } else {
@@ -529,16 +543,15 @@ export default {
                 ? timestampToFormatTime(item.value, 'YYYY-MM-DD HH:mm:ss')
                 : '' // 编辑的值 在value字段
           } else {
-            params['value'] = item.default_value // 加入默认值 可能编辑的时候需要调整
+            params['value'] = item.default_value ? item.default_value : item.value // 加入默认值 可能编辑的时候需要调整
           }
-
           params['key'] = item.field
           params['data'] = item
           params['disabled'] = false // 是否可交互
           params['styleIndex'] = showStyleIndex
           this.crmForm.crmFields.push(params)
         } else {
-          var params = {}
+            var params = {}
           if (this.action.type == 'update') {
             params['value'] = item.value // 编辑的值 在value字段
           } else {
@@ -550,6 +563,14 @@ export default {
           params['data'] = item
           params['disabled'] = false // 是否可交互
           params['styleIndex'] = showStyleIndex
+          if (this.crmType == 'receivables' && item.field === 'contract_name') {
+              params['disabled'] = true // 是否可交互
+              params['value'] = this.action.data['contract'] ? this.action.data['contract'].name : ''
+          }
+          if (item.field === 'name' && this.crmType == 'receivables_plan') {
+              params['value'] = this.detail.name
+              params['disabled'] = true // 是否可交互
+          }
           this.crmForm.crmFields.push(params)
         }
       }
@@ -569,19 +590,20 @@ export default {
         params['value'] = item.value
       }
       if (this.action.type == 'relative' || this.action.type == 'update') {
-        // 回款计划 需要合同信息
+        // 回款计划 需要订单信息
         if (item.form_type === 'receivables_plan') {
           let contractItem = this.getItemRelatveInfo(item, list, 'contract')
           if (contractItem) {
             contractItem['form_type'] = 'contract'
             params['relation'] = contractItem
           }
-          // 商机合同 需要客户信息
+          // 合同订单 需要客户信息
         } else if (
           item.form_type == 'business' ||
           item.form_type == 'contract'
         ) {
           let customerItem = this.getItemRelatveInfo(item, list, 'customer')
+
           if (item.form_type == 'business' && customerItem) {
             customerItem['form_type'] = 'customer'
             params['relation'] = customerItem
@@ -652,7 +674,7 @@ export default {
         // 新建
         if (this.crmType === 'contract' && item.form_type === 'business') {
           return true
-          // 回款下 新建 合同 和 回款计划 默认不能操作
+          // 回款下 新建 订单 和 回款计划 默认不能操作
         } else if (this.crmType === 'receivables') {
           if (item.form_type === 'contract') {
             return true
@@ -941,15 +963,15 @@ export default {
       } else if (this.crmType == 'contacts') {
         return this.action.type == 'update' ? '编辑联系人' : '新建联系人'
       } else if (this.crmType == 'business') {
-        return this.action.type == 'update' ? '编辑商机' : '新建商机'
+        return this.action.type == 'update' ? '编辑合同' : '新建合同'
       } else if (this.crmType == 'product') {
         return this.action.type == 'update' ? '编辑产品' : '新建产品'
       } else if (this.crmType == 'contract') {
-        return this.action.type == 'update' ? '编辑合同' : '新建合同'
+        return this.action.type == 'update' ? '编辑订单' : '新建订单'
       } else if (this.crmType == 'receivables') {
         return this.action.type == 'update' ? '编辑回款' : '新建回款'
       } else if (this.crmType == 'receivables_plan') {
-        return this.action.type == 'update' ? '编辑回款计划' : '新建回款计划'
+        return this.action.type == 'update' ? '编辑订单发票' : '新建订单发票'
       }
     },
     // 获取左边padding

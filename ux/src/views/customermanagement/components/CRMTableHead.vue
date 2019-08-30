@@ -641,9 +641,9 @@ export default {
       } else if (this.crmType == 'contacts') {
         return '全部联系人'
       } else if (this.crmType == 'business') {
-        return '全部商机'
-      } else if (this.crmType == 'contract') {
         return '全部合同'
+      } else if (this.crmType == 'contract') {
+        return '全部订单'
       } else if (this.crmType == 'receivables') {
         return '全部回款'
       } else if (this.crmType == 'product') {

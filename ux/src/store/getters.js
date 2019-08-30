@@ -1,6 +1,8 @@
 const getters = {
   userInfo: state => state.user.userInfo,
   lang: state => state.app.lang,
+  messageOANum: state => state.oa.messageOANum,
+  messageNum: state => state.customer.messageNum,
   logo: state => {
     if (state.app.logo) {
       return state.app.logo
@@ -11,7 +13,7 @@ const getters = {
     if (state.app.name) {
       return state.app.name
     }
-    return '悟空CRM系统'
+    return 'CRM系统'
   },
   activeIndex: state => state.app.sidebar.activeIndex,
   navActiveIndex: state => state.app.navbar.activeIndex,

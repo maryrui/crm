@@ -7,7 +7,7 @@ import request from '@/utils/request'
  * end_time
  * user_id 员工ID
  * structure_id 部门ID
- * type_id 商机组
+ * type_id 合同组
  */
 export function biBusinessFunnel(data) {
   return request({
@@ -18,7 +18,7 @@ export function biBusinessFunnel(data) {
 }
 
 /**
- * 新增商机数与金额趋势分析
+ * 新增合同数与金额趋势分析
  * @param {*} data
  * year 年
  * status 1销售（目标）2回款（目标）
@@ -34,7 +34,7 @@ export function biBusinessTrendAPI(data) {
 }
 
 /**
- * 新增商机数与金额趋势分析 详情列表
+ * 新增合同数与金额趋势分析 详情列表
  * @param {*} data 
  */
 export function biBusinessTrendListAPI(data) {

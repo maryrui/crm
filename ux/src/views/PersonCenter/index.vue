@@ -45,6 +45,10 @@
           </flexbox>
         </flexbox-item>
       </flexbox>
+      <p class="qrBox">
+        <img src="../../assets/img/qr.png" alt="">
+        <span><i class="el-icon-info"></i> 扫码绑定后，接收微信消息提醒</span>
+      </p>
     </div>
     <input type="file"
            id="inputFile"
@@ -290,7 +294,19 @@ export default {
     }
   }
 }
-
+.qrBox{
+  margin-top:35px;
+  margin-left:35px;
+}
+.qrBox img{
+  width:100px;
+  height:100px;
+}
+.qrBox span{
+  line-height:100px;
+  color:#ff5044;
+  margin-left:15px;
+}
 #inputFile {
   display: none;
 }

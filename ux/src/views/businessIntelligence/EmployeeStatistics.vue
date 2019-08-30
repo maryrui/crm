@@ -93,7 +93,7 @@ export default {
         { field: 'customer_num', name: '客户数' },
         { field: 'deal_customer_num', name: '成交客户数' },
         { field: 'deal_customer_rate', name: '客户成交率(%)' },
-        { field: 'contract_money', name: '合同总金额' },
+        { field: 'contract_money', name: '订单总金额' },
         { field: 'receivables_money', name: '回款金额' },
         { field: 'un_receivables_money', name: '未回款金额' },
         { field: 'deal_receivables_rate', name: '回款完成率(%)' }

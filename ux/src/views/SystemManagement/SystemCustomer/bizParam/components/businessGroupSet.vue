@@ -1,11 +1,11 @@
 <template>
   <div v-loading="loading">
     <div class="content-title">
-      <span>商机组设置</span>
+      <span>合同组设置</span>
       <el-button type="primary"
                  class="rt"
                  size="medium"
-                 @click="addBusiness">添加商机组</el-button>
+                 @click="addBusiness">添加合同组</el-button>
     </div>
     <div class="business-table">
       <el-table :data="businessData"
@@ -69,31 +69,31 @@ export default {
       // 导航显示不同的页面
       menuIndex: 'business',
 
-      // 商机组设置
-      /** 商机组每行的信息 */
+      // 合同组设置
+      /** 合同组每行的信息 */
       businessObj: { name: '', businessDep: [], settingList: '' },
       businessData: [],
       businessList: [
-        { label: '商机组名称', field: 'name' },
+        { label: '合同组名称', field: 'name' },
         { label: '应用部门', field: 'structure_id' },
         { label: '创建时间', field: 'create_time' },
         { label: '创建人', field: 'create_user_id' }
       ],
-      // 添加商机组
+      // 添加合同组
       businessDialogVisible: false,
-      businessTitle: '添加商机组'
+      businessTitle: '添加合同组'
     }
   },
   methods: {
     /**
-     * 商机组列表头样式
+     * 合同组列表头样式
      */
     headerCellStyle(val, index) {
       return { background: '#F2F2F2' }
     },
 
     /**
-     * 商机组列表
+     * 合同组列表
      */
     getBusinessGroupList() {
       this.loading = true
@@ -112,7 +112,7 @@ export default {
     },
 
     /**
-     * 商机列表格式化
+     * 合同列表格式化
      */
     fieldFormatter(row, column) {
       // 如果需要格式化
@@ -144,7 +144,7 @@ export default {
     },
 
     /**
-     * 商机组编辑
+     * 合同组编辑
      */
     businessEdit(data) {
       businessGroupRead({
@@ -162,13 +162,13 @@ export default {
             settingList: settingList
           }
           this.businessDialogVisible = true
-          this.businessTitle = '编辑商机组'
+          this.businessTitle = '编辑合同组'
         })
         .catch(() => {})
     },
 
     /**
-     * 商机组删除
+     * 合同组删除
      */
     businessDelect(scope) {
       this.$confirm('确定删除?', '提示', {
@@ -195,23 +195,23 @@ export default {
     },
 
     /**
-     * 商机组添加
+     * 合同组添加
      */
     addBusiness() {
       this.businessObj = { name: '', businessDep: [], settingList: '' }
       this.businessDialogVisible = true
-      this.businessTitle = '添加商机组'
+      this.businessTitle = '添加合同组'
     },
 
     /**
-     * 商机组添加 -- 关闭
+     * 合同组添加 -- 关闭
      */
     businessClose() {
       this.businessDialogVisible = false
     },
 
     /**
-     * 商机组添加 -- 确定按钮
+     * 合同组添加 -- 确定按钮
      */
     businessSubmit(name, dep, list, title, type_id) {
       var businessHandleRequest = null
@@ -220,7 +220,7 @@ export default {
         structure_id: dep,
         status: list
       }
-      if (title == '添加商机组') {
+      if (title == '添加合同组') {
         businessHandleRequest = businessGroupAdd
       } else {
         params.type_id = type_id
@@ -253,7 +253,7 @@ export default {
   margin-left: 20px;
 }
 
-/* 商机组设置 */
+/* 合同组设置 */
 
 .business-table {
   border: 1px solid #e6e6e6;

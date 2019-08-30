@@ -60,7 +60,7 @@
       <flexbox class="c-header">
         <img class="c-logo"
              src="@/assets/img/send_business.png">
-        <div class="c-name">商机</div>
+        <div class="c-name">合同</div>
       </flexbox>
       <div class="c-body">
         <flexbox wrap="wrap">
@@ -149,12 +149,12 @@ export default {
     CrmRelative
   },
   props: {
-    /** 展示相关商机关联 */
+    /** 展示相关合同关联 */
     showRelativeBusiness: {
       type: Boolean,
       default: false
     },
-    /** 展示相关商机关联 */
+    /** 展示相关合同关联 */
     showRelativeContacts: {
       type: Boolean,
       default: false
@@ -191,7 +191,7 @@ export default {
       imgFiles: [],
       /** 图片信息 */
       files: [],
-      /** 关联商机信息 */
+      /** 关联合同信息 */
       business: [],
       /** 关联联系人信息 */
       contacts: [],
@@ -201,11 +201,11 @@ export default {
   },
   computed: {},
   mounted() {
-    /** 控制展示关联商机 和 联系人 */
+    /** 控制展示关联合同 和 联系人 */
     if (this.showRelativeBusiness) {
       this.barItems.push({
         img: require('@/assets/img/send_business.png'),
-        title: '关联商机',
+        title: '关联合同',
         type: 'business',
         show: false
       })
@@ -239,7 +239,7 @@ export default {
       this.imgFiles = []
       /** 图片信息 */
       this.files = []
-      /** 关联商机信息 */
+      /** 关联合同信息 */
       this.business = []
       /** 关联联系人信息 */
       this.contacts = []

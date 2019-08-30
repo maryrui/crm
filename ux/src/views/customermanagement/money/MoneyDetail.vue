@@ -47,6 +47,7 @@
     </flexbox>
     <c-r-m-create-view v-if="isCreate"
                        crm-type="receivables"
+                       :detail="detailData"
                        :action="{type: 'update', id: this.id}"
                        @save-success="editSaveSuccess"
                        @hiden-view="isCreate=false"></c-r-m-create-view>
@@ -108,8 +109,8 @@ export default {
       detailData: {}, // read 详情
       headDetails: [
         { title: '客户名称', value: '' },
-        { title: '合同金额', value: '' },
-        { title: '合同名称', value: '' },
+        { title: '订单金额', value: '' },
+        { title: '订单名称', value: '' },
         { title: '回款日期', value: '' },
         { title: '回款金额', value: '' },
         { title: '负责人', value: '' }

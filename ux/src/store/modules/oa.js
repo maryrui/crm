@@ -16,7 +16,8 @@ const oa = {
       taskNum: 0,
       announcementNum: 0,
       logNum: 0,
-      examineNum: 0
+      examineNum: 0,
+      totalNum: ''
     }
   },
 
@@ -45,9 +46,10 @@ const oa = {
         }
         oaMessageNumAPI(params)
           .then(response => {
+            response.data['totalNum'] ? response.data['totalNum'] = response.data['totalNum'] :  response.data['totalNum'] = ''
             if (type) {
               let copyNum = objDeepCopy(state.messageOANum)
-              copyNum[type + 'Num'] = response.data[type + 'Num'] || 0
+              copyNum[type + 'Num'] = response.data[type + 'Num'] || ''
               commit('SET_MESSAGEOANUM', copyNum)
             } else {
               commit('SET_MESSAGEOANUM', response.data)

@@ -209,6 +209,7 @@ export default {
       this.$emit('reset')
     },
     examineCellHandle(data) {
+        console.log(data.type);
       // 编辑
       if (data.type == 'edit') {
         this.$emit('edit', data.data.item)

@@ -8,7 +8,7 @@
              direction="row-reverse">
       <el-button class="rc-head-item"
                  @click.native="createClick"
-                 type="primary">新建商机</el-button>
+                 type="primary">新建合同</el-button>
       <el-button v-if="canRelation"
                  class="rc-head-item"
                  @click.native="unRelevanceHandleClick"
@@ -79,14 +79,14 @@ import { crmContactsRelationAPI } from '@/api/customermanagement/contacts'
 import CrmRelative from '@/components/CreateCom/CrmRelative'
 
 export default {
-  name: 'relative-business', //相关联系人商机  可能再很多地方展示 放到客户管理目录下（新建时仅和客户进行关联）
+  name: 'relative-business', //相关联系人合同  可能再很多地方展示 放到客户管理目录下（新建时仅和客户进行关联）
   components: {
     CRMFullScreenDetail: () => import('./CRMFullScreenDetail.vue'),
     CRMCreateView,
     CrmRelative
   },
   computed: {
-    // 联系人下客户id获取关联商机
+    // 联系人下客户id获取关联合同
     customer_id() {
       return this.detail.customer_id
     },
@@ -135,7 +135,7 @@ export default {
       type: Boolean,
       default: false
     },
-    /** 联系人人下 新建商机 需要联系人里的客户信息  合同下需要客户和商机信息 */
+    /** 联系人人下 新建合同 需要联系人里的客户信息  订单下需要客户和合同信息 */
     detail: {
       type: Object,
       default: () => {
@@ -203,11 +203,11 @@ export default {
      * 获取字段信息
      */
     getFieldList() {
-      this.fieldList.push({ prop: 'name', width: '200', label: '商机名称' })
+      this.fieldList.push({ prop: 'name', width: '200', label: '合同名称' })
       this.fieldList.push({
         prop: 'money',
         width: '200',
-        label: '商机金额'
+        label: '合同金额'
       })
       this.fieldList.push({
         prop: 'customer_id',
@@ -217,11 +217,11 @@ export default {
       this.fieldList.push({
         prop: 'type_id',
         width: '200',
-        label: '商机状态组'
+        label: '合同状态组'
       })
       this.fieldList.push({ prop: 'status_id', width: '200', label: '状态' })
 
-      // 为客户名称 商机状态组 状态 加入字段格式化展示规则
+      // 为客户名称 合同状态组 状态 加入字段格式化展示规则
       function crmFieldFormatter(info) {
         return info ? info.name : ''
       }
@@ -297,7 +297,7 @@ export default {
     },
     /** 新建 */
     createClick() {
-      /** 客户 和 联系人 下可新建商机  */
+      /** 客户 和 联系人 下可新建合同  */
       if (this.crmType == 'contacts') {
         this.createActionInfo.data['customer'] = this.detail.customer_id_info
       } else if (this.crmType == 'customer') {

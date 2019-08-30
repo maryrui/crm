@@ -163,7 +163,7 @@ export default {
           field: 'contract_id',
           form_type: 'contract',
           is_null: 1,
-          name: '合同编号',
+          name: '订单编号',
           setting: [],
           id: '', // 用于关联客户id
           input_tips: '请先选择客户',
@@ -250,7 +250,7 @@ export default {
         params['value'] = item.value // 加入默认值 可能编辑的时候需要调整
         params['key'] = item.field
         params['data'] = item
-        // 合同下新建回款计划客户合同信息都有
+        // 订单下新建回款计划客户订单信息都有
         if (this.crmType === 'contract') {
           if (item.form_type === 'customer') {
             params['value'] = [this.action.params.customer]
@@ -260,7 +260,7 @@ export default {
             params['value'] = [this.action.params.contract]
             params['disabled'] = true
           }
-          //客户下新建包含客户信息 默认禁止点击合同
+          //客户下新建包含客户信息 默认禁止点击订单
         } else if (this.crmType === 'customer') {
           if (item.form_type === 'customer') {
             params['value'] = [this.action.params.customer]

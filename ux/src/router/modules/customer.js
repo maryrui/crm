@@ -81,12 +81,12 @@ const customerRouter = {
       }
     },
     {
-      path: 'business', // 商机列表
+      path: 'business', // 合同列表
       name: 'business',
       component: () => import('@/views/customermanagement/business/BusinessIndex'),
       meta: {
         requiresAuth: true,
-        title: '商机',
+        title: '合同',
         icon: 'business',
         index: 1,
         type: 'crm',
@@ -94,11 +94,11 @@ const customerRouter = {
       }
     },
     {
-      path: 'contract', // 合同列表
+      path: 'contract', // 订单列表
       component: () => import('@/views/customermanagement/contract/ContractIndex'),
       meta: {
         requiresAuth: true,
-        title: '合同',
+        title: '订单',
         icon: 'contract',
         index: 1,
         type: 'crm',

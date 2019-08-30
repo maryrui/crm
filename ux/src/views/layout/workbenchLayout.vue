@@ -125,11 +125,6 @@ export default {
       return workbenchMenus
     }
   },
-
-  created() {
-    this.getOAMessagNum()
-  },
-
   methods: {
     navClick(index) {},
     // 新增跳转
@@ -156,16 +151,6 @@ export default {
     selcetExamineCategory(item) {
       this.createInfo = item
       this.isCreate = true
-    },
-
-    /**
-     * 获取消息数
-     */
-    getOAMessagNum() {
-      this.$store
-        .dispatch('GetOAMessageNum')
-        .then(res => {})
-        .catch(() => {})
     }
   }
 }

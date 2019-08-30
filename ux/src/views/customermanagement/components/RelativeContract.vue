@@ -8,7 +8,7 @@
              direction="row-reverse">
       <el-button class="rc-head-item"
                  @click.native="createClick"
-                 type="primary">新建合同
+                 type="primary">新建订单
       </el-button>
     </flexbox>
     <el-table :data="list"
@@ -85,7 +85,7 @@ export default {
       type: Boolean,
       default: false
     },
-    /** 联系人人下 新建商机 需要联系人里的客户信息  合同下需要客户和商机信息 */
+    /** 联系人人下 新建合同 需要联系人里的客户信息  订单下需要客户和合同信息 */
     detail: {
       type: Object,
       default: () => {
@@ -100,14 +100,14 @@ export default {
   deactivated: function() {},
   methods: {
     getFieldList() {
-      this.fieldList.push({ prop: 'num', width: '200', label: '合同编号' })
-      this.fieldList.push({ prop: 'name', width: '200', label: '合同名称' })
+      this.fieldList.push({ prop: 'num', width: '200', label: '订单编号' })
+      this.fieldList.push({ prop: 'name', width: '200', label: '订单名称' })
       this.fieldList.push({
         prop: 'customer_id',
         width: '200',
         label: '客户名称'
       })
-      this.fieldList.push({ prop: 'money', width: '200', label: '合同金额' })
+      this.fieldList.push({ prop: 'money', width: '200', label: '订单金额' })
       this.fieldList.push({
         prop: 'start_time',
         width: '200',
@@ -177,7 +177,7 @@ export default {
     },
     /** 新建 */
     createClick() {
-      /** 客户 和 商机 下新建合同 */
+      /** 客户 和 合同 下新建订单 */
       if (this.crmType == 'business') {
         this.createActionInfo.data['customer'] = this.detail.customer_id_info
         this.createActionInfo.data['business'] = this.detail

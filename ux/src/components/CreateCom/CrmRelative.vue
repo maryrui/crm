@@ -126,11 +126,11 @@ export default {
         type: 'leads'
       },
       business: {
-        name: '商机',
+        name: '合同',
         type: 'business'
       },
       contract: {
-        name: '合同',
+        name: '订单',
         type: 'contract'
       },
       product: {
@@ -198,11 +198,11 @@ export default {
       } else if (this.crmType == 'contacts') {
         return '关联联系人模块'
       } else if (this.crmType == 'business') {
-        return '关联商机模块'
+        return '关联合同模块'
       } else if (this.crmType == 'product') {
         return '关联产品模块'
       } else if (this.crmType == 'contract') {
-        return '关联合同模块'
+        return '关联订单模块'
       } else {
         return '关联业务模块'
       }

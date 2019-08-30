@@ -106,7 +106,7 @@ export default {
       type: String,
       default: '20px'
     },
-    // 编辑时传递所有关联数据   关联联系人-contacts 关联客户-customer 商机-business 合同-contract
+    // 编辑时传递所有关联数据   关联联系人-contacts 关联客户-customer 合同-business 订单-contract
     allData: {
       type: Object,
       default: () => {

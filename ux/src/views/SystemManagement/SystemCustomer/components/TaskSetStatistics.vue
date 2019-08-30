@@ -20,7 +20,7 @@
       </el-date-picker>
       <el-select v-model="typeSelect"
                  placeholder="请选择">
-        <el-option v-for="item in [{label:'合同金额', value:1},{label:'回款金额', value:2}]"
+        <el-option v-for="item in [{label:'订单金额', value:1},{label:'回款金额', value:2}]"
                    :key="item.value"
                    :label="item.label"
                    :value="item.value">

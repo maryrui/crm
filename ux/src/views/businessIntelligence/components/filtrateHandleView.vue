@@ -32,10 +32,10 @@
                  :value="item.id">
       </el-option>
     </el-select>
-    <!-- 展示商机状态筛选 -->
+    <!-- 展示合同状态筛选 -->
     <el-select v-model="businessStatusValue"
                v-if="showBusinessSelect"
-               placeholder="商机组">
+               placeholder="合同组">
       <el-option v-for="item in businessOptions"
                  :key="item.type_id"
                  :label="item.name"
@@ -103,7 +103,7 @@ export default {
       /** 用户列表 */
       userOptions: [],
       userSelectValue: '',
-      /** 商机状态 */
+      /** 合同状态 */
       businessOptions: [],
       businessStatusValue: '',
       /** 产品类别 */
@@ -124,7 +124,7 @@ export default {
       default: false,
       type: Boolean
     },
-    // 是否展示商机状态筛选
+    // 是否展示合同状态筛选
     showBusinessSelect: {
       default: false,
       type: Boolean
@@ -232,7 +232,7 @@ export default {
           this.$emit('error')
         })
     },
-    /** 商机阶段 */
+    /** 合同阶段 */
     getBusinessStatusList(result) {
       crmBusinessStatusList()
         .then(res => {
@@ -266,7 +266,7 @@ export default {
         params.user_id = this.userSelectValue
       }
 
-      // 展示商机状态 返回商机状态参数
+      // 展示合同状态 返回合同状态参数
       if (this.showBusinessSelect) {
         params.type_id = this.businessStatusValue
       }

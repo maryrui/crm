@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// crm 新建商机
+// crm 新建合同
 export function crmBusinessSave(data) {
   return request({
     url: 'crm/business/save',
@@ -36,7 +36,7 @@ export function crmBusinessUpdate(data) {
   })
 }
 
-// crm 商机状态组
+// crm 合同状态组
 export function crmBusinessStatusList(data) {
   return request({
     url: 'crm/business/statusList',
@@ -55,9 +55,9 @@ export function crmBusinessRead(data) {
 }
 
 /**
- * 商机转移
+ * 合同转移
  * @param {*} data
- * business_id 	商机数组
+ * business_id 	合同数组
  * owner_user_id 	变更负责人
  * is_remove 1移出，2转为团队成员
  * type 权限 1只读2读写
@@ -71,10 +71,10 @@ export function crmBusinessTransfer(data) {
 }
 
 /**
- * 商机转移
+ * 合同转移
  * @param {*} data
- * business_id 	商机
- * status_id 	商机状态ID
+ * business_id 	合同
+ * status_id 	合同状态ID
  * content 备注
  */
 export function crmBusinessAdvance(data) {
@@ -86,9 +86,9 @@ export function crmBusinessAdvance(data) {
 }
 
 /**
- * 商机相关产品
+ * 合同相关产品
  * @param {*} data
- * business_id 	商机ID
+ * business_id 	合同ID
  */
 export function crmBusinessProduct(data) {
   return request({

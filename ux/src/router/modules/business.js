@@ -86,17 +86,17 @@ const businessRouter = {
       ...businessAuth
     }
   }, {
-    path: 'businessTrend', // 新增商机分析
+    path: 'businessTrend', // 新增合同分析
     component: () => import('@/views/businessIntelligence/business/BusinessTrendStatistics'),
     meta: {
-      title: '新增商机分析',
+      title: '新增合同分析',
       ...businessAuth
     }
   }, {
-    path: 'businessWin', // 商机转化率分析
+    path: 'businessWin', // 合同转化率分析
     component: () => import('@/views/businessIntelligence/business/BusinessWinStatistics'),
     meta: {
-      title: '商机转化率分析',
+      title: '合同转化率分析',
       ...businessAuth
     }
   }]
@@ -119,17 +119,17 @@ const achievementRouter = {
   },
   hidden: false,
   children: [{
-    path: 'achievementCount', // 合同数量分析
+    path: 'achievementCount', // 订单数量分析
     component: () => import('@/views/businessIntelligence/achievement/AchievementCountStatistics'),
     meta: {
-      title: '合同数量分析',
+      title: '订单数量分析',
       ...achievementAuth
     }
   }, {
-    path: 'achievementMoney', // 合同金额分析
+    path: 'achievementMoney', // 订单金额分析
     component: () => import('@/views/businessIntelligence/achievement/AchievementMoneyStatistics'),
     meta: {
-      title: '合同金额分析',
+      title: '订单金额分析',
       ...achievementAuth
     }
   }, {
@@ -140,10 +140,10 @@ const achievementRouter = {
       ...achievementAuth
     }
   }, {
-    path: 'achievementSummary', // 合同汇总表
+    path: 'achievementSummary', // 订单汇总表
     component: () => import('@/views/businessIntelligence/achievement/AchievementSummaryStatistics'),
     meta: {
-      title: '合同汇总表',
+      title: '订单汇总表',
       ...achievementAuth
     }
   }]
@@ -273,10 +273,10 @@ const rankingRouter = {
   },
   hidden: false,
   children: [{
-    path: 'rankingContract', // 合同金额排行
+    path: 'rankingContract', // 订单金额排行
     component: () => import('@/views/businessIntelligence/ranking/RankingContractStatistics'),
     meta: {
-      title: '合同金额排行',
+      title: '订单金额排行',
       icon: 'productstatistics',
       ...rankingAuth
     }
@@ -289,10 +289,10 @@ const rankingRouter = {
       ...rankingAuth
     }
   }, {
-    path: 'rankingSigning', // 签约合同排行
+    path: 'rankingSigning', // 签约订单排行
     component: () => import('@/views/businessIntelligence/ranking/RankingSigningStatistics'),
     meta: {
-      title: '签约合同排行',
+      title: '签约订单排行',
       icon: 'productstatistics',
       ...rankingAuth
     }
@@ -347,8 +347,6 @@ const rankingRouter = {
   }]
 }
 
-
-
 const taskCompleteRouteItem = {
   path: 'taskCompletestatistics', // 业绩目标完成情况
   component: () => import('@/views/businessIntelligence/TaskCompleteStatistics'),
@@ -362,6 +360,32 @@ const taskCompleteRouteItem = {
   }
 }
 
+/* 客诉占比 */
+const complaintRoute = {
+    path: 'complaint',
+    component: () => import('@/views/businessIntelligence/complaintType'),
+    meta: {
+        requiresAuth: true,
+        icon: 'address',
+        title: '客诉类型占比',
+        index: 0,
+        type: 'bi',
+        subType: 'achievement'
+    }
+}
+
+const contractAccountsRouter = {
+    path: 'accountDatnum',
+    component: () => import('@/views/businessIntelligence/AccountDatnum'),
+    meta: {
+        requiresAuth: true,
+        icon: 'money',
+        title: '账款数据分析',
+        index: 0,
+        type: 'bi',
+        subType: 'achievement'
+    }
+}
 
 export const biRouter = {
   path: '/bi',
@@ -382,7 +406,9 @@ export const biRouter = {
     ...portrayalRouter.children,
     ...productRouter.children,
     ...rankingRouter.children,
-    taskCompleteRouteItem
+    taskCompleteRouteItem,
+    complaintRoute,
+    contractAccountsRouter
   ]
 }
 
@@ -393,5 +419,7 @@ export const biRouterMenu = [
   portrayalRouterMenu,
   productRouter,
   rankingRouter,
-  taskCompleteRouteItem
+  taskCompleteRouteItem,
+  complaintRoute,
+  contractAccountsRouter
 ]

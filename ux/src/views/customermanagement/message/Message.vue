@@ -84,7 +84,7 @@ export default {
           hidden: false
         },
         {
-          name: '待审核合同',
+          name: '待审核订单',
           crmType: 'contract',
           infoType: 'checkContract',
           num: 0,
@@ -99,20 +99,20 @@ export default {
           tips: '',
           hidden: false
         },
-        {
+       /* {
           name: '待回款提醒',
           crmType: 'receivables_plan',
           infoType: 'remindReceivablesPlan',
           num: 0,
           tips: '',
           hidden: false
-        },
+        },*/
         {
-          name: '即将到期的合同',
+          name: '即将到期的订单',
           crmType: 'contract',
           infoType: 'endContract',
           num: 0,
-          tips: '根据“合同到期时间”及设置的“提前提醒天数”提醒',
+          tips: '根据“订单到期时间”及设置的“提前提醒天数”提醒',
           hidden: false
         }
       ]

@@ -130,7 +130,7 @@ export function crmCustomerUserCustomer(data) {
  * end_time
  * user_id 员工ID
  * structure_id 部门ID
- * type_id 商机组
+ * type_id 合同组
  */
 export function crmBusinessFunnel(data) {
   return request({

@@ -67,7 +67,7 @@ export default {
       this.showObj.form.splice(index, 1)
       this.$emit('delete', { item: item, index: index, obj: this.showObj })
     },
-    // 商机组展示名称
+    // 合同组展示名称
     getTypesName(data) {
       if (data.type_id) {
         let obj = data.typeOption.find(item => {
@@ -77,7 +77,7 @@ export default {
       }
       return ''
     },
-    // 商机阶段展示名称
+    // 合同阶段展示名称
     getStatusName(data) {
       if (data.status_id) {
         let obj = data.statusOption.find(item => {

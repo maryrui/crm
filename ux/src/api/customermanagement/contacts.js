@@ -105,7 +105,7 @@ export function crmContactsExcelImport(data) {
 export const crmContactsExcelDownloadURL = 'crm/contacts/excelDownload'
 
 /**
- * 关联和取消关联商机/联系人
+ * 关联和取消关联合同/联系人
  * @param {*} data 
  */
 export function crmContactsRelationAPI(data) {

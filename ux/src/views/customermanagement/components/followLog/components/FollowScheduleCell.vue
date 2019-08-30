@@ -80,14 +80,14 @@
            @click="checkRelatedDetail('business',business)">
           <img src="@/assets/img/relevance_business.png"
                alt="">
-          商机-{{business.name}}
+          合同-{{business.name}}
         </p>
         <p v-for="(contract, i) in data.contractList"
            :key="'contract' + i"
            @click="checkRelatedDetail('contract',contract)">
           <img src="@/assets/img/relevance_business.png"
                alt="">
-          合同-{{contract.name}}
+          订单-{{contract.name}}
         </p>
       </div>
     </div>

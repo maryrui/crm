@@ -59,8 +59,8 @@ export default {
       axisList: [],
       fieldList: [
         { field: 'name', name: '客户名称' },
-        { field: 'contract_name', name: '合同名称' },
-        { field: 'contract_money', name: '合同金额（元）' },
+        { field: 'contract_name', name: '订单名称' },
+        { field: 'contract_money', name: '订单金额（元）' },
         { field: 'r_money', name: '回款金额（元）' },
         { field: 'industry', name: '客户行业' },
         { field: 'source', name: '客户来源' },

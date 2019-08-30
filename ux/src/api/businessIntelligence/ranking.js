@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 合同金额
+ * 订单金额
  * @param {*} data
  * year 年
  * status 1销售（目标）2回款（目标）
@@ -29,7 +29,7 @@ export function biRankingReceivablesAPI(data) {
 }
 
 /**
- * 签约合同排行
+ * 签约订单排行
  * @param {*} data 
  */
 export function biRankingSigningAPI(data) {

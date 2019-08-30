@@ -52,11 +52,11 @@ export default {
       postParams: {}, // 筛选参数
       axisList: [],
       fieldList: [
-        { field: 'business_name', name: '商机名称' },
+        { field: 'business_name', name: '合同名称' },
         { field: 'customer_name', name: '客户名称' },
-        { field: 'type_id_info', name: '商机状态组' },
-        { field: 'status_id_info', name: '商机阶段' },
-        { field: 'money', name: '商机金额' },
+        { field: 'type_id_info', name: '合同状态组' },
+        { field: 'status_id_info', name: '合同阶段' },
+        { field: 'money', name: '合同金额' },
         { field: 'deal_date', name: '预计成交日期' },
         { field: 'owner_user_name', name: '负责人' },
         { field: 'create_time', name: '创建时间' }
@@ -151,7 +151,7 @@ export default {
           }
         },
         legend: {
-          data: ['赢单转化率', '商机总数', '赢单商机数'],
+          data: ['赢单转化率', '合同总数', '赢单合同数'],
           bottom: '0px',
           itemWidth: 14
         },
@@ -205,7 +205,7 @@ export default {
           },
           {
             type: 'value',
-            name: '商机数',
+            name: '合同数',
             axisTick: {
               alignWithLabel: true,
               lineStyle: { width: 0 }
@@ -231,14 +231,14 @@ export default {
             data: []
           },
           {
-            name: '商机总数',
+            name: '合同总数',
             type: 'bar',
             yAxisIndex: 1,
             barWidth: 15,
             data: []
           },
           {
-            name: '赢单商机数',
+            name: '赢单合同数',
             type: 'bar',
             yAxisIndex: 1,
             barWidth: 15,
@@ -249,7 +249,7 @@ export default {
 
       axisChart.setOption(option, true)
       axisChart.on('click', params => {
-        // seriesIndex	1：赢单转化率 2:商机总数  dataIndex 具体的哪条数据
+        // seriesIndex	1：赢单转化率 2:合同总数  dataIndex 具体的哪条数据
         this.getRecordList(params.dataIndex)
       })
       this.axisOption = option

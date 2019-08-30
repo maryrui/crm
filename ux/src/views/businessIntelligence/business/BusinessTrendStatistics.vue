@@ -39,7 +39,7 @@ import {
 } from '@/api/businessIntelligence/business'
 
 export default {
-  /** 新增商机数与金额趋势分析 */
+  /** 新增合同数与金额趋势分析 */
   name: 'business-trend-statistics',
   data() {
     return {
@@ -52,11 +52,11 @@ export default {
       postParams: {}, // 筛选参数
       axisList: [],
       fieldList: [
-        { field: 'business_name', name: '商机名称' },
+        { field: 'business_name', name: '合同名称' },
         { field: 'customer_name', name: '客户名称' },
-        { field: 'type_id_info', name: '商机状态组' },
-        { field: 'status_id_info', name: '商机阶段' },
-        { field: 'money', name: '商机金额' },
+        { field: 'type_id_info', name: '合同状态组' },
+        { field: 'status_id_info', name: '合同阶段' },
+        { field: 'money', name: '合同金额' },
         { field: 'deal_date', name: '预计成交日期' },
         { field: 'owner_user_name', name: '负责人' },
         { field: 'create_time', name: '创建时间' }
@@ -147,7 +147,7 @@ export default {
           }
         },
         legend: {
-          data: ['新增商机金额', '新增商机数量'],
+          data: ['新增合同金额', '新增合同数量'],
           bottom: '0px',
           itemWidth: 14
         },
@@ -182,7 +182,7 @@ export default {
         yAxis: [
           {
             type: 'value',
-            name: '新增商机金额',
+            name: '新增合同金额',
             axisTick: {
               alignWithLabel: true,
               lineStyle: { width: 0 }
@@ -201,7 +201,7 @@ export default {
           },
           {
             type: 'value',
-            name: '新增商机数量',
+            name: '新增合同数量',
             axisTick: {
               alignWithLabel: true,
               lineStyle: { width: 0 }
@@ -221,13 +221,13 @@ export default {
         ],
         series: [
           {
-            name: '新增商机金额',
+            name: '新增合同金额',
             type: 'line',
             yAxisIndex: 0,
             data: []
           },
           {
-            name: '新增商机数量',
+            name: '新增合同数量',
             type: 'line',
             yAxisIndex: 1,
             data: []
@@ -237,7 +237,7 @@ export default {
 
       axisChart.setOption(option, true)
       axisChart.on('click', params => {
-        // seriesIndex	1：新增商机金额 2:新增商机数量  dataIndex 具体的哪条数据
+        // seriesIndex	1：新增合同金额 2:新增合同数量  dataIndex 具体的哪条数据
         this.getRecordList(params.dataIndex)
       })
       this.axisOption = option

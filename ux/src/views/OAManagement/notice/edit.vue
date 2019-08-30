@@ -48,6 +48,8 @@
 
 <script>
 import CreateView from '@/components/CreateView'
+import { validateFirstTimeOrEndTime } from "@/utils";
+
 export default {
   components: {
     CreateView
@@ -77,6 +79,9 @@ export default {
   },
   methods: {
     onSubmit() {
+    if ( this.formData.start_time && this.formData.end_time && !validateFirstTimeOrEndTime(this.formData.start_time ,this.formData.end_time)){
+      return false;
+    }
       this.$emit('editSubmit')
     },
     close() {

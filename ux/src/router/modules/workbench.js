@@ -80,7 +80,15 @@ const workbenchRouter = {
         title: '通讯录',
         icon: 'address'
       }
-    }
+    },
+      {
+          path: 'complaint',
+          component: () => import('@/views/OAManagement/complaint/index'),
+          meta: {
+              title: '客户投诉',
+              icon: 'employeestatistics'
+          }
+      }
   ]
 }
 

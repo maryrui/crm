@@ -8,7 +8,7 @@
                           @change="getDataList">
     </filtrate-handle-view>
     <div class="content">
-      <div class="content-title">签约合同数排行（按实际签订时间）</div>
+      <div class="content-title">签约订单数排行（按实际签订时间）</div>
       <div class="axis-content"
            v-empty="list.length === 0"
            xs-empty-text="暂无排行">
@@ -48,7 +48,7 @@ import echarts from 'echarts'
 import { biRankingSigningAPI } from '@/api/businessIntelligence/ranking'
 
 export default {
-  /** 签约合同排行 */
+  /** 签约订单排行 */
   name: 'ranking-signing-statistics',
   data() {
     return {}
@@ -59,7 +59,7 @@ export default {
     this.fieldList = [
       { field: 'user_name', name: '签订人' },
       { field: 'structure_name', name: '部门' },
-      { field: 'count', name: '签约合同数（个）' }
+      { field: 'count', name: '签约订单数（个）' }
     ]
     this.initAxis()
   },

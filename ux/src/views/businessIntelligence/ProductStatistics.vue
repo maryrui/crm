@@ -119,7 +119,7 @@ export default {
       headFieldList: [
         { field: 'category_id_info', name: '产品分类', width: '115px' },
         { field: 'product_id', name: '产品名称', width: '115px' },
-        { field: 'contract_id', name: '合同编号', width: '115px' },
+        { field: 'contract_id', name: '订单编号', width: '115px' },
         { field: 'owner_user_id', name: '负责人', width: '115px' },
         { field: 'customer_id', name: '客户名称', width: '115px' },
         { field: 'sales_price', name: '销售单价', width: '115px' },
@@ -129,7 +129,7 @@ export default {
       infoFieldList: [
         { field: 'name1', name: '产品分类', width: '115px' },
         { field: 'name2', name: '产品名称', width: '115px' },
-        { field: 'name3', name: '合同编号', width: '115px' },
+        { field: 'name3', name: '订单编号', width: '115px' },
         { field: 'name4', name: '负责人', width: '115px' },
         { field: 'count', name: '客户名称', width: '115px' },
         { field: 'money', name: '销售单价', width: '115px' }

@@ -23,9 +23,9 @@
 
 <script>
 import FollowLogTypeSet from './components/followLogTypeSet' // 跟进记录类型设置
-import BusinessGroupSet from './components/businessGroupSet' // 商机组设置
+import BusinessGroupSet from './components/businessGroupSet' // 合同组设置
 import ProductCategorySet from './components/productCategorySet' // 产品类别设置
-import ContractExpireSet from './components/contractExpireSet' // 合同到期提醒设置
+import ContractExpireSet from './components/contractExpireSet' // 订单到期提醒设置
 
 export default {
   name: 'biz-param',
@@ -41,9 +41,9 @@ export default {
     return {
       menuList: [
         { label: '跟进记录类型设置', key: 'follow-log-type-set' },
-        { label: '商机组设置', key: 'business-group-set' },
+        { label: '合同组设置', key: 'business-group-set' },
         { label: '产品类别设置', key: 'product-category-set' },
-        { label: '合同到期提醒设置', key: 'contract-expire-set' }
+        { label: '订单到期提醒设置', key: 'contract-expire-set' }
       ],
       menuIndex: 'follow-log-type-set'
     }

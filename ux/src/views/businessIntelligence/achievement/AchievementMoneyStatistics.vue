@@ -37,7 +37,7 @@
 import achievementMixins from '../mixins/achievement'
 
 export default {
-  /** 合同金额分析 */
+  /** 订单金额分析 */
   name: 'achievement-money-statistics',
   data() {
     return {}

@@ -35,7 +35,7 @@ export default {
             settingList[0].status_id &&
             !settingList[0].value
           ) {
-            // 商机阶段
+            // 合同阶段
             this.option = settingList.map((item, index, array) => {
               item.value = item.status_id
               return item

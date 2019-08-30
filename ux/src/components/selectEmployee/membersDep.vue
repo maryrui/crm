@@ -141,8 +141,11 @@ export default {
       checkedUserDepList: []
     }
   },
+  created() {
+      console.log(this.userCheckedData)
+  },
   watch: {
-    userCheckedData: function() {
+    userCheckedData: function(val) {
       this.updateCheckInfoByWatch()
     },
     depCheckedData: function() {

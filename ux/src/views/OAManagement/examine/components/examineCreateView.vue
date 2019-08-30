@@ -35,7 +35,7 @@
                       </span>
                     </div>
                   </div>
-                  <!-- 员工 和部门 为多选（radio=false）  relation 相关合同商机使用-->
+                  <!-- 员工 和部门 为多选（radio=false）  relation 相关订单合同使用-->
                   <component :is="item.data.form_type | typeToComponentName"
                              :value="item.value"
                              :index="index"
@@ -152,7 +152,7 @@ import {
   XhFiles,
   CrmRelativeCell
 } from '@/components/CreateCom'
-
+import { validateFirstTimeOrEndTime } from '@/utils/'
 export default {
   name: 'examine-create-view', // 所有新建效果的view
   components: {
@@ -679,13 +679,29 @@ export default {
             /** 验证审批数据 */
             this.$refs.examineInfo.validateField(() => {
               var params = this.getSubmiteParams(this.crmForm.crmFields)
+
               if (this.examineInfo.config === 0) {
                 params['check_user_id'] = this.examineInfo.value[0].id
               }
+                if (params['cause']){
+
+                    for(var i = 0 ; i < params['cause'].length ; i++) {
+                        if (params['cause'][i]['start_time'] && params['cause'][i]['end_time'] && !validateFirstTimeOrEndTime(params['cause'][i]['start_time'] ,params['cause'][i]['end_time'])) {
+                            this.$message('结束时间不能小于开始时间')
+                            return false
+                        }
+                    }
+                } else {
+                    if (params['start_time'] && params['end_time'] && !validateFirstTimeOrEndTime(params['start_time'] ,params['end_time'])) {
+                        this.$message('结束时间不能小于开始时间')
+                        return false
+                    }
+                }
               this.submiteParams(params)
             })
           } else {
             var params = this.getSubmiteParams(this.crmForm.crmFields)
+
             this.submiteParams(params)
           }
         } else {

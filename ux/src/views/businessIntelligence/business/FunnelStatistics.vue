@@ -49,7 +49,7 @@ export default {
       fieldList: [
         { field: 'status_name', name: '阶段' },
         { field: 'money', name: '金额' },
-        { field: 'count', name: '商机数' }
+        { field: 'count', name: '合同数' }
       ],
 
       funnelChart: null, // 漏斗图

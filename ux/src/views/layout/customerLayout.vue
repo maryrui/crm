@@ -79,7 +79,7 @@ export default {
         addItems.push({
           icon: 'business',
           index: 'business',
-          label: '商机'
+          label: '合同'
         })
       }
 
@@ -87,7 +87,7 @@ export default {
         addItems.push({
           icon: 'contract',
           index: 'contract',
-          label: '合同'
+          label: '订单'
         })
       }
       if (this.crm.receivables && this.crm.receivables.save) {
@@ -116,13 +116,6 @@ export default {
       createCRMType: ''
     }
   },
-
-  created() {
-    this.getcrmMessagNum()
-  },
-
-  mounted() {},
-
   methods: {
     navClick(index) {},
     addSkip(item) {
@@ -135,17 +128,6 @@ export default {
       this.createCRMType = type
       this.isCreate = true
     },
-
-    /**
-     * 获取消息数
-     */
-    getcrmMessagNum() {
-      this.$store
-        .dispatch('GetMessageNum')
-        .then(res => {})
-        .catch(() => {})
-    },
-
     /**
      * 新建客户同时新建联系人
      */

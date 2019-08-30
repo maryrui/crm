@@ -406,9 +406,9 @@ export default {
       } else if (this.$route.params.type == 'crm_contacts') {
         return '联系人'
       } else if (this.$route.params.type == 'crm_business') {
-        return '商机'
-      } else if (this.$route.params.type == 'crm_contract') {
         return '合同'
+      } else if (this.$route.params.type == 'crm_contract') {
+        return '订单'
       } else if (this.$route.params.type == 'crm_product') {
         return '产品'
       } else {

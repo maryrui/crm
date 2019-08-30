@@ -86,6 +86,7 @@ import { usersList, depList } from '@/api/common'
 import relatedBusiness from '@/components/relatedBusiness'
 import XhUser from '@/components/CreateCom/XhUser'
 
+import { validateFirstTimeOrEndTime } from '@/utils/'
 export default {
   components: {
     relatedBusiness,
@@ -134,6 +135,11 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           var formInlineCopy = Object.assign({}, this.formInline)
+
+            if (this.formInline.start_time && this.formInline.end_time && !validateFirstTimeOrEndTime( this.formInline.start_time ,this.formInline.end_time )) {
+
+                return false;
+            }
           formInlineCopy = {
             main_user_id:
               this.colleaguesList.length == 0 ? '' : this.colleaguesList[0].id,

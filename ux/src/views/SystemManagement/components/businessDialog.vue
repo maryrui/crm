@@ -4,7 +4,7 @@
              width="600px"
              :before-close="businessClose">
     <div class="business-list">
-      <div class="business-label">商机组名称</div>
+      <div class="business-label">合同组名称</div>
       <el-input v-model="name"
                 style="width: 60%;"></el-input>
     </div>
@@ -130,7 +130,7 @@ export default {
     },
     businessSubmit() {
       if (!this.name) {
-        this.$message.error('请填写商机组名称')
+        this.$message.error('请填写合同组名称')
       } else if (!this.businessDep) {
         this.$message.error('请关联应用部门')
       } else {

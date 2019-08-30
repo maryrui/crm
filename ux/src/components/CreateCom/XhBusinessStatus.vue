@@ -15,7 +15,7 @@
 import stringMixin from './stringMixin'
 
 export default {
-  name: 'xh-business-status', // 商机状态
+  name: 'xh-business-status', // 合同状态
   components: {},
   mixins: [stringMixin],
   computed: {},
@@ -42,7 +42,7 @@ export default {
   methods: {
     // 输入的值
     valueChange(val) {
-      /** 商机组顺便回调筛选数据 */
+      /** 合同组顺便回调筛选数据 */
       this.$emit('value-change', {
         index: this.index,
         value: val,

@@ -47,6 +47,7 @@
     </flexbox>
     <c-r-m-create-view v-if="isCreate"
                        crm-type="contract"
+                       :detail="detailData"
                        :action="{type: 'update', id: this.id}"
                        @save-success="editSaveSuccess"
                        @hiden-view="isCreate=false"></c-r-m-create-view>
@@ -59,7 +60,7 @@ import { crmContractRead } from '@/api/customermanagement/contract'
 import SlideView from '@/components/SlideView'
 import CRMDetailHead from '../components/CRMDetailHead'
 import ContractFollow from './components/ContractFollow' // 跟进记录
-import CRMBaseInfo from '../components/CRMBaseInfo' // 商机基本信息
+import CRMBaseInfo from '../components/CRMBaseInfo' // 合同基本信息
 import RelativeHandle from '../components/RelativeHandle' //相关操作
 import RelativeTeam from '../components/RelativeTeam' //相关团队
 import RelativeProduct from '../components/RelativeProduct' //相关团队
@@ -73,7 +74,7 @@ import moment from 'moment'
 import detail from '../mixins/detail'
 
 export default {
-  /** 客户管理 的 合同详情 */
+  /** 客户管理 的 订单详情 */
   name: 'contract-detail',
   components: {
     SlideView,
@@ -119,9 +120,9 @@ export default {
       crmType: 'contract',
       detailData: {}, // read 详情
       headDetails: [
-        { title: '合同编号', value: '' },
+        { title: '订单编号', value: '' },
         { title: '客户名称', value: '' },
-        { title: '合同金额（元）', value: '' },
+        { title: '订单金额（元）', value: '' },
         { title: '下单时间', value: '' },
         { title: '回款金额（元）', value: '' },
         { title: '负责人', value: '' }
@@ -179,7 +180,6 @@ export default {
         .then(res => {
           this.loading = false
           this.detailData = res.data // 创建回款计划的时候使用
-
           this.headDetails[0].value = res.data.num
           this.headDetails[1].value = res.data.customer_id_info
             ? res.data.customer_id_info.name

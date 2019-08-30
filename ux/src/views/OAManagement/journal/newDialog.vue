@@ -57,6 +57,7 @@
                          :action="crmFileSaveUrl"
                          :headers="httpHeader"
                          name="file[]"
+                         :before-upload="beforeAvatarUpload"
                          multiple
                          accept="*.*"
                          :on-preview="handleFilePreview"
@@ -110,6 +111,7 @@
 <script>
     import axios from 'axios'
     import { crmFileSave, crmFileDelete, crmFileSaveUrl } from '@/api/common'
+    import { baseUrl } from "@/utils/env"
     import CreateView from '@/components/CreateView'
     // 部门员工优化版
     import membersDep from '@/components/selectEmployee/membersDep'
@@ -123,7 +125,7 @@
         },
         computed: {
             crmFileSaveUrl() {
-                return window.BASE_URL + crmFileSaveUrl
+                return baseUrl + crmFileSaveUrl
             },
             httpHeader() {
                 return {
@@ -195,7 +197,7 @@
         mounted() {
             document.body.appendChild(this.$el)
             this.formList = this.dateList
-
+            console.log(this.formData);
             // 确定显示哪一种日志
             if (this.formData.category_id) {
                 switch (this.formData.category_id) {

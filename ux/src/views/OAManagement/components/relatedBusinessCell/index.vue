@@ -25,9 +25,9 @@ export default {
       } else if (this.type == 'contacts') {
         return '联系人'
       } else if (this.type == 'business') {
-        return '商机'
-      } else if (this.type == 'contract') {
         return '合同'
+      } else if (this.type == 'contract') {
+        return '订单'
       }
       return ''
     }

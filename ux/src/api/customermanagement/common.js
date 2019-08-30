@@ -33,7 +33,7 @@ export function filterIndexfields(data) {
   })
 }
 
-// 商机状态组列表 systemCustomer.js 也包含该接口
+// 合同状态组列表 systemCustomer.js 也包含该接口
 export function businessGroupList(data) {
   return request({
     url: 'crm/business_status/type',
@@ -180,7 +180,7 @@ export function crmSettingRecordListAPI(data) {
   })
 }
 
-// 客户管理下 合同审批信息
+// 客户管理下 订单审批信息
 export function crmExamineFlowStepList(data) {
   return request({
     url: 'admin/examine_flow/stepList',
@@ -204,7 +204,7 @@ export function crmExamineFlowRecordList(data) {
 }
 
 /**
- * 合同审批人信息
+ * 订单审批人信息
  * @param {*} data
  * types crm_contract
  */

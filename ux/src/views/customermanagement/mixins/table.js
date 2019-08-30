@@ -118,12 +118,12 @@ export default {
         .then(res => {
           if (this.crmType === 'customer') {
             this.list = res.data.list.map(element => {
-              element.show = false // 控制列表商机展示
+              element.show = false // 控制列表合同展示
               return element
             })
           } else {
             if (this.crmType === 'contract') {
-              // 合同列表展示金额信息
+              // 订单列表展示金额信息
               this.moneyData = res.data.data
             }
             this.list = res.data.list
@@ -237,7 +237,7 @@ export default {
                   type: 'crm',
                   formatter: fieldFormatter
                 }
-                /** 联系人 客户 商机 合同*/
+                /** 联系人 客户 合同 订单*/
               } else if (element.field === 'contacts_id' || element.field === 'customer_id' || element.field === 'business_id' || element.field === 'contract_id') {
                 function fieldFormatter(info) {
                   return info ? info.name : ''
@@ -327,7 +327,7 @@ export default {
         }
       } else if (this.crmType === 'customer') {
         if (column.property === 'business-check' && row.business_count > 0) {
-          return // 列表查看商机不展示详情
+          return // 列表查看合同不展示详情
         }
         if (column.property === 'name') {
           this.rowID = row.customer_id
@@ -440,6 +440,7 @@ export default {
           })
           var downloadElement = document.createElement('a')
           var href = window.URL.createObjectURL(blob) //创建下载的链接
+
           downloadElement.href = href
           downloadElement.download =
             decodeURI(

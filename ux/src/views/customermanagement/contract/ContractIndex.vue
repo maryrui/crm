@@ -1,10 +1,10 @@
 <template>
   <div>
-    <c-r-m-list-head title="合同管理"
-                     placeholder="请输入合同名称"
+    <c-r-m-list-head title="订单管理"
+                     placeholder="请输入订单名称"
                      @on-handle="listHeadHandle"
                      @on-search="crmSearch"
-                     main-title="新建合同"
+                     main-title="新建订单"
                      :crm-type="crmType">
     </c-r-m-list-head>
     <div v-empty="!crm.contract.index"
@@ -86,7 +86,7 @@
                        :page-size.sync="pageSize"
                        layout="slot, total, sizes, prev, pager, next, jumper"
                        :total="total">
-          <span class="money-bar">合同总金额：{{moneyPageData.sumMoney}} / 已回款金额：{{moneyPageData.unReceivablesMoney}}</span>
+          <span class="money-bar">订单总金额：{{moneyPageData.sumMoney}} / 已回款金额：{{moneyPageData.unReceivablesMoney}}</span>
         </el-pagination>
       </div>
     </div>
@@ -107,7 +107,7 @@ import CRMAllDetail from '@/views/customermanagement/components/CRMAllDetail'
 import table from '../mixins/table'
 
 export default {
-  /** 客户管理 的 合同列表 */
+  /** 客户管理 的 订单列表 */
   name: 'contractIndex',
   components: {
     CRMAllDetail
@@ -116,12 +116,12 @@ export default {
   data() {
     return {
       crmType: 'contract',
-      moneyData: null //合同列表金额
+      moneyData: null //订单列表金额
     }
   },
   computed: {
     moneyPageData() {
-      // 未勾选展示合同总金额信息
+      // 未勾选展示订单总金额信息
       if (this.selectionList.length == 0 && this.moneyData) {
         return this.moneyData
       } else {
@@ -129,7 +129,7 @@ export default {
         let unReceivablesMoney = 0.0
         for (let index = 0; index < this.selectionList.length; index++) {
           const element = this.selectionList[index]
-          // 2 审核通过的合同
+          // 2 审核通过的订单
           if (element.check_status == 2) {
             sumMoney += parseFloat(element.money)
             unReceivablesMoney += parseFloat(element.unMoney)

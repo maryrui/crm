@@ -31,7 +31,7 @@
         </el-option>
       </el-select>
       <el-select v-model="businessStatusValue"
-                 placeholder="商机组">
+                 placeholder="合同组">
         <el-option v-for="item in businessOptions"
                    :key="item.type_id"
                    :label="item.name"
@@ -103,7 +103,7 @@ export default {
       /** 用户列表 */
       userOptions: [],
       userSelectValue: '',
-      /** 商机状态 */
+      /** 合同状态 */
       businessOptions: [],
       businessStatusValue: '',
 
@@ -111,7 +111,7 @@ export default {
       fieldList: [
         { field: 'status_name', name: '阶段' },
         { field: 'money', name: '金额' },
-        { field: 'count', name: '商机数' }
+        { field: 'count', name: '合同数' }
       ],
 
       funnelChart: null, // 漏斗图
@@ -143,7 +143,7 @@ export default {
           if (res.data.length > 0) {
             this.structuresSelectValue = res.data[0].id
             this.getUserList() // 更新员工列表
-            this.getBusinessStatusList() // 获取商机状态信息 然后请求数据
+            this.getBusinessStatusList() // 获取合同状态信息 然后请求数据
           }
         })
         .catch(() => {
@@ -166,7 +166,7 @@ export default {
         })
         .catch(() => {})
     },
-    /** 商机阶段 */
+    /** 合同阶段 */
     getBusinessStatusList() {
       this.loading = true
       crmBusinessStatusList({})

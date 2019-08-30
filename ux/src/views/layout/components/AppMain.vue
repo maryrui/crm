@@ -7,7 +7,31 @@
 <script>
 export default {
   name: 'AppMain',
-  computed: {}
+  created() {
+      this.getOAMessagNum()
+      this.getcrmMessagNum()
+  },
+  computed: {},
+  methods: {
+      /**
+       * 获取消息数
+       */
+      getOAMessagNum() {
+          this.$store
+              .dispatch('GetOAMessageNum')
+              .then(res => {})
+              .catch(() => {})
+      },
+      /**
+       * 获取消息数
+       */
+      getcrmMessagNum() {
+          this.$store
+              .dispatch('GetMessageNum')
+              .then(res => {})
+              .catch(() => {})
+      }
+    }
 }
 </script>
 

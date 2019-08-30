@@ -113,8 +113,8 @@ import {
 import SlideView from '@/components/SlideView'
 import CRMDetailHead from '../components/CRMDetailHead'
 import BusinessFollow from './components/BusinessFollow' // 跟进记录
-import CRMBaseInfo from '../components/CRMBaseInfo' // 商机基本信息
-import RelativeContract from '../components/RelativeContract' // 相关合同
+import CRMBaseInfo from '../components/CRMBaseInfo' // 合同基本信息
+import RelativeContract from '../components/RelativeContract' // 相关订单
 import RelativeContacts from '../components/RelativeContacts' // 相关联系人
 import RelativeHandle from '../components/RelativeHandle' //相关操作
 import RelativeTeam from '../components/RelativeTeam' //相关团队
@@ -127,7 +127,7 @@ import moment from 'moment'
 import detail from '../mixins/detail'
 
 export default {
-  /** 客户管理 的 商机详情 */
+  /** 客户管理 的 合同详情 */
   name: 'business-detail',
   components: {
     SlideView,
@@ -174,13 +174,13 @@ export default {
       detailData: {}, // read 详情
       headDetails: [
         { title: '客户名称', value: '' },
-        { title: '商机金额（元）', value: '' },
-        { title: '商机状态', value: '' },
+        { title: '合同金额（元）', value: '' },
+        { title: '合同状态', value: '' },
         { title: '负责人', value: '' },
         { title: '创建时间', value: '' }
       ],
       tabCurrentName: 'followlog',
-      /** 商机状态数据 */
+      /** 合同状态数据 */
       status: [],
       /** 完结状态 */
       statuHandleItems: [
@@ -239,7 +239,7 @@ export default {
       }
 
       if (this.crm.contract && this.crm.contract.index) {
-        tempsTabs.push({ label: '合同', name: 'contract' })
+        tempsTabs.push({ label: '订单', name: 'contract' })
       }
 
       if (this.crm.product && this.crm.product.index) {
@@ -286,7 +286,7 @@ export default {
     },
     //** tab标签点击 */
     handleClick(tab, event) {},
-    /** 处理商机状态数据 */
+    /** 处理合同状态数据 */
     handleBusinessStatus(data) {
       this.status = []
       var statusList = data.status_list.status
@@ -443,7 +443,7 @@ export default {
             })
           })
       } else {
-        var message = '确定将当前商机设为' + item.name + '吗?'
+        var message = '确定将当前合同设为' + item.name + '吗?'
         this.$confirm(message, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

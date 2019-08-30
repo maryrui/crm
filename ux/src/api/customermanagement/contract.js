@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// crm 新建合同
+// crm 新建订单
 export function crmContractSave(data) {
   return request({
     url: 'crm/contract/save',
@@ -70,7 +70,7 @@ export function crmReceivablesPlanUpdate(data) {
 }
 
 /**
- * 合同审核
+ * 订单审核
  * @param {*} data
  * id
  * status 1通过0拒绝
@@ -85,7 +85,7 @@ export function crmContractCheck(data) {
 }
 
 /**
- * 合同撤回审批
+ * 订单撤回审批
  * @param {*} data
  * id
  * status 1通过 0拒绝
@@ -100,7 +100,7 @@ export function crmContractRevokeCheck(data) {
 }
 
 /**
- * 合同相关产品
+ * 订单相关产品
  * @param {*} data
  * contract_id
  */

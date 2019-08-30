@@ -85,7 +85,7 @@ export default {
     CrmRelative
   },
   computed: {
-    // 联系人下客户id获取关联商机
+    // 联系人下客户id获取关联合同
     customer_id() {
       return this.detail.customer_id
     },
@@ -132,7 +132,7 @@ export default {
       type: Boolean,
       default: false
     },
-    /** 联系人人下 新建商机 需要联系人里的客户信息  合同下需要客户和商机信息 */
+    /** 联系人人下 新建合同 需要联系人里的客户信息  订单下需要客户和合同信息 */
     detail: {
       type: Object,
       default: () => {

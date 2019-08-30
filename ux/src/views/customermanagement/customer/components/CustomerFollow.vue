@@ -31,9 +31,11 @@
                         placeholder="选择日期"
                         :default-value="new Date"
                         value-format="yyyy-MM-dd HH:mm:ss"
+                        default-time="12:00:00"
                         :editable="false">
         </el-date-picker>
         <el-checkbox v-model="is_event">添加到日程提醒</el-checkbox>
+        <el-input placeholder="提前天数" style="width:100px;" v-model.number="remind"></el-input>（天）
         <el-button @click.native="sendInfo"
                    class="se-send"
                    type="primary">发布</el-button>
@@ -101,6 +103,8 @@ export default {
   data() {
     return {
       sendLoading: false,
+      /** 提前提醒天数 */
+      remind: "",
       /** 下次联系时间 */
       next_time: '',
       /** 是否添加日程提醒 */
@@ -153,10 +157,15 @@ export default {
         this.$message.error('请选择下次联系时间')
         return
       }
+        if(this.is_event && !this.remind ){
+            this.$message.error('请输入提前提醒天数')
+            return
+        }
       var params = {}
       params.types = 'crm_' + this.crmType
       params.types_id = this.id
       params.content = data.content
+      params.remind = this.remind ? this.remind : 0
       params.category = this.followType
       var image_ids = data.images.map(function(element, index, array) {
         return element.file_id
@@ -188,6 +197,7 @@ export default {
           this.$refs.mixadd.resetInfo()
           this.is_event = false
           this.next_time = ''
+          this.remind = ''
           // 刷新数据
           this.$bus.emit('follow-log-refresh', { type: 'record-log' })
         })

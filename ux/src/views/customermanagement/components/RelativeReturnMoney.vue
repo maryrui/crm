@@ -5,7 +5,7 @@
              direction="row-reverse">
       <el-button class="rc-head-item"
                  @click.native="createClick('plan')"
-                 type="primary">新建回款计划</el-button>
+                 type="primary">新建订单发票</el-button>
     </flexbox>
     <el-table :data="palnList"
               :height="tableHeight"
@@ -63,6 +63,7 @@
     <c-r-m-create-view v-if="isCreate"
                        :crm-type="createCrmType"
                        :action="createActionInfo"
+                       :detail="detail"
                        @save-success="saveSuccess"
                        @hiden-view="isCreate=false"></c-r-m-create-view>
   </div>
@@ -102,7 +103,7 @@ export default {
       isCreate: false, // 新建回款回款
       palnList: [],
       planFieldList: [],
-      createActionInfo: {} // 新建回款计划的时候 在客户 合同下导入关联信息
+      createActionInfo: {} // 新建回款计划的时候 在客户 订单下导入关联信息
     }
   },
 
@@ -123,7 +124,7 @@ export default {
       type: String,
       default: ''
     },
-    /** 客户和 合同下 可新建 回款计划 */
+    /** 客户和 订单下 可新建 回款计划 */
     detail: {
       type: Object,
       default: () => {
@@ -139,27 +140,31 @@ export default {
 
   mounted() {
     this.planFieldList = [
-      { prop: 'num', width: '200', label: '期数' },
-      { prop: 'customer_id', width: '200', label: '客户名称' },
-      { prop: 'contract_id', width: '200', label: '合同编号' },
-      { prop: 'money', width: '200', label: '计划回款金额' },
-      { prop: 'return_date', width: '200', label: '计划回款日期' },
-      { prop: 'return_type', width: '200', label: '计划回款方式' },
-      { prop: 'remind', width: '200', label: '提前几日提醒' },
-      { prop: 'remark', width: '200', label: '备注' }
+      // { prop: 'num', width: '200', label: '期数' },
+      // { prop: 'customer_id', width: '200', label: '客户名称' },
+      { prop: 'contract_id', width: '200', label: '订单编号' },
+      { prop: 'contract_id', width: '200', label: '订单名称' },
+      { prop: 'invoice_code', width: '200', label: '发票编号' },
+      { prop: 'money', width: '200', label: '发票金额' },
+      { prop: 'return_date', width: '200', label: '开票日期' }
+      // { prop: 'return_type', width: '200', label: '计划回款方式' },
+      // { prop: 'remind', width: '200', label: '提前几日提醒' },
+      // { prop: 'remark', width: '200', label: '备注' }
     ]
 
     this.getPlanList()
 
     this.fieldList = [
-      { prop: 'number', width: '200', label: '回款编号' },
-      { prop: 'contract_id', width: '200', label: '合同名称' },
-      { prop: 'contract_money', width: '200', label: '合同金额' },
+      // { prop: 'number', width: '200', label: '回款编号' },
+      { prop: 'contract_id', width: '200', label: '订单编号' },
+      { prop: 'contract_name', width: '200', label: '订单名称' },
+        { prop: 'plan_id', width: '200', label: '发票编号' },
+      // { prop: 'contract_money', width: '200', label: '订单金额' },
       { prop: 'money', width: '200', label: '回款金额' },
-      { prop: 'num', width: '200', label: '期数' },
-      { prop: 'owner_user_id', width: '200', label: '负责人' },
-      { prop: 'check_status_info', width: '200', label: '状态' },
-      { prop: 'return_time', width: '200', label: '回款日期' }
+      // { prop: 'num', width: '200', label: '期数' },
+        { prop: 'return_time', width: '200', label: '回款日期' },
+      // { prop: 'owner_user_id', width: '200', label: '负责人' },
+      { prop: 'check_status_info', width: '200', label: '状态' }
     ]
     this.getList()
   },
@@ -242,11 +247,13 @@ export default {
           this.createActionInfo.data['contract'] = this.detail
         } else if (this.crmType === 'customer') {
           this.createActionInfo.data['customer'] = this.detail
+          // this.createActionInfo.data['contract'] = this.detail
         }
         this.createCrmType = 'receivables'
         this.isCreate = true
       } else if (type == 'plan') {
         if (this.crmType === 'contract') {
+          console.log(this.createActionInfo)
           this.createActionInfo.data['customer'] = this.detail.customer_id_info
           this.createActionInfo.data['contract'] = this.detail
         } else if (this.crmType === 'customer') {

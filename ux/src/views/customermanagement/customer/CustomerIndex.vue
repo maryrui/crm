@@ -128,7 +128,7 @@
 
 <script>
 import CRMAllDetail from '@/views/customermanagement/components/CRMAllDetail'
-import BusinessCheck from './components/BusinessCheck' // 相关商机
+import BusinessCheck from './components/BusinessCheck' // 相关合同
 import table from '../mixins/table'
 
 export default {
@@ -160,7 +160,7 @@ export default {
         return ''
       }
     },
-    // 商机信息查看
+    // 合同信息查看
     businessCheckClick(e, scope) {
       if (scope.row.business_count == 0) {
         return

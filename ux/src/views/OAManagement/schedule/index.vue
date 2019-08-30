@@ -63,7 +63,8 @@ export default {
       hoverDialogList: {},
       dialogVisible: false,
       formData: {
-        checkList: []
+        checkList: [],
+        owner_user_ids: { staff: [], dep: [] }
       },
       newtext: '',
       loading: true,
@@ -95,7 +96,8 @@ export default {
           _this.formData = {
             start_time: date._i,
             end_time: date._i,
-            checkList: []
+            checkList: [],
+            owner_user_ids: { staff: [], dep: [] }
           }
         },
         // 点击显示详情
@@ -181,6 +183,9 @@ export default {
       }
       val.start_time = times[0]
       val.end_time = times[1]
+      val.owner_user_ids = {
+          'staff': val.ownerList, dep: val.structureList
+      }
       this.formData = val
       this.handleClose()
       this.showDialog = true
@@ -190,7 +195,8 @@ export default {
       this.newText = '创建日程'
       this.showDialog = true
       this.formData = {
-        checkList: []
+        checkList: [],
+        owner_user_ids: { staff: [], dep: [] }
       }
     },
     // 新建日程关闭按钮

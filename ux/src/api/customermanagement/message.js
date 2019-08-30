@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 待审核合同
+ * 待审核订单
  * @param {*} data 
  */
 export function crmMessageCheckContractAPI(data) {
@@ -62,7 +62,7 @@ export function crmMessageFollowCustomerAPI(data) {
 }
 
 /**
- * 即将到期合同
+ * 即将到期订单
  * @param {*} data 
  */
 export function crmMessagEndContractAPI(data) {
@@ -74,7 +74,7 @@ export function crmMessagEndContractAPI(data) {
 }
 
 /**
- * 待回款合同
+ * 待回款订单
  * @param {*} data 
  */
 export function crmMessagRemindreceivablesplanAPI(data) {

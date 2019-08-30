@@ -53,7 +53,7 @@
         <span v-if="item.category"
               class="follow-info">{{item.category}}</span>
         <span v-if="item.next_time"
-              class="follow-info">{{item.next_time|filterTimestampToFormatTime('YYYY-MM-DD HH:mm:ss')}}</span>
+              class="follow-info">下次联系时间：{{item.next_time|filterTimestampToFormatTime('YYYY-MM-DD HH:mm:ss')}}</span>
       </div>
       <div class="fl-b-other"
            v-if="item.dataInfo.contactsList && item.dataInfo.contactsList.length > 0">
@@ -72,7 +72,7 @@
       </div>
       <div class="fl-b-other"
            v-if="item.dataInfo.businessList && item.dataInfo.businessList.length > 0">
-        <div class="fl-b-other-name">关联商机</div>
+        <div class="fl-b-other-name">关联合同</div>
         <div>
           <flexbox class="cell"
                    v-for="(item, index) in item.dataInfo.businessList"

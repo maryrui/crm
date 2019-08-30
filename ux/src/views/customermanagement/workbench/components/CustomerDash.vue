@@ -54,7 +54,7 @@
               <div class="value">{{gaugeData.achievementMoney}}元</div>
             </div>
             <div class="target-item">
-              <div class="name">合同金额</div>
+              <div class="name">订单金额</div>
               <div class="value">{{gaugeData.contractMoney}}元</div>
             </div>
             <div class="target-item">
@@ -74,7 +74,7 @@
           </flexbox>
           <flexbox class="funnelSelect">
             <el-select v-model="businessStatusValue"
-                       placeholder="商机组"
+                       placeholder="合同组"
                        @change="getBusinessStatustatistics">
               <el-option v-for="item in businessOptions"
                          :key="item.type_id"
@@ -100,7 +100,7 @@
                  src="@/assets/img/qushi.png" />销售趋势</flexbox>
           <flexbox style="position: relative;">
             <div class="trend-target-item">
-              <div class="name">合同金额</div>
+              <div class="name">订单金额</div>
               <div class="value">{{trendData.totlaContractMoney}}元</div>
             </div>
             <div class="trend-target-item">
@@ -112,7 +112,7 @@
             <flexbox class="label-item">
               <div class="label-item-mark"
                    style="background-color: #6ca2ff"></div>
-              <div class="label-item-name">合同金额</div>
+              <div class="label-item-name">订单金额</div>
             </flexbox>
             <flexbox class="label-item"
                      style="margin-top:5px;">
@@ -163,19 +163,19 @@ export default {
           value: 0
         },
         {
-          title: '新增商机',
+          title: '新增合同',
           icon: require('@/assets/img/c_business.png'),
           field: 'businessNum',
           value: 0
         },
         {
-          title: '阶段变化的商机',
+          title: '阶段变化的合同',
           icon: require('@/assets/img/jd_business.png'),
           field: 'businessStatusNum',
           value: 0
         },
         {
-          title: '新增合同',
+          title: '新增订单',
           icon: require('@/assets/img/c_contract.png'),
           field: 'contractNum',
           value: 0
@@ -198,7 +198,7 @@ export default {
       gaugeSelectValue: 2,
       gaugeData: { contractMoney: 0, receivablesMoney: 0, achievementMoney: 0 },
       /** 销售漏斗 */
-      /** 商机状态 */
+      /** 合同状态 */
       funnelLoading: false,
       businessOptions: [],
       businessStatusValue: '',
@@ -229,7 +229,7 @@ export default {
   computed: {
     /** 简报信息 */
     gaugeOptions() {
-      return [{ label: '回款金额', value: 2 }, { label: '合同金额', value: 1 }]
+      return [{ label: '回款金额', value: 2 }, { label: '订单金额', value: 1 }]
     }
   },
   mounted() {
@@ -348,7 +348,7 @@ export default {
       this.gaugeChart = gaugeChart
     },
     /** 销售漏斗 */
-    /** 商机阶段 */
+    /** 合同阶段 */
     getBusinessStatusList() {
       this.funnelLoading = true
       crmBusinessStatusList({})
@@ -552,7 +552,7 @@ export default {
         ],
         series: [
           {
-            name: '合同金额',
+            name: '订单金额',
             type: 'bar',
             stack: 'one',
             barWidth: 10,

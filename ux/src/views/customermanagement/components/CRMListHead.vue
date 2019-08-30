@@ -66,7 +66,7 @@ export default {
       /** 更多操作 */
       moreTypes: [],
       // 创建的相关信息
-      createActionInfo: { type: 'save' },
+      createActionInfo: { type: 'save', data: {}},
       createCRMType: '',
       isCreate: false, //是创建
       // 导入
@@ -123,7 +123,7 @@ export default {
     },
     createClick() {
       this.createCRMType = this.crmType
-      this.createActionInfo = { type: 'save' }
+      this.createActionInfo = { type: 'save', data: {}}
       this.isCreate = !this.isCreate
     },
     // 进行搜索操作

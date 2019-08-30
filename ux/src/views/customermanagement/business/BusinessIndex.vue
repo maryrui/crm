@@ -1,10 +1,10 @@
 <template>
   <div>
-    <c-r-m-list-head title="商机管理"
-                     placeholder="请输入商机名称"
+    <c-r-m-list-head title="合同管理"
+                     placeholder="请输入合同名称"
                      @on-handle="listHeadHandle"
                      @on-search="crmSearch"
-                     main-title="新建商机"
+                     main-title="新建合同"
                      :crm-type="crmType">
     </c-r-m-list-head>
     <div v-empty="!crm.business.index"
@@ -88,7 +88,7 @@ import CRMAllDetail from '@/views/customermanagement/components/CRMAllDetail'
 import table from '../mixins/table'
 
 export default {
-  /** 客户管理 的 商机列表 */
+  /** 客户管理 的 合同列表 */
   name: 'businessIndex',
   components: {
     CRMAllDetail

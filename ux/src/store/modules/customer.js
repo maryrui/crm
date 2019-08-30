@@ -16,7 +16,7 @@ const app = {
       checkReceivables: 0,
       remindReceivablesPlan: 0,
       endContract: 0,
-      totalNum: 0
+      totalNum: ''
     }
   },
 
@@ -31,7 +31,7 @@ const app = {
           totalNum += (messageNum[key] || 0)
         }
       }
-      messageNum.totalNum = totalNum
+      messageNum.totalNum = totalNum ? totalNum : ''
       state.messageNum = messageNum
     }
   },

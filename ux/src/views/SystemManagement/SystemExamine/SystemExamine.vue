@@ -31,8 +31,9 @@
         </el-table-column>
         <el-table-column fixed="right"
                          label="操作"
-                         width="250">
+                         width="300">
           <template slot-scope="scope">
+
             <el-button @click="handleClick('edit', scope)"
                        type="text"
                        size="small">编辑</el-button>
@@ -45,6 +46,10 @@
             <el-button @click="handleClick('copy', scope)"
                        type="text"
                        size="small">复制并新建</el-button>
+            <el-button @click="showTypeHandleView=true"
+                       type="text"
+                       v-if="scope.row.types=='crm_complaint'"
+                       size="small">客诉分类</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,6 +74,10 @@
                            @refresh="getList"
                            @hide-view="showDetail=false">
     </system-examine-detail>
+    <create-system-complaint v-if="showTypeHandleView"
+                             @save="getList"
+                             @hiden-view="showTypeHandleView=false">
+    </create-system-complaint>
   </div>
 </template>
 
@@ -81,13 +90,15 @@ import {
   examineFlowEnables
 } from '@/api/systemManagement/examineflow'
 import { timestampToFormatTime } from '@/utils'
-
+import CreateSystemComplaint from  './components/CreateSystemComplaint'
+// import { getComplaintList, saveComplaintType, deletComplaintType } from "@/api/systemManagement/SystemComplaint"
 export default {
   /** 系统管理 的 审核管理 */
   name: 'system-examine',
   components: {
     CreateSystemExamine,
-    SystemExamineDetail
+    SystemExamineDetail,
+    CreateSystemComplaint
   },
   mixins: [],
   data() {
@@ -138,6 +149,8 @@ export default {
       total: 0,
       /** 展示操作框 */
       showHandleView: false,
+      /* 客诉类型展示框 */
+      showTypeHandleView: false,
       // 创建的相关信息
       createHandleInfo: { action: 'save', type: 'examineflow', id: '' },
       // 详情展示
@@ -186,7 +199,7 @@ export default {
           return ''
         }
       } else if (column.property === 'types') {
-        return { crm_contract: '合同', crm_receivables: '回款' }[
+        return { crm_contract: '订单', crm_receivables: '回款', crm_complaint: '客诉' }[
           row[column.property]
         ]
       } else if (column.property === 'user_ids') {

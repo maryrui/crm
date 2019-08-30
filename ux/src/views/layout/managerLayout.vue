@@ -29,6 +29,9 @@ export default {
     Sidebar,
     AppMain
   },
+  mounted() {
+
+  },
   computed: {
     ...mapGetters(['manage']),
     managerRouterItems() {

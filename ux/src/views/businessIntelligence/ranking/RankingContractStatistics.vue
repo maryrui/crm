@@ -8,7 +8,7 @@
                           @change="getDataList">
     </filtrate-handle-view>
     <div class="content">
-      <div class="content-title">合同金额排行（按实际下单时间）</div>
+      <div class="content-title">订单金额排行（按实际下单时间）</div>
       <div class="axis-content"
            v-empty="list.length === 0"
            xs-empty-text="暂无排行">
@@ -48,7 +48,7 @@ import echarts from 'echarts'
 import { biRankingContractAPI } from '@/api/businessIntelligence/ranking'
 
 export default {
-  /** 合同金额排行 */
+  /** 订单金额排行 */
   name: 'ranking-contract-statistics',
   data() {
     return {}
@@ -59,7 +59,7 @@ export default {
     this.fieldList = [
       { field: 'user_name', name: '签订人' },
       { field: 'structure_name', name: '部门' },
-      { field: 'money', name: '合同金额（元）' }
+      { field: 'money', name: '订单金额（元）' }
     ]
     this.initAxis()
   },

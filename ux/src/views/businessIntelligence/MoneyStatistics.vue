@@ -113,10 +113,10 @@ export default {
       userSelectValue: '',
 
       list: [],
-      showType: 0, // 	1：合同 2:回款 0 不展示
+      showType: 0, // 	1：订单 2:回款 0 不展示
       /** 格式化规则 */
       formatterRules: {},
-      /** 合同列表 */
+      /** 订单列表 */
       fieldContractList: [],
       /** 回款字段列表 */
       fieldReceivablesList: [],
@@ -128,7 +128,7 @@ export default {
   },
   computed: {
     fieldList() {
-      // 1：合同 2:回款 0 不展示
+      // 1：订单 2:回款 0 不展示
       if (this.showType == 1) {
         return this.fieldContractList
       } else if (this.showType == 2) {
@@ -231,7 +231,7 @@ export default {
           }
         },
         legend: {
-          data: ['回款金额', '合同金额'],
+          data: ['回款金额', '订单金额'],
           bottom: '0px',
           itemWidth: 14
         },
@@ -279,7 +279,7 @@ export default {
         yAxis: [
           {
             type: 'value',
-            name: '合同金额',
+            name: '订单金额',
             axisTick: {
               alignWithLabel: true,
               lineStyle: { width: 0 }
@@ -305,7 +305,7 @@ export default {
             data: []
           },
           {
-            name: '合同金额',
+            name: '订单金额',
             type: 'bar',
             yAxisIndex: 0,
             data: []
@@ -316,7 +316,7 @@ export default {
       axisChart.setOption(option, true)
       var self = this
       axisChart.on('click', function(params) {
-        // 	1：合同 2:回款
+        // 	1：订单 2:回款
         if (params.seriesIndex === 0) {
           // 回款金额
           if (self.fieldReceivablesList.length === 0) {
@@ -329,7 +329,7 @@ export default {
             self.getDataList(params.dataIndex + 1, 2)
           }
         } else if (params.seriesIndex === 1) {
-          // 合同金额
+          // 订单金额
           if (self.fieldContractList.length === 0) {
             self.getFieldList('contract', () => {
               self.showType = 1
@@ -443,7 +443,7 @@ export default {
                 type: 'crm',
                 formatter: fieldFormatter
               }
-              /** 联系人 客户 商机 */
+              /** 联系人 客户 合同 */
             } else if (
               element.field === 'contacts_id' ||
               element.field === 'customer_id' ||
@@ -521,7 +521,7 @@ export default {
     },
     /** 查看详情 */
     handleRowClick(row, column, event) {
-      // 	1：合同 2:回款
+      // 	1：订单 2:回款
       if (this.showType == 1) {
         this.rowID = row.contract_id
         this.showContractDview = true

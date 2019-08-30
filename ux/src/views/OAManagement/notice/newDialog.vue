@@ -38,6 +38,7 @@
                            :userCheckedData="formData[item.field].staff"
                            :depCheckedData="formData[item.field].dep"
                            @popoverSubmit="popoverSubmit">
+
                 <flexbox slot="membersDep"
                          wrap="wrap"
                          class="user-container">
@@ -78,6 +79,9 @@ import { usersList, depList } from '@/api/common'
 import membersDep from '@/components/selectEmployee/membersDep'
 // API
 import { noticeAdd } from '@/api/oamanagement/notice'
+/* 时间验证 */
+import { validateFirstTimeOrEndTime } from "@/utils";
+
 export default {
   components: {
     CreateView,
@@ -109,6 +113,9 @@ export default {
     onSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
+          if (this.formData.start_time  && this.formData.end_time  &&  !validateFirstTimeOrEndTime( this.formData.start_time ,this.formData.end_time )){
+              return false;
+          }
           this.loading = true
           noticeAdd({
             title: this.formData.title,

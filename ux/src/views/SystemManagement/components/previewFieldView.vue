@@ -149,7 +149,7 @@ export default {
         // 产品类别
         return 'XhProuctCate'
       } else if (form_type == 'business_type') {
-        // 商机类别
+        // 合同类别
         return 'XhBusinessStatus'
       } else if (form_type == 'product') {
         return 'XhProduct'

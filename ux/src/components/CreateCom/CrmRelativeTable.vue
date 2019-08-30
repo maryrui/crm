@@ -41,14 +41,13 @@
       <el-table-column show-overflow-tooltip
                        type="selection"
                        align="center"
-                       width="55"></el-table-column>
+                       width="50"></el-table-column>
       <el-table-column v-for="(item, index) in fieldList"
                        :key="index"
-                       :fixed="index===0"
                        show-overflow-tooltip
                        :prop="item.prop"
                        :label="item.label"
-                       :width="150"
+                       width="150"
                        :formatter="fieldFormatter"></el-table-column>
       <el-table-column></el-table-column>
     </el-table>
@@ -241,7 +240,7 @@ export default {
               type: 'crm',
               formatter: fieldFormatter
             }
-            /** 联系人 客户 商机 */
+            /** 联系人 客户 合同 */
           } else if (
             element.field === 'contacts_id' ||
             element.field === 'customer_id' ||
@@ -303,18 +302,18 @@ export default {
         ]
       } else if (this.crmType === 'business') {
         return [
-          { name: '商机名称', field: 'name', form_type: 'text' },
-          { name: '商机金额', field: 'money', form_type: 'text' },
+          { name: '合同名称', field: 'name', form_type: 'text' },
+          { name: '合同金额', field: 'money', form_type: 'text' },
           { name: '客户名称', field: 'customer_id', form_type: 'text' },
-          { name: '商机状态组 ', field: 'type_id', form_type: 'text' },
+          { name: '合同状态组 ', field: 'type_id', form_type: 'text' },
           { name: '状态 ', field: 'status_id', form_type: 'text' }
         ]
       } else if (this.crmType === 'contract') {
         return [
-          { name: '合同编号', field: 'num', form_type: 'text' },
-          { name: '合同名称', field: 'name', form_type: 'text' },
+          { name: '订单编号', field: 'num', form_type: 'text' },
+          { name: '订单名称', field: 'name', form_type: 'text' },
           { name: '客户名称', field: 'customer_id', form_type: 'text' },
-          { name: '合同金额', field: 'money', form_type: 'text' },
+          { name: '订单金额', field: 'money', form_type: 'text' },
           { name: '开始日期', field: 'start_time', form_type: 'text' },
           { name: '结束日期', field: 'end_time', form_type: 'text' }
         ]
@@ -511,6 +510,10 @@ export default {
 .el-table /deep/ thead th {
   font-weight: 400;
   font-size: 12px;
+}
+
+.el-table /deep/ .el-table__body-wrapper{
+  min-height:150px;
 }
 
 .el-table /deep/ tbody tr td {

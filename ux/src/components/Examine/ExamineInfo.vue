@@ -15,9 +15,9 @@
                    type="text">查看审批历史</el-button>
       </el-popover>
       <div style="min-height: 40px;">
-        <el-button v-if="examineInfo.is_recheck==1"
-                   @click="examineHandle(2)"
-                   class="flow-button white">撤回审批</el-button>
+        <!--<el-button v-if="examineInfo.is_recheck==1"-->
+                   <!--@click="examineHandle(2)"-->
+                   <!--class="flow-button white">撤回审批</el-button>-->
         <el-button v-if="examineInfo.is_check==1"
                    @click="examineHandle(0)"
                    class="flow-button red">拒绝</el-button>
@@ -108,7 +108,7 @@ import CheckFlow from './CheckFlow' // 审批流程
 
 // 审核信息 config 1 固定 0 自选
 export default {
-  name: 'examine-info', // 合同审核操作
+  name: 'examine-info', // 订单审核操作
   components: {
     ExamineHandle,
     CheckFlow
@@ -188,7 +188,9 @@ export default {
     // 审批流id
     flow_id: [String, Number]
   },
-  mounted() {},
+  mounted() {
+      console.log(this.examineInfo)
+  },
   methods: {
     getFlowStepList() {
       if (!this.flow_id || !this.id) {
@@ -215,8 +217,10 @@ export default {
     },
     // 撤回审批 通过 拒绝
     examineHandle(status) {
+        console.log(status)
       this.examineHandleInfo.status = status
       this.showExamineHandle = true
+        console.log(this.showExamineHandle)
     },
     // 获取状态名称
     getStatusName(status) {

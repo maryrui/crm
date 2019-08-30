@@ -11,7 +11,7 @@
       </el-date-picker>
       <el-select v-model="typeSelect"
                  placeholder="请选择">
-        <el-option v-for="item in [{label:'合同金额', value:1},{label:'回款金额', value:2}]"
+        <el-option v-for="item in [{label:'订单金额', value:1},{label:'回款金额', value:2}]"
                    :key="item.value"
                    :label="item.label"
                    :value="item.value">
@@ -98,7 +98,7 @@ export default {
       list: [],
       fieldList: [
         { field: 'month', name: '时间' },
-        { field: 'receivables', name: '合同金额(元)' },
+        { field: 'receivables', name: '订单金额(元)' },
         { field: 'achiement', name: '目标(元)' },
         { field: 'rate', name: '完成率(%)' }
       ],
@@ -199,11 +199,11 @@ export default {
      */
     refreshTableHeadAndChartInfo() {
       this.fieldList[1].name =
-        this.typeSelect == 1 ? '合同金额(元)' : '回款金额(元)'
+        this.typeSelect == 1 ? '订单金额(元)' : '回款金额(元)'
       this.axisOption.legend.data[0] =
-        this.typeSelect == 1 ? '合同金额' : '回款金额'
+        this.typeSelect == 1 ? '订单金额' : '回款金额'
       this.axisOption.series[0].name =
-        this.typeSelect == 1 ? '合同金额' : '回款金额'
+        this.typeSelect == 1 ? '订单金额' : '回款金额'
     },
     /** 柱状图 */
     initAxis() {
@@ -219,7 +219,7 @@ export default {
           }
         },
         legend: {
-          data: ['合同金额', '目标', '完成率'],
+          data: ['订单金额', '目标', '完成率'],
           bottom: '0px',
           itemWidth: 14
         },
@@ -267,7 +267,7 @@ export default {
         yAxis: [
           {
             type: 'value',
-            name: '合同金额',
+            name: '订单金额',
             axisTick: {
               alignWithLabel: true,
               lineStyle: { width: 0 }
@@ -307,7 +307,7 @@ export default {
         ],
         series: [
           {
-            name: '合同金额',
+            name: '订单金额',
             type: 'bar',
             yAxisIndex: 0,
             barWidth: 15,

@@ -34,8 +34,8 @@
         <div class="handle-item-name">同时变更负责人至：</div>
         <el-checkbox-group v-model="addsTypes">
           <el-checkbox label="crm_contacts">联系人</el-checkbox>
-          <el-checkbox label="crm_business">商机</el-checkbox>
-          <el-checkbox label="crm_contract">合同</el-checkbox>
+          <el-checkbox label="crm_business">合同</el-checkbox>
+          <el-checkbox label="crm_contract">订单</el-checkbox>
         </el-checkbox-group>
       </flexbox>
     </div>
