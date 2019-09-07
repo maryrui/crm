@@ -613,16 +613,16 @@ class Customer extends ApiCommon
 
         //设置属性
         $objProps = $objPHPExcel->getProperties();
-        $objProps->setCreator("5kcrm");
-        $objProps->setLastModifiedBy("5kcrm");
-        $objProps->setTitle("5kcrm");
-        $objProps->setSubject("5kcrm data");
-        $objProps->setDescription("5kcrm data");
-        $objProps->setKeywords("5kcrm data");
-        $objProps->setCategory("5kcrm");
+        $objProps->setCreator("crm");
+        $objProps->setLastModifiedBy("crm");
+        $objProps->setTitle("crm");
+        $objProps->setSubject("crm data");
+        $objProps->setDescription("crm data");
+        $objProps->setKeywords("crm data");
+        $objProps->setCategory("crm");
         $objPHPExcel->setActiveSheetIndex(0);
         $objActSheet = $objPHPExcel->getActiveSheet();
-        $objActSheet->setTitle('悟空软件客户导入模板'.date('Y-m-d',time()));
+        $objActSheet->setTitle('客户导入模板'.date('Y-m-d',time()));
 
         //填充边框
         $styleArray = [

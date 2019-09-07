@@ -92,7 +92,7 @@ return [
 	//人资员工导入
 	'admin/users/tobeusers' => ['admin/users/tobeusers', ['method' => 'POST']],	
 	//根据ID批量设置密码
-	'admin/users/updatePwd' => ['admin/users/updatePwd', ['method' => 'POST']],	
+	'admin/users/updatePwd' => ['admin/users/updatePwd', ['method' => 'POST']],
 
 	// 【部门】列表
 	'admin/structures/index' => ['admin/structures/index', ['method' => 'POST']],
@@ -166,6 +166,7 @@ return [
 	'admin/record/index' => ['admin/record/index', ['method' => 'POST']],
 	// 【跟进记录】创建
 	'admin/record/save' => ['admin/record/save', ['method' => 'POST']],	
+	'admin/record/updateStatus' => ['admin/record/updateStatus', ['method' => 'POST']],
 	// 【跟进记录】删除
 	'admin/record/delete' => ['admin/record/delete', ['method' => 'POST']],	
 
@@ -187,8 +188,15 @@ return [
 	'admin/examine_flow/recordList' => ['admin/examine_flow/recordList', ['method' => 'POST']],	
 
 	// 【员工部门】员工账号编辑
-	'admin/users/usernameEdit' => ['admin/users/usernameEdit', ['method' => 'POST']],					
-	
+	'admin/users/usernameEdit' => ['admin/users/usernameEdit', ['method' => 'POST']],
+
+    // 【二次开发功能】批量导入员工
+	'admin/users/excel/import' => ['admin/users/userExcelImport', ['method' => 'POST']],
+	'admin/phw/database/:key' => ['admin/phw/phwTest', ['method' => 'get']],
+
+    'admin/complaint/type/index' => ['admin/examine_flow/complaintTypes', ['method' => 'get']],
+    'admin/complaint/type/save' => ['admin/examine_flow/complaintTypeSave', ['method' => 'POST']],
+
 	// MISS路由
 	'__miss__'  => 'admin/base/miss',
 ];

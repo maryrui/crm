@@ -501,7 +501,7 @@ class Task extends ApiCommon
             Db::name('Task')->where('task_id = '.$param['task_id'])->setField('owner_user_id','');
         }
         if ($param) {
-            $taskDet = Db::name('Task')->field('task_id,structure_ids,owner_user_id')->where('task_id ='.$param['task_id'])->find();
+            $taskDet = Db::name('Task')->field('task_id,name,structure_ids,owner_user_id')->where('task_id ='.$param['task_id'])->find();
             $tructure = substr($taskDet['structure_ids'],1,strlen($taskDet['structure_ids'])-2);
             if ($param['structure_ids']) {   //部门编辑
                 if ($tructure) {
@@ -529,8 +529,12 @@ class Task extends ApiCommon
                     $data2['task_id'] = $param['task_id'];
                     $this->updateStructure($data2);
                 }
-				
-				actionLog( $param['task_id'],$param['owner_user_id'],$param['structure_ids'],'修改了部门');
+                $temp['user_id'] = $userInfo['id'];
+                $temp['content'] = '任务（'.$taskDet['name'].'）修改了参与部门';
+                $temp['create_time'] = time();
+                $temp['task_id'] = $param['task_id'];
+                Db::name('WorkTaskLog')->insert($temp);
+				actionLog( $param['task_id'],$param['owner_user_id'],$param['structure_ids'],'任务（'.$taskDet['name'].'）修改了参与部门');
             }  
 
             $ownerid = substr($taskDet['owner_user_id'],1,strlen($taskDet['owner_user_id'])-2);
@@ -560,7 +564,12 @@ class Task extends ApiCommon
                     $data4['task_id'] = $param['task_id'];
                     $this->updateOwnerId($data4);
                 }
-				actionLog( $param['task_id'],$param['owner_user_id'],$param['structure_ids'],'修改了参与人');
+                $temp['user_id'] = $userInfo['id'];
+                $temp['content'] ='任务（'.$taskDet['name'].'）修改了参与人';
+                $temp['create_time'] = time();
+                $temp['task_id'] = $param['task_id'];
+                Db::name('WorkTaskLog')->insert($temp);
+				actionLog( $param['task_id'],$param['owner_user_id'],$param['structure_ids'],'任务（'.$taskDet['name'].'）修改了参与人' );
             } 
             return resultArray(['data'=>true]);
         } else {
@@ -784,25 +793,24 @@ class Task extends ApiCommon
 			$taskInfo = Db::name('task')->where('task_id = '.$param['task_id'].'')->find();
             if ($param['type'] == '1') {
                 $flag = Db::name('Task')->where('task_id ='.$param['task_id'])->setField('status',5);
-				if( $flag && !$taskInfo['pid']){
+				if( $flag){
 					
 					$temp['user_id'] = $userInfo['id'];
-					$temp['content'] = '任务标记结束';
+					$temp['content'] = '任务('.$taskInfo['name'].')标记结束';
 					$temp['create_time'] = time();
 					$temp['task_id'] = $param['task_id'];
 					Db::name('WorkTaskLog')->insert($temp);
-					actionLog( $taskInfo['task_id'],$taskInfo['owner_user_id'],$taskInfo['structure_ids'],'任务标记结束'); //
+					actionLog( $taskInfo['task_id'],$taskInfo['owner_user_id'],$taskInfo['structure_ids'],'任务('.$taskInfo['name'].')标记结束'); //
 				}
             } else {
                 $flag = Db::name('Task')->where('task_id ='.$param['task_id'])->setField('status',1);
-				if( $flag && !$taskInfo['pid']){
-				
+				if( $flag){
 					$temp['user_id'] = $userInfo['id'];
-					$temp['content'] = '任务标记开始';
+					$temp['content'] = '任务('.$taskInfo['name'].')标记开始';
 					$temp['create_time'] = time();
 					$temp['task_id'] = $param['task_id'];
 					Db::name('WorkTaskLog')->insert($temp);
-					actionLog( $taskInfo['task_id'],$taskInfo['owner_user_id'],$taskInfo['structure_ids'],'任务标记开始'); //
+					actionLog( $taskInfo['task_id'],$taskInfo['owner_user_id'],$taskInfo['structure_ids'],'任务('.$taskInfo['name'].')标记开始'); //
 				}
             }
             return resultArray(['data' => true ]);

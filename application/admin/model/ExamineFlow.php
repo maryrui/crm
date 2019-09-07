@@ -21,7 +21,7 @@ class ExamineFlow extends Common
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
 	protected $autoWriteTimestamp = true;
-	protected $typesArr = ['crm_contract','crm_receivables','oa_examine'];
+	protected $typesArr = ['crm_contract','crm_receivables','oa_examine','crm_complaint'];
 
 	/**
      * [getDataList 审批流程list]
@@ -176,30 +176,35 @@ class ExamineFlow extends Common
         if ($types !== 'oa_examine') {
             $types_id = 0;
         }
-    	$map['types_id'] = $types_id;
-    	//判断用户使用哪个流程（优先级：所属部门 > 全部）
-        $userData = $userModel->getUserById($user_id);
-        $userData['map'] = $map;
+        $map['types_id'] = $types_id;
 
-        $flowInfo = db('admin_examine_flow')
-                    ->where(function ($query) use ($userData) {
-                        $userData = $userData;
-                        $query->where(['config' => 1])
-                                ->where($userData['map'])
-                                ->where(function ($query) use ($userData) {
-                                    $query->where('structure_ids','like','%,'.$userData['structure_id'].',%')
-                                            ->whereOr('user_ids','like','%,'.$userData['id'].',%');
-                                });
-                    })->whereOr(function ($query) use ($userData) {
-                        $query->where(['config' => 1])
-                                ->where($userData['map'])
-                                ->where('structure_ids','eq','')
-                                ->where('user_ids','eq','');                    
-                    })->whereOr(function ($query) use ($userData) {
-                        $query->where(['config' => 0])
-                                ->where($userData['map']);
-                    })->order('update_time desc')->find();
-    	return $flowInfo ? : [];
+        if($types !== 'crm_complaint'){
+            //判断用户使用哪个流程（优先级：所属部门 > 全部）
+            $userData = $userModel->getUserById($user_id);
+            $userData['map'] = $map;
+            $flowInfo = db('admin_examine_flow')
+                ->where(function ($query) use ($userData) {
+                    $userData = $userData;
+                    $query->where(['config' => 1])
+                        ->where($userData['map'])
+                        ->where(function ($query) use ($userData) {
+                            $query->where('structure_ids','like','%,'.$userData['structure_id'].',%')
+                                ->whereOr('user_ids','like','%,'.$userData['id'].',%');
+                        });
+                })->whereOr(function ($query) use ($userData) {
+                    $query->where(['config' => 1])
+                        ->where($userData['map'])
+                        ->where('structure_ids','eq','')
+                        ->where('user_ids','eq','');
+                })->whereOr(function ($query) use ($userData) {
+                    $query->where(['config' => 0])
+                        ->where($userData['map']);
+                })->order('update_time desc')->find();
+            return $flowInfo ? : [];
+        }
+        $flowInfo = db('admin_examine_flow')->where($map)
+            ->order('update_time desc')->find();
+        return $flowInfo ? : [];
     }
 
     /**

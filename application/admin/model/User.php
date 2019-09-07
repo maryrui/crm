@@ -535,6 +535,18 @@ class User extends Common
 		}
 	}
 
+	public function updateOpenid($param)
+    {
+        $data['openid']=$param['openid'];
+        $flag = Db::name('AdminUser')->where('mobile ='.$param['mobile'])->update($data);
+        if ($flag) {
+            return $flag;
+        } else {
+            $this->error ='绑定失败，请联系管理员创建账户!';
+            return false;
+        }
+    }
+
 	/**
 	 * 获取菜单和权限 protected
 	 * @param  array   $param  [description]
@@ -721,7 +733,7 @@ class User extends Common
 		$data = Db::name('AdminUser')
 				->alias('user')
 				->join('__ADMIN_STRUCTURE__ structure', 'structure.id = user.structure_id', 'LEFT')
-				->where(['user.id' => $id])->field('user.id,username,img,thumb_img,realname,parent_id,structure.name as structure_name,structure.id as structure_id')->find();
+				->where(['user.id' => $id])->field('user.id,user.openid,username,img,thumb_img,realname,parent_id,structure.name as structure_name,structure.id as structure_id')->find();
 		$data['img'] = $data['img'] ? getFullPath($data['img']) : '';
 		$data['thumb_img'] = $data['thumb_img'] ? getFullPath($data['thumb_img']) : '';
 		return $data ? : [];

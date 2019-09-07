@@ -40,6 +40,20 @@ class Time
     }
 
     /**
+     * 返回几天前/后的开始和结束的时间戳
+     *
+     * @return array
+     */
+    public static function day($day)
+    {
+        $yesterday = date('d') + $day;
+        return [
+            mktime(0, 0, 0, date('m'), $yesterday, date('Y')),
+            mktime(23, 59, 59, date('m'), $yesterday, date('Y'))
+        ];
+    }
+
+    /**
      * 返回本周开始和结束的时间戳
      *
      * @return array

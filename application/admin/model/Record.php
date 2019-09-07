@@ -381,12 +381,15 @@ class Record extends Common
 		}
 		$param['business_ids'] = arrayToString($param['business_ids']);
 		$param['contacts_ids'] = arrayToString($param['contacts_ids']);
-
+		$remind = $param['remind'] ? $param['remind'] : 7;
+        $param['remind_date'] = $param['next_time'] - 86400 * $remind;
 		$fileArr = $param['file_id']; //接收表单附件
 		unset($param['file_id']);
-		if ($this->data($param)->allowField(true)->save()) {
+
+
+        if ($this->data($param)->allowField(true)->save()) {
 			//下次联系时间
-			$this->updateNexttime($param['types'], $param['types_id'], $param['next_time']);
+			$this->updateNexttime($param['types'], $param['types_id'], $param['next_time'],$param['remind']);
 
 			//处理附件关系
 	        if ($fileArr) {
@@ -487,7 +490,7 @@ class Record extends Common
 	 * @param types 类型ID
 	 * @param next_time 下次联系时间
 	 */ 
-	public function updateNexttime($types, $types_id, $next_time)
+	public function updateNexttime($types, $types_id, $next_time,$remind)
 	{
 		switch ($types) {
 			case 'crm_customer' : $dbName = db('crm_customer'); $dbId = 'customer_id'; break;
@@ -499,9 +502,20 @@ class Record extends Common
 		}
 		$data = [];
 		if ($next_time) $data['next_time'] = $next_time;
-		$data['update_time'] = time();
-		if (in_array($types,['crm_customer','crm_leads'])) $data['follow'] = '已跟进';
+        $remind = $remind ? $remind : 7;
+        $data['remind_date'] = $remind ?strtotime($remind) - 86400 * $remind:0;
+
+        $data['update_time'] = time();
 		$dbName->where([$dbId => $types_id])->update($data);
 		return true;
 	}
+
+	public function updateStatus($types, $types_id)
+    {
+        $where = ['types'=>$types,"types_id"=>$types_id];
+        $data =['status'=> 1,'update_time'=>time()] ;
+        Db::name("admin_record")->where($where)->update($data);
+
+        return true;
+    }
 }

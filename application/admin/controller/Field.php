@@ -52,8 +52,10 @@ class Field extends ApiCommon
             '1' => ['types' => 'crm_customer','name' => '客户管理'],
             '2' => ['types' => 'crm_contacts','name' => '联系人管理'],
             '3' => ['types' => 'crm_product','name' => '产品管理'],
-            '4' => ['types' => 'crm_business','name' => '商机管理'],
-            '5' => ['types' => 'crm_contract','name' => '合同管理'],
+            //'4' => ['types' => 'crm_business','name' => '商机管理'],
+            '4' => ['types' => 'crm_business','name' => '合同管理'],
+            //'5' => ['types' => 'crm_contract','name' => '合同管理'],
+            '5' => ['types' => 'crm_contract','name' => '订单管理'],
             '6' => ['types' => 'crm_receivables','name' => '回款管理'],
         ];
         $examine_types_arr = [];    

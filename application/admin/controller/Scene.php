@@ -11,6 +11,7 @@ use think\Hook;
 use think\Session;
 use think\Request;
 use think\Db;
+use think\Log;
 
 class Scene extends ApiCommon
 {

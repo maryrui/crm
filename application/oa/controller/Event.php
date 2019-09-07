@@ -40,6 +40,7 @@ class Event extends ApiCommon
         $param = $this->param;
         $userInfo = $this->userInfo;
         $param['user_id'] = $userInfo['id'];
+        $param['structure_id'] =$userInfo['structure_id'];
         $data = $eventModel->getDataList($param);       
         return resultArray(['data' => $data]);
     }

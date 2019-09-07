@@ -106,7 +106,7 @@ class Message extends ApiCommon
         switch ($type) {
             case '1' : $param['next_time'] = ['between',array($todayTime[0],$todayTime[1])]; break;
             case '2' : $param['next_time'] = ['between',array(1,time())]; break;
-            case '3' : $param['next_time'] = ['between',array($todayTime[0],$todayTime[1])]; $param['follow'] = ['eq','已联系']; break;
+            case '3' : $param['next_time'] = ['between',array($todayTime[0],$todayTime[1])]; break;
         }
         $data = $customerModel->getDataList($param);
         if ($types == 'list') {
@@ -137,7 +137,7 @@ class Message extends ApiCommon
             $param['owner_user_id'] = array('in',getSubUserId(false));
         }        
         switch ($type) {
-            case '1' : $param['follow'] = ['neq','已跟进']; break;
+            case '1' : $param['follow'] = ['NULL']; break;
             case '2' : $param['follow'] = ['eq','已跟进']; break;
         }
         $data = $leadsModel->getDataList($param);

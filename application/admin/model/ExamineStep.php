@@ -55,7 +55,7 @@ class ExamineStep extends Common
                 $resSuccess = false;
             }
             $dataStep[$k]['relation'] = 1;
-            if (in_array($v['status'],[2,3])) {
+            if (in_array($v['status'],[2,3,9])) {
                 $dataStep[$k]['user_id'] = $v['user_id'] ? arrayToString($v['user_id']) : ''; //处理user_id
                 $dataStep[$k]['relation'] = ($v['status'] == 3) ? 1 : 2;
             }
@@ -179,6 +179,12 @@ class ExamineStep extends Common
     		case 'oa_examine' : $dataInfo = db('oa_examine')->where(['examine_id' => intval($types_id)])->field('create_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
             case 'crm_contract' : $dataInfo = db('crm_contract')->where(['contract_id' => intval($types_id)])->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
             case 'crm_receivables' : $dataInfo = db('crm_receivables')->where(['receivables_id' => intval($types_id)])->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
+            case 'crm_complaint' :
+                $dataInfo = db('crm_complaint')
+                    ->where(['id' => intval($types_id)])
+                    ->field('create_user_id,check_user_id,flow_id,order_id,check_status,update_time')
+                    ->find();
+                break;
     	}
         $stepInfo = [];
         if ($dataInfo['flow_id']) {
@@ -213,7 +219,8 @@ class ExamineStep extends Common
                     $examine_user_id_arr[] = 1;
                 }
                 break;
-            case 2 : 
+            case 2 :
+            case 9:
             case 3 :$examine_user_id_arr = stringToArray($stepInfo['user_id']); break;
             case 4 : 
                 $order_id = $stepInfo['order_id'] ? $stepInfo['order_id']-1 : 0;
@@ -232,6 +239,7 @@ class ExamineStep extends Common
                     $examine_user_id_arr = stringToArray($examine_user_id);
                 }       
                 break;
+
             default : $examine_user_id_arr = [];
         }
         return array_unique($examine_user_id_arr) ? ','.implode(',',array_filter(array_unique($examine_user_id_arr))).',' : '';
@@ -477,5 +485,30 @@ class ExamineStep extends Common
         $data['is_check'] = $is_check;
         $data['is_recheck'] = $is_recheck;
         return $data ? : [];
-    }           
+    }
+
+
+    /**
+     * 根据客诉类别获取下一节点处理人
+     * @param  types 类型
+     * @param  types_id 类型ID
+     * @return
+     */
+    public function getComplaintStepUser($complaint_id, $user_ids){
+        $complaintModel = new \app\crm\model\Complaint();
+        $userModel = new \app\admin\model\User();
+        $complaint = $complaintModel->getDataById($complaint_id);
+        $complaintType = $complaintModel->getComplaintType($complaint['type']);
+        $depart = stringToArray($complaintType['depart']);
+        $res = [];
+        foreach($user_ids as $k => $v){
+            $user = $userModel->getDataById($v);
+            $structure_id = (string)$user['structure_id'];
+            if(in_array($structure_id,$depart)){
+                $res[] = $user['id'];
+                break;
+            }
+        }
+        return $res;
+    }
 }

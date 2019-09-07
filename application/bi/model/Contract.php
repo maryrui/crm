@@ -6,6 +6,7 @@
 // +----------------------------------------------------------------------
 namespace app\bi\model;
 
+use app\admin\model\Field;
 use think\Db;
 use app\admin\model\Common;
 use think\Request;
@@ -74,5 +75,24 @@ class Contract extends Common
     function getDataMoney($whereArr){
         $money = db('crm_contract')->where($whereArr)->sum('money');
         return $money;
+    }
+
+    function getAccounts($whereArr){
+        $contracts = Db::name("crm_contract")->field(['contract_id','name','money'])->where($whereArr)->select();
+        foreach($contracts as $i=>$v){
+            $balance  = $v['money'];
+            $receivables = Db::name("crm_receivables")->field(['plan_id','money'])->where(['contract_id'=>$v['contract_id']])->select();
+            $contracts[$i]['receivables'] = $receivables;
+            foreach ($receivables as $j =>$v2){
+                $plans = Db::name("crm_receivables_plan")->field(['plan_id','return_date','money','status'])
+                    ->where(['plan_id'=>$v2['plan_id'],'status'=>1])->select();
+                $contracts[$i]['receivables'][$j]['plans'] = $plans;
+                foreach ($plans as $plan){
+                    $balance = $balance - $plan['money'];
+                }
+            }
+            $contracts[$i]['balance'] = $balance;
+        }
+        return $contracts;
     }
 }

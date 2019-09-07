@@ -159,6 +159,25 @@ class Contacts extends Common
         return $data;
     }
 
+    /**
+     * 计划任务list
+     * @author Chen
+     * @return    [array]
+     */
+    public function crontabList()
+    {
+        $param['contacts.remind_date'] = array('elt',time());
+        $param['contacts.next_time'] = array('egt',time());
+        $param['record.types'] = "crm_contacts";
+        $list =  Db::name('crm_contacts')->alias('contacts')
+            ->join('__ADMIN_RECORD__ record','contacts.contacts_id=record.types_id')
+            ->join('__ADMIN_USER__ user', 'user.id=record.create_user_id')
+            ->where($param)
+            ->field('contacts.name,record.next_time,record.content,record.category,user.openid')
+            ->select();
+        return $list;
+    }
+
 	/**
 	 * 创建联系人主表信息
 	 * @author Michael_xu

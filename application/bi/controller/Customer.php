@@ -677,4 +677,24 @@ class Customer extends ApiCommon
         }
         return resultArray(['data' => $datas]);
     }
+
+
+    public function complaint(){
+        $model = new \app\bi\model\Customer();
+        $param = $this->param;
+        $create_time = [];
+        $timeType = isset($param['type']) ? $param['type']:'today';
+        if(isset($param['type'])){
+            $paramTime = getTimeByType($timeType);
+            $create_time = array('between',array($paramTime[0],$paramTime[1]));
+        }
+        if(isset($param['start_time']) && isset($param['end_time']) ){
+            $create_time = array('between',array($param['start_time'],$param['end_time']));
+        }
+
+        $whereArr['create_time'] = $create_time;
+
+        $data = $model->complaintSummary($whereArr);
+        return resultArray(['data' => $data]);
+    }
 }

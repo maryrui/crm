@@ -19,25 +19,25 @@ use think\console\Output;
 use think\Loader;
 use think\Session;
 
-class Test extends Command
-{
-    public function configure()
-    {
-        $this->setName('unit')->setDescription('phpunit')->ignoreValidationErrors();
-    }
-
-    public function execute(Input $input, Output $output)
-    {
-        Loader::addClassMap('TestCase', ROOT_PATH . 'tests/TestCase.php');
-        Loader::addClassMap('think\App', CORE_PATH . 'App' . EXT);
-
-        Session::init();
-        $argv = $_SERVER['argv'];
-        array_shift($argv);
-        array_shift($argv);
-        array_unshift($argv,'phpunit');
-
-        (new PHPUnit_TextUI_Command())->run($argv);
-    }
-
-}
+//class Demo extends Command
+//{
+//    public function configure()
+//    {
+//        $this->setName('unit')->setDescription('phpunit')->ignoreValidationErrors();
+//    }
+//
+//    public function execute(Input $input, Output $output)
+//    {
+//        Loader::addClassMap('TestCase', ROOT_PATH . 'tests/TestCase.php');
+//        Loader::addClassMap('think\App', CORE_PATH . 'App' . EXT);
+//
+//        Session::init();
+//        $argv = $_SERVER['argv'];
+//        array_shift($argv);
+//        array_shift($argv);
+//        array_unshift($argv,'phpunit');
+//
+//        (new PHPUnit_TextUI_Command())->run($argv);
+//    }
+//
+//}

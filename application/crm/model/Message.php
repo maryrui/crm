@@ -53,9 +53,7 @@ class Message extends Common
                 ->page($request['page'], $request['limit'])
                 ->order($order)
                 ->select(); 
-        foreach ($list as $k=>$v) {
-            $list[$k]['']
-        }
+
         $dataCount = $this->where($map)->count('message_id');
         $data = [];
         $data['list'] = $list;

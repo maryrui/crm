@@ -59,7 +59,7 @@ return [
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     //允许访问模块
-    'allow_module_list'      => ['admin','crm','oa','bi'],    
+    'allow_module_list'      => ['admin','crm','oa','bi','extend'],
     // 默认控制器名
     'default_controller'     => 'Index',
     // 默认操作名
@@ -92,7 +92,7 @@ return [
     // 是否开启路由
     'url_route_on'           => true,
     // 路由配置文件（支持配置多个）
-    'route_config_file'      => ['route_admin','route_crm','route_oa','route_bi'],
+    'route_config_file'      => ['route_admin','route_crm','route_oa','route_bi','route_extend'],
     // 是否强制使用路由
     'url_route_must'         => false,
     // 域名部署
@@ -246,5 +246,5 @@ return [
     //百度地图apiKey
     'map_ak' => 'g4D9pzuFnwjVVpUCDvQ6vhkSfPDx7V3q',
     //组织简称授权码
-    'num_ak' => '',       
+    'num_ak' => '',
 ];

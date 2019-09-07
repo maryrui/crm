@@ -69,7 +69,7 @@ class Base extends Common
         if (Request::instance()->isOptions()) {
             return ;
         } else {
-            echo '悟空软件';
+            echo 'eyemove';
         }
     }
 }
