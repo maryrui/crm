@@ -23,7 +23,7 @@ class Contract extends ApiCommon
     {
         $action = [
             'permission' => [''],
-            'allow' => ['analysis', 'summary']
+            'allow' => ['analysis', 'summary', 'accounts']
         ];
         Hook::listen('check_auth', $action);
         $request = Request::instance();
