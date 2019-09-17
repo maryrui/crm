@@ -680,6 +680,10 @@ class Customer extends ApiCommon
 
 
     public function complaint(){
+        if (!checkPerByAction('bi', 'customer' , 'read')) {
+            header('Content-Type:application/json; charset=utf-8');
+            exit(json_encode(['code'=>102,'error'=>'无权操作']));
+        }
         $model = new \app\bi\model\Customer();
         $param = $this->param;
         $create_time = [];

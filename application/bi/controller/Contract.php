@@ -251,11 +251,15 @@ class Contract extends ApiCommon
 
     public function accounts()
     {
+        if (!checkPerByAction('bi', 'contract', 'read')) {
+            header('Content-Type:application/json; charset=utf-8');
+            exit(json_encode(['code' => 102, 'error' => '无权操作']));
+        }
         $userModel = new \app\admin\model\User();
         $model = new \app\bi\model\Contract();
         $param = $this->param;
         $create_time = [];
-        $timeType = isset($param['type']) ? $param['type']:'today';
+        $timeType = isset($param['type']) ? $param['type'] : 'today';
         if (isset($param['type'])) {
             $paramTime = getTimeByType($timeType);
             $create_time = array('between', array($paramTime[0], $paramTime[1]));
@@ -277,14 +281,31 @@ class Contract extends ApiCommon
         $whereArr['tract.owner_user_id'] = array('in', $userIds);
         $whereArr['tract.check_status'] = array('eq', 2);
         $whereArr['tract.create_time'] = $create_time;
-
-
+        if (isset($param['contract_name'])) {
+            //todo
+        }
+        if (isset($param['contract_money'])) {
+            //todo
+        }
         $list = $model->getAccounts($whereArr);
 
         return resultArray(['data' => $list]);
     }
 
-//    public function getSearchField() {
-//        $fields = ['contract_name', 'contract_money', '']
-//    }
+    /**
+     * 账款数据分析筛选字段
+     */
+    public function getSearchField()
+    {
+        $fields = array(
+            'contract_name', // 订单名称
+            'contract_money', // 订单金额
+            'customer_name', // 客户名称
+            'money', // 发票金额
+            'receivables_money', //回款金额
+            'receivables_datetime', // 回款日期
+            'balance', // 欠款
+        );
+        return resultArray(['data' => $fields]);
+    }
 }

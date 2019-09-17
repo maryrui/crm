@@ -55,6 +55,8 @@ return [
 	'bi/contract/summary' => ['bi/contract/summary', ['method' => 'POST']],
     // 【商业智能】合同到账明细
     'bi/contract/accounts' => ['bi/contract/accounts', ['method' => 'POST']],
+    // 【商业智能】合同到账搜索字段
+    'bi/contract/accounts/searchFields' => ['bi/contract/accounts', ['method' => 'GET']],
 	// 【商业智能】员工客户总量分析
 	'bi/customer/total' => ['bi/customer/total', ['method' => 'POST']],
 	// 【商业智能】员工客户跟进次数分析

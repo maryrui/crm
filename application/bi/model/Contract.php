@@ -89,6 +89,7 @@ class Contract extends Common
 //            ->field(['contract_id','name','money', 'contacts_id'])
 //            ->where($whereArr)
 //            ->select();
+
         $contracts = Db::name('crm_contract')->alias('tract')
             ->field('tract.contract_id,tract.name,tract.money,tract.owner_user_id,user.realname,tract.customer_id,customer.name as customer_name')
             ->join('crm_customer customer', 'tract.customer_id = customer.customer_id')
