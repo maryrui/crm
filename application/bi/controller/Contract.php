@@ -274,13 +274,17 @@ class Contract extends ApiCommon
         }
         $perUserIds = $userModel->getUserByPer('crm', 'contract', 'read'); //权限范围内userIds
         $userIds = $map_user_ids ? array_intersect($map_user_ids, $perUserIds) : $perUserIds; //数组交集
-        $whereArr['owner_user_id'] = array('in', $userIds);
-        $whereArr['check_status'] = array('eq', 2);
-        $whereArr['create_time'] = $create_time;
+        $whereArr['tract.owner_user_id'] = array('in', $userIds);
+        $whereArr['tract.check_status'] = array('eq', 2);
+        $whereArr['tract.create_time'] = $create_time;
 
 
         $list = $model->getAccounts($whereArr);
 
         return resultArray(['data' => $list]);
     }
+
+//    public function getSearchField() {
+//        $fields = ['contract_name', 'contract_money', '']
+//    }
 }
