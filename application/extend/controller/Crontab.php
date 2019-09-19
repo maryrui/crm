@@ -15,10 +15,10 @@ class Crontab
     {
         $this->receivablesPlan();
         $this->customer();
-//        $this->business();
-//        $this->leads();
-//        $this->contacts();
-//        $this->contract();
+        $this->business();
+        $this->leads();
+        $this->contacts();
+        $this->contract();
     }
 
     public function receivablesPlan()

@@ -90,13 +90,6 @@
             <input type="text" class="phone" placeholder="请输入联系电话"></label>
     </p>
     <p>
-        <label>投诉类型： <br>
-            <select class="type">
-
-            </select>
-        </label>
-    </p>
-    <p>
         <label>投诉内容： <br>
             <textarea rows="3" class="content" placeholder="请输入投诉内容"></textarea></label>
     </p>
@@ -149,7 +142,7 @@
                 $('.mask_box').show();
                 $.ajax({
                     type: 'post',
-                    url: "/index.php/extend/wechat/complaint/save",
+                    url: "/index.php/crm/complaint/save",
                     data: data,
                     success: function (res) {
                         $('.mask_box').hide();
@@ -161,21 +154,6 @@
                     }
                 })
             });
-
-            $.ajax({
-                type: 'get',
-                url: "/index.php/extend/wechat/complaint/types",
-                success: function (res) {
-                    res.data.forEach(function (item) {
-                        var option = `<option value="${item.type}">${item.type}</option>`;
-                        $(".type").append(option)
-                    });
-                    return false;
-                },
-                error: function () {
-
-                }
-            })
         },
     };
     window.onload = function () {

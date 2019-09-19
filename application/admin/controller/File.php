@@ -83,7 +83,6 @@ class File extends ApiCommon
 		} else {
 			return resultArray(['error' => $fileModel->getError()]);
 		}
-        
     }
 
 	/**

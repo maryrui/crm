@@ -78,10 +78,23 @@ class Complaint extends Common
     }
 
 
-    public function getComplaintTypeList(){
-        $list = db('admin_complaint_type')->select();
-        return $list;
+    /**
+     * [getDataList 获取列表]
+     * @return    [array]
+     */
+    public function getComplaintTypes($type=''){
+        $cat = new \com\Category('admin_complaint_type', array('id', 'pid', 'depart', 'type'));
+        $data = $cat->getList('', 0, 'id');
+        // 若type为tree，则返回树状结构
+        if ($type == 'tree') {
+            $tree = new \com\Tree();
+            $data = $tree->list_to_tree($data, 'id', 'pid', 'child', 0, true, array(''));
+        }
+        return $data;
     }
+
+
+
 
     public function saveComplaintType($data){
         $types = [];

@@ -57,10 +57,36 @@ class ReceivablesPlan extends ApiCommon
     public function save()
     {
         $receivablesPlanModel = model('ReceivablesPlan');
+        $examineStepModel = new \app\admin\model\ExamineStep();
         $param = $this->param;
         $userInfo = $this->userInfo;
         $param['create_user_id'] = $userInfo['id'];
         $param['owner_user_id'] = $userInfo['id'];
+        $examineFlowModel = new \app\admin\model\ExamineFlow();
+        if (!$examineFlowModel->checkExamine($param['create_user_id'], 'crm_receivables_plan')) {
+            return resultArray(['error' => '暂无审批人，无法创建']);
+        }
+        //添加审批相关信息
+        $examineFlowData = $examineFlowModel->getFlowByTypes($param['create_user_id'], 'crm_receivables_plan');
+        if (!$examineFlowData) {
+            return resultArray(['error' => '无可用审批流，请联系管理员']);
+        }
+        $param['flow_id'] = $examineFlowData['flow_id'];
+        //获取审批人信息
+        if ($examineFlowData['config'] == 1) {
+            //固定审批流
+            $nextStepData = $examineStepModel->nextStepUser($userInfo['id'], $examineFlowData['flow_id'], 'crm_receivables_plan', 0, 0, 0);
+            $next_user_ids = arrayToString($nextStepData['next_user_ids']) ? : '';
+            $check_user_id = $next_user_ids ? : [];
+            $param['order_id'] = 1;
+        } else {
+            $check_user_id = $param['check_user_id'] ? ','.$param['check_user_id'].',' : '';
+        }
+        if (!$check_user_id) {
+            return resultArray(['error' => '无可用审批人，请联系管理员']);
+        }
+        $param['check_user_id'] = is_array($check_user_id) ? ','.implode(',',$check_user_id).',' : $check_user_id;
+
 
         $res = $receivablesPlanModel->createData($param);
         if ($res) {
@@ -111,6 +137,41 @@ class ReceivablesPlan extends ApiCommon
             header('Content-Type:application/json; charset=utf-8');
             exit(json_encode(['code'=>102,'error'=>'无权操作']));
         }
+
+        //已进行审批，不能编辑
+        if ($dataInfo['check_status']!=0) {
+            return resultArray(['error' => '当前状态为审批中或已审批通过，不可编辑']);
+        }
+        //将审批状态至为待审核，提交后重新进行审批
+        //审核判断（是否有符合条件的审批流）
+        $examineFlowModel = new \app\admin\model\ExamineFlow();
+        $examineStepModel = new \app\admin\model\ExamineStep();
+        if (!$examineFlowModel->checkExamine($dataInfo['owner_user_id'], 'crm_receivables_plan')) {
+            return resultArray(['error' => '暂无审批人，无法创建']);
+        }
+        //添加审批相关信息
+        $examineFlowData = $examineFlowModel->getFlowByTypes($dataInfo['owner_user_id'], 'crm_receivables_plan');
+        if (!$examineFlowData) {
+            return resultArray(['error' => '无可用审批流，请联系管理员']);
+        }
+        $param['flow_id'] = $examineFlowData['flow_id'];
+        //获取审批人信息
+        if ($examineFlowData['config'] == 1) {
+            //固定审批流
+            $nextStepData = $examineStepModel->nextStepUser($dataInfo['owner_user_id'], $examineFlowData['flow_id'], 'crm_receivables_plan', 0, 0, 0);
+            $next_user_ids = arrayToString($nextStepData['next_user_ids']) ? : '';
+            $check_user_id = $next_user_ids ? : [];
+            $param['order_id'] = 1;
+        } else {
+            $check_user_id = $param['check_user_id'] ? ','.$param['check_user_id'].',' : '';
+        }
+        if (!$check_user_id) {
+            return resultArray(['error' => '无可用审批人，请联系管理员']);
+        }
+        $param['check_user_id'] = is_array($check_user_id) ? ','.implode(',',$check_user_id).',' : $check_user_id;
+        $param['check_status'] = 0;
+        $param['flow_user_id'] = '';
+
         $res = $receivablesPlanModel->updateDataById($param, $param['id']);
         if ($res) {
             return resultArray(['data' => '编辑成功']);

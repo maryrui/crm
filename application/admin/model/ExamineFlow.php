@@ -21,7 +21,7 @@ class ExamineFlow extends Common
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
 	protected $autoWriteTimestamp = true;
-	protected $typesArr = ['crm_contract','crm_receivables','oa_examine','crm_complaint'];
+	protected $typesArr = ['crm_contract','crm_receivables','oa_examine','crm_complaint','crm_receivables_plan'];
 
 	/**
      * [getDataList 审批流程list]
@@ -200,6 +200,7 @@ class ExamineFlow extends Common
                     $query->where(['config' => 0])
                         ->where($userData['map']);
                 })->order('update_time desc')->find();
+
             return $flowInfo ? : [];
         }
         $flowInfo = db('admin_examine_flow')->where($map)

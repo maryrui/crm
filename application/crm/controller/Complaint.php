@@ -9,6 +9,7 @@
 namespace app\crm\controller;
 
 use app\admin\controller\ApiCommon;
+use think\Db;
 use think\Hook;
 use think\Request;
 
@@ -26,12 +27,13 @@ class Complaint extends ApiCommon
             'permission'=>[''],
             'allow'=>['index','read','update','check']
         ];
-        Hook::listen('check_auth',$action);
+//        Hook::listen('check_auth',$action);
         $request = Request::instance();
         $a = strtolower($request->action());
-        if (!in_array($a, $action['permission'])) {
+        if (in_array($a, $action['permission'])) {
             parent::_initialize();
         }
+
     }
 
     /**
@@ -39,12 +41,13 @@ class Complaint extends ApiCommon
      * @author Chen
      * @return
      */
-    function index()
+    public function index()
     {
         $complaintModel = model("complaint");
-        $userInfo = $this->userInfo;
-        $param = $this->param;
-        unset($param['status']);
+        $header = Request::instance()->header();
+        $authKey = $header['authkey'];
+        $cache = cache('Auth_'.$authKey);
+        $userInfo = $cache['userInfo'];
         $param['user_ids'] = ['like','%,'.$userInfo['id'].',%'];
         $param['structure_ids'] = ['like','%,'.$userInfo['structure_id'].',%'];
 
@@ -55,9 +58,12 @@ class Complaint extends ApiCommon
     public function save()
     {
         $complaintModel = model("complaint");
-        $userInfo = $this->userInfo;
+        $header = Request::instance()->header();
+        $authKey = $header['authkey'];
+        $cache = cache('Auth_'.$authKey);
+        $userInfo = $cache['userInfo'];
         $examineStepModel = new \app\admin\model\ExamineStep();
-        $param = $this->param;
+        $param = $this->request->param();
         //审核判断（是否有符合条件的审批流）
         $examineFlowModel = new \app\admin\model\ExamineFlow();
         if (!$examineFlowModel->checkExamine('', 'crm_complaint')) {
@@ -84,7 +90,43 @@ class Complaint extends ApiCommon
         }
         $param['check_user_id'] = is_array($check_user_id) ? ','.implode(',',$check_user_id).',' : $check_user_id;
         $param['create_user_id'] = $userInfo['id'];
-
+        // 创建新的流程
+        $flowModel = new \app\admin\model\ExamineFlow();
+        $flowData = $flowModel->where(['flow_id'=>$examineFlowData['flow_id']])->find();
+        $flowNew = array(
+            'name'=>$flowData['name'],
+            'config'=>$flowData['config'],
+            'types'=>$flowData['types'],
+            'types_id'=>$flowData['types_id'],
+            'structure_ids'=>$flowData['structure_ids'],
+            'user_ids'=>$flowData['user_ids'],
+            'remark'=>$flowData['remark'],
+            'update_user_id'=>-1,
+            'status'=>1,
+            'is_deleted'=>0,
+        );
+        $flowModel->save($flowNew);
+        $newFlowId = $flowModel->flow_id;
+        // 将上一个流程设置为失效
+        $flowId = $flowData['flow_id'];
+        $flowModel->where('flow_id',$flowId)->update(['status'=>0,'is_deleted'=>1,'delete_time'=>time(),'delete_user_id'=>-1]);
+        // 新建流程各个节点
+        $examineStepModel = new \app\admin\model\ExamineStep();
+        $steps = $examineStepModel->where(['flow_id'=>$flowId])->field(['status','user_id','order_id','relation'])->select();
+        $stepsNew = [];
+        foreach($steps as $k=>$v){
+            $item = array();
+            $item['flow_id'] = $newFlowId;
+            $item['create_time'] = time();
+            $item['order_id'] = $v['order_id'];
+            $item['status'] = $v['status'];
+            if($k ==0){
+                $item['user_id'] =$v['user_id'];
+            }
+            $stepsNew[]=$item;
+        }
+        $examineStepModel->saveAll($stepsNew,true);
+        $param['flow_id'] = $newFlowId;
         if ($complaintModel->createData($param)) {
             return resultArray(['data' => '提交成功']);
         } else {
@@ -116,8 +158,11 @@ class Complaint extends ApiCommon
     }
 
     public function check(){
-        $param = $this->param;
-        $userInfo = $this->userInfo;
+        $param = $this->request->param();
+        $header = Request::instance()->header();
+        $authKey = $header['authkey'];
+        $cache = cache('Auth_'.$authKey);
+        $userInfo = $cache['userInfo'];
         $user_id = $userInfo['id'];
         $complaintModel = model('Complaint');
         $examineStepModel = new \app\admin\model\ExamineStep();
@@ -135,18 +180,20 @@ class Complaint extends ApiCommon
         $dataInfo = $complaintModel->getDataById($param['id']);
         $flowInfo = $examineFlowModel->getDataById($dataInfo['flow_id']);
         $is_end = 0; // 1审批结束
-
         $status = $param['status'] ? 1 : 0; //1通过，0驳回
 
-        $checkData = [];
-        $checkData['check_user_id'] = $user_id;
-        $checkData['types'] = 'crm_complaint';
-        $checkData['types_id'] = $param['id'];
-        $checkData['check_time'] = time();
-        $checkData['content'] = $param['content'];
-        $checkData['flow_id'] = $dataInfo['flow_id'];
-        $checkData['order_id'] = $dataInfo['order_id'] ? : 1;
-        $checkData['status'] = $status;
+        if($param['order_id'] == 1){
+            $examineStepModel = new \app\admin\model\ExamineStep();
+            $examineStepModel->where(['flow_id'=>$param['flow_id'],'order_id'=>2])->update(['user_id'=>arrayToString($param['departmentVal'])]);
+            $examineStepModel->where(['flow_id'=>$param['flow_id'],'order_id'=>3])->update(['user_id'=>arrayToString($param['visitorVal'])]);
+        }else if($param['order_id'] == 3){
+            $complaintModel->where(['id'=>$param['id']])->update(['score'=>$param['score']]);
+        }
+        $checkData = array(
+            'check_user_id'=>$user_id,'types'=> 'crm_complaint','types_id' => $param['id'],
+            'check_time' => time(),'content' => $param['content'],'flow_id' => $dataInfo['flow_id'],
+            'order_id' => $dataInfo['order_id'] ? : 1,'status' => $status
+            );
 
         if ($status == 1) {
             if ($flowInfo['config'] == 1) {

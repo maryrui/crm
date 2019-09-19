@@ -68,7 +68,8 @@ return [
 
 	// 【用户】列表
 	'admin/users/index' => ['admin/users/index', ['method' => 'POST']],	
-	'admin/users/read' => ['admin/users/read', ['method' => 'POST']],	
+	'admin/users/tree' => ['admin/users/tree', ['method' => 'POST']],
+	'admin/users/read' => ['admin/users/read', ['method' => 'POST']],
 	// 【用户】创建
 	'admin/users/save' => ['admin/users/save', ['method' => 'POST']],		
 	// 【用户】编辑

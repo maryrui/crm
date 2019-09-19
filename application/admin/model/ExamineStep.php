@@ -178,11 +178,22 @@ class ExamineStep extends Common
     	switch (trim($types)) {
     		case 'oa_examine' : $dataInfo = db('oa_examine')->where(['examine_id' => intval($types_id)])->field('create_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
             case 'crm_contract' : $dataInfo = db('crm_contract')->where(['contract_id' => intval($types_id)])->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
-            case 'crm_receivables' : $dataInfo = db('crm_receivables')->where(['receivables_id' => intval($types_id)])->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')->find(); break;
+            case 'crm_receivables' :
+                $dataInfo = db('crm_receivables')
+                    ->where(['receivables_id' => intval($types_id)])
+                    ->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')
+                    ->find();
+                break;
             case 'crm_complaint' :
                 $dataInfo = db('crm_complaint')
                     ->where(['id' => intval($types_id)])
                     ->field('create_user_id,check_user_id,flow_id,order_id,check_status,update_time')
+                    ->find();
+                break;
+            case 'crm_receivables_plan':
+                $dataInfo = db('crm_receivables_plan')
+                    ->where(['receivables_id' => intval($types_id)])
+                    ->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')
                     ->find();
                 break;
     	}
@@ -220,7 +231,6 @@ class ExamineStep extends Common
                 }
                 break;
             case 2 :
-            case 9:
             case 3 :$examine_user_id_arr = stringToArray($stepInfo['user_id']); break;
             case 4 : 
                 $order_id = $stepInfo['order_id'] ? $stepInfo['order_id']-1 : 0;
@@ -355,52 +365,50 @@ class ExamineStep extends Common
                 //判断步骤审批人是否存在
                 $examine_user_ids = $this->getUserByStep($v['step_id'], $user_id);
                 $examine_user_arr = stringToArray($examine_user_ids);
-                if ($examine_user_arr) {
-                    $newStepInfo = $v;
-                    $user_id_info_arr = [];
-                    foreach ($examine_user_arr as $key=>$val) {
-                        $user_id_info = [];
-                        $user_id_info = $userModel->getUserById($val);
-                        $check_type = 4; //type 0失败，1通过，2撤销，3创建，4待审核，5审核中
-                        //当前步骤已审批user_id
-                        $check_user_ids = [];
-                        $check_user_ids = $this->getUserByCheck($types, $types_id, $v['order_id'], 1);
-                        if (in_array($val, $check_user_ids)) {
-                            $check_type = 1;
-                            $type = 1;
-                        }
-                        $re_check_user_ids = $this->getUserByCheck($types, $types_id, $v['order_id'], 2); //撤销人员
-                        if ($dataInfo['check_status'] == 4) {
-                            if ($re_check_user_ids) {
-                                $is_break = true;
-                                $check_type = 2;
-                                $type = 2;
-                            }
-                        }
-                        $fail_check_user_ids = $this->getUserByCheck($types, $types_id, $v['order_id'], 0); //拒绝人员
-                        if ($dataInfo['check_status'] == 3) {
-                            if (in_array($val,$fail_check_user_ids)) {
-                                $is_break = true;
-                                $check_type = 0;
-                                $type = 0;
-                            }
-                            //if ($action == 'view') break;
-                        }
-                        $user_id_info['check_type'] = $check_type;
-                        $check_time = '';
-                        $check_time = db('admin_examine_record')->where(['types' => $types,'types_id' => $types_id,'flow_id' => $flow_id,'order_id' => $v['order_id'],'check_user_id' => $val,'is_end' =>0])->value('check_time');
-                        $user_id_info['check_time'] = $check_time ? : '';
-                        $user_id_info_arr[] = $user_id_info;
-                    }
-                    $newStepInfo['user_id'] = $examine_user_ids;
-                    $newStepInfo['user_id_info'] = $user_id_info_arr;
-                    if ($dataInfo['order_id'] > $v['order_id']) {
+                $newStepInfo = $v;
+                $user_id_info_arr = [];
+                foreach ($examine_user_arr as $key=>$val) {
+                    $user_id_info = [];
+                    $user_id_info = $userModel->getUserById($val);
+                    $check_type = 4; //type 0失败，1通过，2撤销，3创建，4待审核，5审核中
+                    //当前步骤已审批user_id
+                    $check_user_ids = [];
+                    $check_user_ids = $this->getUserByCheck($types, $types_id, $v['order_id'], 1);
+                    if (in_array($val, $check_user_ids)) {
+                        $check_type = 1;
                         $type = 1;
                     }
-                    //if ($is_break !== false) break; 
-                    $newStepInfo['type'] = $type;          
-                    $stepList[] = $newStepInfo;
+                    $re_check_user_ids = $this->getUserByCheck($types, $types_id, $v['order_id'], 2); //撤销人员
+                    if ($dataInfo['check_status'] == 4) {
+                        if ($re_check_user_ids) {
+                            $is_break = true;
+                            $check_type = 2;
+                            $type = 2;
+                        }
+                    }
+                    $fail_check_user_ids = $this->getUserByCheck($types, $types_id, $v['order_id'], 0); //拒绝人员
+                    if ($dataInfo['check_status'] == 3) {
+                        if (in_array($val,$fail_check_user_ids)) {
+                            $is_break = true;
+                            $check_type = 0;
+                            $type = 0;
+                        }
+                        //if ($action == 'view') break;
+                    }
+                    $user_id_info['check_type'] = $check_type;
+                    $check_time = '';
+                    $check_time = db('admin_examine_record')->where(['types' => $types,'types_id' => $types_id,'flow_id' => $flow_id,'order_id' => $v['order_id'],'check_user_id' => $val,'is_end' =>0])->value('check_time');
+                    $user_id_info['check_time'] = $check_time ? : '';
+                    $user_id_info_arr[] = $user_id_info;
                 }
+                $newStepInfo['user_id'] = $examine_user_ids;
+                $newStepInfo['user_id_info'] = $user_id_info_arr;
+                if ($dataInfo['order_id'] > $v['order_id']) {
+                    $type = 1;
+                }
+                //if ($is_break !== false) break;
+                $newStepInfo['type'] = $type;
+                $stepList[] = $newStepInfo;
             }            
         }
         $newStepList = [];

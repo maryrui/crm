@@ -229,7 +229,6 @@ class ExamineFlow extends ApiCommon
                     return resultArray(['error' => '参数错误']);
                 }
             }
-
         } else {
             $user_id = $check_user_id;
             //获取符合条件的审批流

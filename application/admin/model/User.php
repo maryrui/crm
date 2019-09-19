@@ -140,6 +140,25 @@ class User extends Common
 		return $data;
 	}
 
+    /**
+     * [getDataList 列表]
+     * @AuthorHTL
+     * @param     [string]                   $map [查询条件]
+     * @param     [number]                   $page     [当前页数]
+     * @param     [number]                   $limit    [每页数量]
+     * @return                     [description]
+     */
+    public function getTree($type=''){
+        $structureModel = new \app\admin\model\Structure();
+        $structures = $structureModel->getDataList($type);
+        foreach ($structures as $k=>$v){
+            $users = $this->getDataList(['structure_id'=>$v['id'],'status'=>1]);
+            $structures[$k]['users'] = $users['list'];
+        }
+
+        return $structures;
+    }
+
 	/*
 	*根据字符串展示参与人 use by work
 	*/
