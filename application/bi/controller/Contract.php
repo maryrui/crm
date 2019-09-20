@@ -282,12 +282,29 @@ class Contract extends ApiCommon
         $whereArr['tract.check_status'] = array('eq', 2);
         $whereArr['tract.create_time'] = $create_time;
         if (isset($param['contract_name'])) {
-            //todo
+            $whereArr['tract.name'] = field($param['contract_name']['value'], $param['contract_name']['condition']);
         }
         if (isset($param['contract_money'])) {
-            //todo
+            $whereArr['tract.money'] = field($param['contract_money']['value'], $param['contract_money']['condition']);
         }
-        $list = $model->getAccounts($whereArr);
+        if (isset($param['customer_name'])) {
+            $whereArr['user.realname'] = field($param['customer_name']['value'], $param['customer_name']['condition']);
+        }
+        // 订单发票金额
+        if (isset($param['money'])) {
+            $whereArrReceivablesPlan['money'] = field($param['money']['value'], $param['money']['condition']);
+        }
+        // 回款金额
+        if (isset($param['receivables_money'])) {
+            $whereArrReceivables['money'] = field($param['receivables_money']['value'], $param['receivables_money']['condition']);
+        }
+        // 回款日期
+        if (isset($param['receivables_datetime'])) {
+            $startDate = strtotime($param['receivables_datetime']['start_date']);
+            $endDate = strtotime($param['receivables_datetime']['end_date']);
+            $whereArrReceivables['create_time'] = ['between', [$startDate, $endDate]];
+        }
+        $list = $model->getAccounts($whereArr, $whereArrReceivables, $whereArrReceivablesPlan);
 
         return resultArray(['data' => $list]);
     }
@@ -298,13 +315,13 @@ class Contract extends ApiCommon
     public function getSearchField()
     {
         $fields = array(
-            'contract_name', // 订单名称
-            'contract_money', // 订单金额
-            'customer_name', // 客户名称
-            'money', // 发票金额
-            'receivables_money', //回款金额
-            'receivables_datetime', // 回款日期
-            'balance', // 欠款
+            'contract_name' => '订单名称',
+            'contract_money' => '订单金额',
+            'customer_name' => '客户名称',
+            'money' => '发票金额',
+            'receivables_money' => '回款金额',
+            'receivables_datetime' => '回款日期',
+            'balance' => '欠款',
         );
         return resultArray(['data' => $fields]);
     }

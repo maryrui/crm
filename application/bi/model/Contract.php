@@ -83,7 +83,7 @@ class Contract extends Common
         return $money;
     }
 
-    function getAccounts($whereArr)
+    function getAccounts($whereArr, $whereArrReceivables='', $whereArrReceivablesPlan='')
     {
 //        $contracts = Db::name("crm_contract")
 //            ->field(['contract_id','name','money', 'contacts_id'])
@@ -98,12 +98,35 @@ class Contract extends Common
             ->select();
         foreach ($contracts as $i => $v) {
             $balance = $v['money'];
-            $receivables = Db::name("crm_receivables")->field(['plan_id', 'money'])->where(['contract_id' => $v['contract_id']])->select();
+            if (false == empty($whereArrReceivables)) {
+                $receivables = Db::name("crm_receivables")
+                    ->field(['plan_id', 'money'])
+                    ->where(['contract_id' => $v['contract_id']])
+                    ->where($whereArrReceivables)
+                    ->select();
+            } else {
+                $receivables = Db::name("crm_receivables")
+                    ->field(['plan_id', 'money'])
+                    ->where(['contract_id' => $v['contract_id']])
+                    ->select();
+            }
+
             $contracts[$i]['receivables'] = $receivables;
             foreach ($receivables as $j => $v2) {
-                $plans = Db::name("crm_receivables_plan")->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
-                    ->where(['plan_id' => $v2['plan_id'], 'status' => 1])->select();
+                if (false == empty($whereArrReceivablesPlan)) {
+                    $plans = Db::name("crm_receivables_plan")
+                        ->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
+                        ->where(['plan_id' => $v2['plan_id'], 'status' => 1])
+                        ->where($whereArrReceivablesPlan)
+                        ->select();
+                } else {
+                    $plans = Db::name("crm_receivables_plan")
+                        ->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
+                        ->where(['plan_id' => $v2['plan_id'], 'status' => 1])
+                        ->select();
+                }
                 $contracts[$i]['receivables'][$j]['plans'] = $plans;
+                $contracts[$i]['receivables'][$j]['balance'] = $plans[0]['money'] - $v2['money'];
                 foreach ($plans as $plan) {
                     $balance = $balance - $plan['money'];
                 }
