@@ -280,31 +280,37 @@ class Contract extends ApiCommon
         $userIds = $map_user_ids ? array_intersect($map_user_ids, $perUserIds) : $perUserIds; //数组交集
         $whereArr['tract.owner_user_id'] = array('in', $userIds);
         $whereArr['tract.check_status'] = array('eq', 2);
-        $whereArr['tract.create_time'] = $create_time;
-        if (isset($param['contract_name'])) {
-            $whereArr['tract.name'] = field($param['contract_name']['value'], $param['contract_name']['condition']);
+//        if (isset($param['contract_name'])) {
+//            $whereArr['tract.name'] = field($param['contract_name']['value'], $param['contract_name']['condition']);
+//        }
+//        if (isset($param['contract_money'])) {
+//            $whereArr['tract.money'] = field($param['contract_money']['value'], $param['contract_money']['condition']);
+//        }
+//        if (isset($param['customer_name'])) {
+//            $whereArr['user.realname'] = field($param['customer_name']['value'], $param['customer_name']['condition']);
+//        }
+//        // 订单发票金额
+//        if (isset($param['money'])) {
+//            $whereArrReceivablesPlan['money'] = field($param['money']['value'], $param['money']['condition']);
+//        }
+//        // 回款金额
+//        if (isset($param['receivables_money'])) {
+//            $whereArrReceivables['money'] = field($param['receivables_money']['value'], $param['receivables_money']['condition']);
+//        }
+//        // 回款日期
+//        if (isset($param['receivables_datetime'])) {
+//            $startDate = strtotime($param['receivables_datetime']['start_date']);
+//            $endDate = strtotime($param['receivables_datetime']['end_date']);
+//            $whereArrReceivables['create_time'] = ['between', [$startDate, $endDate]];
+//        }
+        if (isset($param['owner_user_id'])) {
+            $whereArr['tract.owner_user_id'] = array('eq', $param['owner_user_id']);
         }
-        if (isset($param['contract_money'])) {
-            $whereArr['tract.money'] = field($param['contract_money']['value'], $param['contract_money']['condition']);
+        if (isset($param['customer_id'])) {
+            $whereArr['tract.customer_id'] = array('eq', $param['customer_id']);
         }
-        if (isset($param['customer_name'])) {
-            $whereArr['user.realname'] = field($param['customer_name']['value'], $param['customer_name']['condition']);
-        }
-        // 订单发票金额
-        if (isset($param['money'])) {
-            $whereArrReceivablesPlan['money'] = field($param['money']['value'], $param['money']['condition']);
-        }
-        // 回款金额
-        if (isset($param['receivables_money'])) {
-            $whereArrReceivables['money'] = field($param['receivables_money']['value'], $param['receivables_money']['condition']);
-        }
-        // 回款日期
-        if (isset($param['receivables_datetime'])) {
-            $startDate = strtotime($param['receivables_datetime']['start_date']);
-            $endDate = strtotime($param['receivables_datetime']['end_date']);
-            $whereArrReceivables['create_time'] = ['between', [$startDate, $endDate]];
-        }
-        $list = $model->getAccounts($whereArr, $whereArrReceivables, $whereArrReceivablesPlan);
+        $balance = $param['balance'];
+        $list = $model->getAccounts($whereArr, $create_time, $balance);
 
         return resultArray(['data' => $list]);
     }

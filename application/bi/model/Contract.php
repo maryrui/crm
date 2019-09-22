@@ -83,12 +83,18 @@ class Contract extends Common
         return $money;
     }
 
-    function getAccounts($whereArr, $whereArrReceivables='', $whereArrReceivablesPlan='')
+    function getAccounts($whereArr, $createTime, $balance)
     {
 //        $contracts = Db::name("crm_contract")
 //            ->field(['contract_id','name','money', 'contacts_id'])
 //            ->where($whereArr)
 //            ->select();
+        // 查找时间范围内的已审批的发票
+        $plansContract = DB::name('crm_receivables_plan')->field('contract_id')
+            ->where('status', 'eq', 1)
+            ->where('create_time', $createTime)
+            ->find();
+        $whereArr['tract.contract_id'] = array('in', $plansContract);
 
         $contracts = Db::name('crm_contract')->alias('tract')
             ->field('tract.contract_id,tract.name,tract.money,tract.owner_user_id,user.realname,tract.customer_id,customer.name as customer_name')
@@ -98,33 +104,18 @@ class Contract extends Common
             ->select();
         foreach ($contracts as $i => $v) {
             $balance = $v['money'];
-            if (false == empty($whereArrReceivables)) {
-                $receivables = Db::name("crm_receivables")
-                    ->field(['plan_id', 'money'])
-                    ->where(['contract_id' => $v['contract_id']])
-                    ->where($whereArrReceivables)
-                    ->select();
-            } else {
-                $receivables = Db::name("crm_receivables")
-                    ->field(['plan_id', 'money'])
-                    ->where(['contract_id' => $v['contract_id']])
-                    ->select();
-            }
+            $receivables = Db::name("crm_receivables")
+                ->field(['plan_id', 'money'])
+                ->where(['contract_id' => $v['contract_id']])
+                ->select();
 
             $contracts[$i]['receivables'] = $receivables;
             foreach ($receivables as $j => $v2) {
-                if (false == empty($whereArrReceivablesPlan)) {
-                    $plans = Db::name("crm_receivables_plan")
-                        ->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
-                        ->where(['plan_id' => $v2['plan_id'], 'status' => 1])
-                        ->where($whereArrReceivablesPlan)
-                        ->select();
-                } else {
-                    $plans = Db::name("crm_receivables_plan")
-                        ->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
-                        ->where(['plan_id' => $v2['plan_id'], 'status' => 1])
-                        ->select();
-                }
+                $plans = Db::name("crm_receivables_plan")
+                    ->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
+                    ->where(['plan_id' => $v2['plan_id'], 'status' => 1])
+                    ->select();
+
                 $contracts[$i]['receivables'][$j]['plans'] = $plans;
                 $contracts[$i]['receivables'][$j]['balance'] = $plans[0]['money'] - $v2['money'];
                 foreach ($plans as $plan) {
@@ -132,6 +123,23 @@ class Contract extends Common
                 }
             }
             $contracts[$i]['balance'] = $balance;
+        }
+
+        // 已回款，删除balance > 0的元素
+        if ($balance == 1) {
+            foreach ($contracts as $key => $value) {
+                if ($value['balance'] > 0) {
+                    unset($contracts[$key]);
+                }
+            }
+        }
+        // 未回款，删除balance == 0的元素
+        if ($balance == 2) {
+            foreach ($contracts as $key => $value) {
+                if ($value['balance'] == 0) {
+                    unset($contracts[$key]);
+                }
+            }
         }
         return $contracts;
     }
