@@ -41,14 +41,32 @@ class ReceivablesPlan extends Common
         unset($request['user_id']);
 
         $request = $this->fmtRequest($request);
-        $map = $request['map'] ?: [];
-        if (isset($map['search'])) {
-            //普通筛选
-            $map['name'] = ['like', '%' . $map['search'] . '%'];
-            unset($map['search']);
+        $requestMap = $request['map'] ?: [];
+
+        $sceneModel = new \app\admin\model\Scene();
+        if ($scene_id) {
+            //自定义场景
+            $sceneMap = $sceneModel->getDataById($scene_id, $user_id, 'receivables_plan') ? : [];
         } else {
-            $map = where_arr($map, 'crm', 'receivables_plan', 'index'); //高级筛选
+            //默认场景
+            $sceneMap = $sceneModel->getDefaultData('receivables_plan', $user_id) ? : [];
         }
+        if ($search) {
+            //普通筛选
+            $sceneMap['number'] = ['condition' => 'contains','value' => $search,'form_type' => 'text','name' => '发票编号'];
+        }
+        //优先级：普通筛选>高级筛选>场景
+        $map = $requestMap ? array_merge($sceneMap, $requestMap) : $sceneMap;
+        //高级筛选
+        $map = where_arr($map, 'crm', 'receivables_plan', 'index');
+
+//        if (isset($map['search'])) {
+//            //普通筛选
+//            $map['name'] = ['like', '%' . $map['search'] . '%'];
+//            unset($map['search']);
+//        } else {
+//            $map = where_arr($map, 'crm', 'receivables_plan', 'index'); //高级筛选
+//        }
         if ($map['receivables_plan.owner_user_id']) {
             $map['contract.owner_user_id'] = $map['receivables_plan.owner_user_id'];
             unset($map['receivables_plan.owner_user_id']);

@@ -209,7 +209,7 @@ class ExamineFlow extends ApiCommon
         $flow_id = $param['flow_id'];
         $types = $param['types'];
         $types_id = $param['types_id'];
-        $typesArr = ['crm_contract','crm_complaint','crm_receivables','oa_examine'];
+        $typesArr = ['crm_contract','crm_complaint','crm_receivables','crm_receivables_plan','oa_examine'];
         if (!$types || !in_array($types,$typesArr)) {
             return resultArray(['error' => '参数错误']);
         }
@@ -295,22 +295,6 @@ class ExamineFlow extends ApiCommon
         $examineRecordModel = model('ExamineRecord');
         $list = $examineRecordModel->getDataList($param) ? : [];
         return resultArray(['data' => $list]);
-    }
-
-    public function complaintTypes(){
-        $model = new \app\crm\model\Complaint();
-        $list = $model->getComplaintTypeList();
-        return resultArray(['data' => $list]);
-    }
-
-    public function complaintTypeSave(){
-        $param = $this->param;
-        $model = new \app\crm\model\Complaint();
-        $res = $model->saveComplaintType($param);
-        if (!$res) {
-            return resultArray(['error' =>"数据提交失败"]);
-        }
-        return resultArray(['data' => "数据提交成功"]);
     }
 
 }

@@ -186,8 +186,9 @@ class Complaint extends ApiCommon
             $examineStepModel = new \app\admin\model\ExamineStep();
             $examineStepModel->where(['flow_id'=>$param['flow_id'],'order_id'=>2])->update(['user_id'=>arrayToString($param['departmentVal'])]);
             $examineStepModel->where(['flow_id'=>$param['flow_id'],'order_id'=>3])->update(['user_id'=>arrayToString($param['visitorVal'])]);
+            $complaintModel->where(['id'=>$param['id']])->update(['type'=>$param['type']]);
         }else if($param['order_id'] == 3){
-            $complaintModel->where(['id'=>$param['id']])->update(['score'=>$param['score']]);
+            $complaintModel->where(['id'=>$param['id']])->update(['score'=>$param['rate']]);
         }
         $checkData = array(
             'check_user_id'=>$user_id,'types'=> 'crm_complaint','types_id' => $param['id'],

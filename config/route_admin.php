@@ -195,8 +195,8 @@ return [
 	'admin/users/excel/import' => ['admin/users/userExcelImport', ['method' => 'POST']],
 	'admin/phw/database/:key' => ['admin/phw/phwTest', ['method' => 'get']],
 
-    'admin/complaint/type/index' => ['admin/examine_flow/complaintTypes', ['method' => 'get']],
-    'admin/complaint/type/save' => ['admin/examine_flow/complaintTypeSave', ['method' => 'POST']],
+    'admin/complaint/type/index' => ['admin/complaintType/index', ['method' => 'get']],
+    'admin/complaint/type/save' => ['admin/complaintType/save', ['method' => 'POST']],
 
 	// MISS路由
 	'__miss__'  => 'admin/base/miss',

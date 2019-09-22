@@ -92,7 +92,10 @@ class Contract extends ApiCommon
         //流程审批人
         // $flow_user_id = $examineFlowModel->getUserByFlow($examineFlowData['flow_id'], $param['create_user_id']); 
         // $param['flow_user_id'] = $flow_user_id ? arrayToString($flow_user_id) : '';            
-
+        $todayTime = getTimeByType('today');
+        $count = $contractModel->where(['create_time'=>['between',[$todayTime[0],$todayTime[1]]]])->count();
+        $num = substr(strval($count+10000),1,4);
+        $param['num']=date("Ymd").$num;
         if ($contractModel->createData($param)) {
             return resultArray(['data' => '添加成功']);
         } else {

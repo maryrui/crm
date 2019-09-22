@@ -237,6 +237,7 @@ class Contract extends Common
 			$param[$v] = arrayToString($param[$v]);
 		}
 
+
 		if ($this->data($param)->allowField(true)->save()) {
 			if ($param['product']) {
 				//产品数据处理

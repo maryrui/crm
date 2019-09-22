@@ -28,7 +28,13 @@ class Group extends Common
 			$map['pid'] = $param['pid'];
 		}
 		if ($param['tree'] == 1) {
-			$list = ['0' => ['name' => '管理角色','pid' => 1],'1' => ['name' => '客户管理角色','pid' => 2],'2' => ['name' => '人事角色','pid' => 3],'3' => ['name' => '财务角色','pid' => 4],'4' => ['name' => '项目角色','pid' => 5],'5' => ['name' => '自定义角色','pid' => 0]];
+			$list = ['0' => ['name' => '管理角色','pid' => 1],
+                '1' => ['name' => '客户管理角色','pid' => 2],
+                '2' => ['name' => '人事角色','pid' => 3],
+                '3' => ['name' => '财务角色','pid' => 4],
+                '4' => ['name' => '项目角色','pid' => 5],
+                '5' => ['name' => '自定义角色','pid' => 0]
+            ];
 			foreach ($list as $k=>$v) {
 				$where = [];
 				$where['pid'] = $v['pid'];
