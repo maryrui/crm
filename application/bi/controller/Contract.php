@@ -303,14 +303,14 @@ class Contract extends ApiCommon
 //            $endDate = strtotime($param['receivables_datetime']['end_date']);
 //            $whereArrReceivables['create_time'] = ['between', [$startDate, $endDate]];
 //        }
-        if (isset($param['owner_user_id'])) {
+        if (!empty($param['owner_user_id'])) {
             $whereArr['tract.owner_user_id'] = array('eq', $param['owner_user_id']);
         }
-        if (isset($param['customer_id'])) {
+        if (!empty($param['customer_id'])) {
             $whereArr['tract.customer_id'] = array('eq', $param['customer_id']);
         }
-        $balance = $param['balance'];
-        $list = $model->getAccounts($whereArr, $create_time, $balance);
+        $balanceFlag = $param['balance'];
+        $list = $model->getAccounts($whereArr, $create_time, $balanceFlag);
 
         return resultArray(['data' => $list]);
     }

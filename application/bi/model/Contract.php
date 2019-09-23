@@ -83,7 +83,7 @@ class Contract extends Common
         return $money;
     }
 
-    function getAccounts($whereArr, $createTime, $balance)
+    function getAccounts($whereArr, $createTime, $balanceFlag)
     {
 //        $contracts = Db::name("crm_contract")
 //            ->field(['contract_id','name','money', 'contacts_id'])
@@ -126,7 +126,7 @@ class Contract extends Common
         }
 
         // 已回款，删除balance > 0的元素
-        if ($balance == 1) {
+        if ($balanceFlag == 1) {
             foreach ($contracts as $key => $value) {
                 if ($value['balance'] > 0) {
                     unset($contracts[$key]);
@@ -134,7 +134,7 @@ class Contract extends Common
             }
         }
         // 未回款，删除balance == 0的元素
-        if ($balance == 2) {
+        if ($balanceFlag == 2) {
             foreach ($contracts as $key => $value) {
                 if ($value['balance'] == 0) {
                     unset($contracts[$key]);
