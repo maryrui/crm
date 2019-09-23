@@ -217,7 +217,7 @@ class ExamineFlow extends ApiCommon
         if ($flow_id) {
             $examineFlowData = $examineFlowModel->getDataById($param['flow_id']);
             if (!$examineFlowData) {
-                return resultArray(['error' => '参数错误']);
+                return resultArray(['error' => '参数错误2']);
             }
             $typesInfo = $examineStepModel->getDataByTypes($types, $types_id);
             $user_id = $typesInfo['dataInfo']['owner_user_id'];
@@ -226,7 +226,7 @@ class ExamineFlow extends ApiCommon
             }
             if($types !== 'crm_complaint'){
                 if (!$user_id) {
-                    return resultArray(['error' => '参数错误']);
+                    return resultArray(['error' => '参数错误3']);
                 }
             }
         } else {

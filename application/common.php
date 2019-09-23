@@ -897,6 +897,31 @@ function getmonthdays($time){
     return $days;
 }
 
+/**
+ * 计算两个时间戳之差
+ * @param $begin_time
+ * @param $end_time
+ * @return array
+ */
+function timeDiff( $begin_time, $end_time ){
+    if ( $begin_time < $end_time ) {
+        $starttime = $begin_time;
+        $endtime = $end_time;
+    } else {
+        $starttime = $end_time;
+        $endtime = $begin_time;
+    }
+    $timediff = $endtime - $starttime;
+    $days = intval( $timediff / 86400 );
+    $remain = $timediff % 86400;
+    $hours = intval( $remain / 3600 );
+    $remain = $remain % 3600;
+    $mins = intval( $remain / 60 );
+    $secs = $remain % 60;
+    $res = array( "day" => $days, "hour" => $hours, "min" => $mins, "sec" => $secs );
+    return $res;
+}
+
 /** 
  * 生成从开始时间到结束时间的日期数组
  * @param type，默认时间戳格式

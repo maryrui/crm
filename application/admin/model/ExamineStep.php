@@ -192,7 +192,7 @@ class ExamineStep extends Common
                 break;
             case 'crm_receivables_plan':
                 $dataInfo = db('crm_receivables_plan')
-                    ->where(['receivables_id' => intval($types_id)])
+                    ->where(['plan_id' => intval($types_id)])
                     ->field('create_user_id,owner_user_id,check_user_id,flow_id,order_id,check_status,update_time')
                     ->find();
                 break;

@@ -165,6 +165,7 @@ class ExamineFlow extends Common
      */ 
     public function getFlowByTypes($user_id, $types, $types_id = 0)
     {
+
         $userModel = new \app\admin\model\User();
     	if (!in_array($types, $this->typesArr)) {
     		$this->error = '参数错误';
@@ -200,7 +201,6 @@ class ExamineFlow extends Common
                     $query->where(['config' => 0])
                         ->where($userData['map']);
                 })->order('update_time desc')->find();
-
             return $flowInfo ? : [];
         }
         $flowInfo = db('admin_examine_flow')->where($map)
