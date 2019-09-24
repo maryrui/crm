@@ -398,10 +398,16 @@ export default {
           for (let index = 0; index < this.crmForm.crmFields.length; index++) {
             const element = this.crmForm.crmFields[index]
             if (element.key === 'contract_name') {
-                var contractItem = item.value[0]
-                contractItem['form_type'] = 'contract'
-                element['relation'] = contractItem
-                element.value = contractItem.name
+                if (item.value.length > 0) {
+                    var contractItem = item.value[0]
+                    contractItem['form_type'] = 'contract'
+                    element['relation'] = contractItem
+                    element.value = contractItem.name
+                } else {
+                    element.disabled = true
+                    element['relation'] = {}
+                    element.value = ''
+                }
             }
             if (element.key === 'plan_id') {
               // 如果是回款 改变回款样式和传入客户ID
@@ -490,7 +496,7 @@ export default {
     },
     // 获取自定义字段
     getField() {
-        debugger
+        // debugger
       this.loading = true
       // 获取自定义字段的更新时间
       var params = {}
@@ -887,11 +893,23 @@ export default {
     },
     /** 上传 */
     submiteParams(params) {
-      this.loading = true
       var crmRequest = this.getSubmiteRequest()
       if (this.action.type == 'update') {
         params.id = this.action.id
       }
+        if (params['plan_id']) {
+          if (parseFloat(params.money) > parseFloat(params['plan_id'].split('-')[1])) {
+              this.$message({
+                  type: 'error',
+                  message: '回款金额不得大于当前发票金额' + params.plan_id.split('-')[1],
+                  customClass: 'zZindex',
+                  showClose: true
+              })
+              return false
+          }
+          params['plan_id'] = params['plan_id'].split('-')[0]
+        }
+      this.loading = true
       crmRequest(params)
         .then(res => {
           this.loading = false
@@ -1165,4 +1183,7 @@ export default {
   border-radius: 8px;
   transform: scale(0.8, 0.8);
 }
+  .zZindex{
+    z-index:5000;
+  }
 </style>
