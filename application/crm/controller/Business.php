@@ -366,13 +366,13 @@ class Business extends ApiCommon
             );
             // localhost 'crm_fsfojh';
             // 生产环境 'crm_axgllm'
-            $short = $companyShort[$businessInfo['crm_fsfojh']];
+            $short = $companyShort[$businessInfo['crm_axgllm']];
             $businessCode = db('crm_business')
-                ->where('crm_uzmoop', 'not null')
-                ->where('crm_uzmoop', 'like', "{$short}%")
+                ->where('crm_ihutnj', 'not null')
+                ->where('crm_ihutnj', 'like', "{$short}%")
                 ->order('business_id desc')
                 ->limit(1)
-                ->value('crm_uzmoop');
+                ->value('crm_ihutnj');
             // 当前年份
             $year = date("Y");
             if (null != $businessCode) {
@@ -386,7 +386,7 @@ class Business extends ApiCommon
             } else {
                 $newBusinessCode = $short . $year . '0001';
             }
-            $data['crm_uzmoop'] = $newBusinessCode;
+            $data['crm_ihutnj'] = $newBusinessCode;
         }
         $res = db('crm_business')->where(['business_id' => $param['business_id']])->update($data);
         if (!$res) {
