@@ -81,7 +81,6 @@
                 count: 0,
                 // 新建数据
                 formData: {
-                    type: "",
                     company: "",
                     phone: "",
                     name: "",

@@ -21,11 +21,11 @@
                     <el-form-item label="联系电话" prop="phone">
                         <el-input v-model="formData.phone" placeholder="请输入联系电话"></el-input>
                     </el-form-item>
-                    <el-form-item label="投诉类型" prop="type">
+                    <!--<el-form-item label="投诉类型" prop="type">
                         <el-select style="width:100%;" v-model = "formData.type">
                             <el-option :label="item.type" :value="item.id" v-for="(item, index) in formList" :key="index"></el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item>-->
                     <el-form-item label="投诉内容" prop="content">
                         <el-input v-model="formData.content" placeholder="请输入投诉内容" type="textarea"></el-input>
                     </el-form-item>
@@ -166,7 +166,6 @@
         },
         mounted() {
             document.body.appendChild(this.$el)
-            this.fetchData()
         },
         methods: {
             fetchData() {

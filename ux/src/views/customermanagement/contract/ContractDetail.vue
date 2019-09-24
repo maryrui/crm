@@ -56,7 +56,6 @@
 
 <script>
 import { crmContractRead } from '@/api/customermanagement/contract'
-
 import SlideView from '@/components/SlideView'
 import CRMDetailHead from '../components/CRMDetailHead'
 import ContractFollow from './components/ContractFollow' // 跟进记录

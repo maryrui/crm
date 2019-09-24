@@ -12,6 +12,9 @@
                 <div id="axismain"></div>
             </div>
             <div class="table-content">
+                <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '客诉类型占比')">
+                    导出
+                </el-button>
                 <el-table :data="list"
                           stripe
                           border
@@ -33,6 +36,7 @@
 
 <script>
     import rankingMixins from './mixins/ranking'
+    import exportTable from './mixins/exportTable'
     import echarts from 'echarts'
     import { adminStructuresSubIndex, getSubUserByStructrue } from '@/api/common'
     import { getComplaintDatnum } from '@/api/businessIntelligence/complaint'
@@ -40,9 +44,9 @@
     import moment from 'moment'
 
     export default {
-        /** 业绩目标完成情况 */
+        /** 客诉类型占比 */
         name: 'task-complete-statistics',
-        mixins: [rankingMixins],
+        mixins: [rankingMixins, exportTable],
         components: {},
         data() {
             return {

@@ -181,8 +181,8 @@ export default {
           options: [
             { name: '负责人主管', value: 1 },
             { name: '指定用户（任意一人）', value: 2 },
-            { name: '指定用户（多人会签）', value: 3 },
-            { name: '根据客诉类型指定', value: 9 }
+            { name: '指定用户（多人会签）', value: 3 }
+            // { name: '根据客诉类型指定', value: 9 }
           ]
         }
       ]
@@ -252,7 +252,7 @@ export default {
               { name: '指定用户（任意一人）', value: 2 },
               { name: '指定用户（多人会签）', value: 3 },
               { name: '上一级审批人主管', value: 4 },
-              { name: '根据客诉类型指定', value: 9 }
+              // { name: '根据客诉类型指定', value: 9 }
             ]
           }
           this.examineList.push(item)
@@ -318,7 +318,8 @@ export default {
           setting: [
             { name: '订单', value: 'crm_contract' },
             { name: '回款', value: 'crm_receivables' },
-            { name: '客诉', value: 'crm_complaint' }
+            { name: '客诉', value: 'crm_complaint' },
+            { name: '发票', value: 'crm_receivables_plan' }
           ],
           value: this.handle.data ? this.handle.data.types : 'crm_contract'
         })
@@ -393,13 +394,13 @@ export default {
     validStepsInfo() {
       for (let index = 0; index < this.examineList.length; index++) {
         const element = this.examineList[index]
-        if (
+     /*   if (
           (element.type === 2 || element.type === 3) &&
           element.value.length === 0
         ) {
           this.$message.error('请添加员工')
           return false
-        }
+        }*/
       }
       return true
     },
@@ -552,9 +553,9 @@ export default {
         if (!removeFour) {
           options.push({ name: '上一级审批人主管', value: 4 })
         }
-        if (!removeFive) {
+        /*if (!removeFive) {
             options.push({ name: '根据客诉类型指定', value: 9 })
-        }
+        }*/
         item.options = options
       }
     },
@@ -567,8 +568,8 @@ export default {
           { name: '负责人主管', value: 1 },
           { name: '指定用户（任意一人）', value: 2 },
           { name: '指定用户（多人会签）', value: 3 },
-          { name: '上一级审批人主管', value: 4 },
-          { name: '根据客诉类型指定', value: 9 }
+          { name: '上一级审批人主管', value: 4 }
+          // { name: '根据客诉类型指定', value: 9 }
         ]
       })
     },

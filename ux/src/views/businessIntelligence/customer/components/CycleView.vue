@@ -13,6 +13,9 @@
              :id="'axismain' + type"></div>
       </div>
       <div class="table-content">
+        <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '成交周期分析')">
+          导出
+        </el-button>
         <el-table :data="list"
                   height="400"
                   stripe
@@ -33,6 +36,7 @@
 </template>
 <script type="text/javascript">
 import base from '../../mixins/base'
+import exportTable  from '../../mixins/exportTable'
 import echarts from 'echarts'
 import {
   biCustomerUserCycleAPI,
@@ -75,7 +79,7 @@ export default {
       }
     }
   },
-  mixins: [base],
+  mixins: [base, exportTable],
   props: {
     type: {
       required: true,

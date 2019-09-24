@@ -12,6 +12,9 @@
         <div id="axismain"></div>
       </div>
       <div class="table-content">
+        <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '回款金额分析')">
+          导出
+        </el-button>
         <el-table :data="list"
                   height="300"
                   stripe
@@ -35,6 +38,7 @@
 
 <script>
 import achievementMixins from '../mixins/achievement'
+import exportTable from '../mixins/exportTable'
 
 export default {
   /** 回款金额分析 */
@@ -42,7 +46,7 @@ export default {
   data() {
     return {}
   },
-  mixins: [achievementMixins],
+  mixins: [achievementMixins, exportTable],
   computed: {},
   created() {
     this.type = 'back'

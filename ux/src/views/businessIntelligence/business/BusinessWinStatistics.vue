@@ -11,6 +11,9 @@
         <div id="axismain"></div>
       </div>
       <div class="table-content">
+        <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '合同转化分析')">
+          导出
+        </el-button>
         <el-table :data="list"
                   height="400"
                   stripe
@@ -32,6 +35,7 @@
 
 <script>
 import base from '../mixins/base'
+import exportTable from '../mixins/exportTable'
 import echarts from 'echarts'
 import {
   biBusinessWinAPI,
@@ -63,7 +67,7 @@ export default {
       ]
     }
   },
-  mixins: [base],
+  mixins: [base, exportTable],
   computed: {},
   mounted() {
     this.initAxis()

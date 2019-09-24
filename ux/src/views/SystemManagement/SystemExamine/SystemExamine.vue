@@ -199,7 +199,7 @@ export default {
           return ''
         }
       } else if (column.property === 'types') {
-        return { crm_contract: '订单', crm_receivables: '回款', crm_complaint: '客诉' }[
+        return { crm_contract: '订单', crm_receivables: '回款', crm_complaint: '客诉', crm_receivables_plan: '发票' }[
           row[column.property]
         ]
       } else if (column.property === 'user_ids') {

@@ -48,6 +48,9 @@
                class="funnel"></div>
         </flexbox-item>
         <flexbox-item>
+          <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '销售漏斗')">
+            导出
+          </el-button>
           <el-table :data="list"
                     height="300"
                     stripe
@@ -75,7 +78,7 @@ import { adminStructuresSubIndex, getSubUserByStructrue } from '@/api/common'
 import { formatTimeToTimestamp } from '@/utils'
 import { crmBusinessStatusList } from '@/api/customermanagement/business'
 import { biBusinessFunnel } from '@/api/businessIntelligence/bi'
-
+import exportTable from './mixins/'
 import moment from 'moment'
 
 export default {

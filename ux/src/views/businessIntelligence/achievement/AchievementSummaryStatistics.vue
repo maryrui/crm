@@ -9,6 +9,9 @@
     <div class="content">
       <div class="content-title">签约订单数：{{data.count_zong}}个；签约订单金额：{{data.money_zong}}元；回款金额：{{data.back_zong}}元；未收款金额：{{data.w_back_zong}}元</div>
       <div class="table-content">
+        <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '订单汇总表')">
+          导出
+        </el-button>
         <el-table :data="list"
                   :height="tableHeight"
                   stripe
@@ -32,7 +35,7 @@
 <script>
 import { biAchievementSummaryAPI } from '@/api/businessIntelligence/achievement'
 import filtrateHandleView from '../components/filtrateHandleView'
-
+import exportTable from '../mixins/exportTable'
 export default {
   /** 订单汇总表 */
   name: 'achievement-summary-statistics',
@@ -58,6 +61,7 @@ export default {
       ]
     }
   },
+  mixins:[exportTable],
   computed: {},
   mounted() {
     /** 控制table的高度 */

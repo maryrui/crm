@@ -64,6 +64,33 @@
                  :value="item.value">
       </el-option>
     </el-select>
+    <!--回款状态-->
+    <el-select v-model="balance"
+               v-if="showBalance"
+               clearable
+               placeholder="回款状态"
+               @change="customSelectChange">
+      <el-option
+                 label="已回款"
+                 :value="1">
+      </el-option>
+      <el-option
+              label="未回款"
+              :value="2">
+      </el-option>
+    </el-select>
+    <!--客户列表-->
+    <el-select v-model="client"
+               v-if="showClient"
+               clearable
+               placeholder="选择客户"
+               @change="customSelectChange">
+      <el-option v-for="item in clientList"
+                 :key="item.customer_id"
+                 :label="item.name"
+                 :value="item.customer_id">
+      </el-option>
+    </el-select>
     <el-button @click.native="postFiltrateValue()"
                type="primary">搜索</el-button>
   </div>
@@ -71,6 +98,7 @@
 
 <script type="text/javascript">
 import { adminStructuresSubIndex, getSubUserByStructrue } from '@/api/common'
+import { crmCustomerIndex } from '@/api/customermanagement/customer'
 import { crmBusinessStatusList } from '@/api/customermanagement/business'
 import { productCategoryIndex } from '@/api/systemManagement/SystemCustomer'
 import timeTypeSelect from '@/components/timeTypeSelect'
@@ -110,7 +138,12 @@ export default {
       productValue: [],
       productOptions: [],
       // 图标类型
-      customValue: ''
+      customValue: '',
+      //回款状态
+      balance: '',
+      //客户列表
+      clientList: [],
+      client: ""
     }
   },
   props: {
@@ -126,6 +159,16 @@ export default {
     },
     // 是否展示合同状态筛选
     showBusinessSelect: {
+      default: false,
+      type: Boolean
+    },
+    // 是否展示客户列表
+      showClient: {
+      default: false,
+      type: Boolean
+    },
+      // 是否展示合同状态筛选
+    showBalance: {
       default: false,
       type: Boolean
     },
@@ -161,7 +204,9 @@ export default {
         .year()
         .toString()
     }
-
+    if (this.showClient) {
+        this.getClientList()
+    }
     this.$emit('load')
     this.getDeptList(() => {
       if (this.showBusinessSelect) {
@@ -172,7 +217,6 @@ export default {
         this.postFiltrateValue()
       }
     })
-
     if (this.showProductSelect) {
       this.getProductCategoryIndex()
     }
@@ -278,6 +322,13 @@ export default {
             : ''
       }
 
+      //展示回款状态  跟客户列表
+        if (this.showClient) {
+            params.customer_id = this.client
+        }
+        if (this.showBalance) {
+            params.balance = this.balance ? this.balance : 0
+        }
       // 展示年和展示时间段类型不同时出现
       if (this.showYearSelect) {
         params.year = this.yearValue
@@ -290,7 +341,17 @@ export default {
         }
       }
       this.$emit('change', params)
-    }
+    },
+      /*获取客户列表*/
+      getClientList() {
+          crmCustomerIndex({
+              page: 1,
+              limit: 10000,
+              search: ''
+          }).then(res => {
+              this.clientList = res.data.list
+          })
+      }
   },
 
   beforeDestroy() {}

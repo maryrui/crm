@@ -24,14 +24,19 @@ export default {
   watch: {
     id: function () {
       if (this.canShowDetail) {
-        this.getDetial()
+        if (this.crmType !== 'receivables_plan') {
+            this.getDetial()
+        }
       }
     }
   },
 
   mounted() {
     if (this.canShowDetail) {
-      this.getDetial()
+
+        if (this.crmType !== 'receivables_plan') {
+            this.getDetial()
+        }
     }
   },
 

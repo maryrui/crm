@@ -79,7 +79,6 @@ export default {
   },
   mounted() {
     this.getUserList()
-      console.log(this.value)
   },
   methods: {
     // 获取员工列表

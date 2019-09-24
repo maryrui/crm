@@ -253,7 +253,6 @@ export default {
         this.isCreate = true
       } else if (type == 'plan') {
         if (this.crmType === 'contract') {
-          console.log(this.createActionInfo)
           this.createActionInfo.data['customer'] = this.detail.customer_id_info
           this.createActionInfo.data['contract'] = this.detail
         } else if (this.crmType === 'customer') {

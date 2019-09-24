@@ -67,6 +67,7 @@ import { crmContactsDelete } from '@/api/customermanagement/contacts'
 import { crmBusinessDelete } from '@/api/customermanagement/business'
 import { crmContractDelete } from '@/api/customermanagement/contract'
 import { crmReceivablesDelete } from '@/api/customermanagement/money'
+import { crmReceivablesPlanDelete } from '@/api/customermanagement/receivablesPlan'
 import { crmProductStatus } from '@/api/customermanagement/product'
 import TransferHandle from './selectionHandle/TransferHandle' // 转移
 import AllocHandle from './selectionHandle/AllocHandle' // 公海分配操作
@@ -94,6 +95,8 @@ export default {
         return require('@/assets/img/money_detail.png')
       } else if (this.crmType === 'product') {
         return require('@/assets/img/product_detail.png')
+      } else if (this.crmType === 'receivables_plan') {
+        return require('@/assets/img/contract_detail.png')
       }
       return ''
     },
@@ -105,7 +108,7 @@ export default {
     },
     // 展示转移
     showTransfer() {
-      if (this.crmType === 'receivables' || this.crmType === 'product' || this.isSeas) {
+      if (this.crmType === 'receivables' || this.crmType === 'product' || this.isSeas || this.crmType === 'receivables_plan') {
         return false
       }
       return this.crm[this.crmType].transfer
@@ -272,9 +275,11 @@ export default {
           request = crmContractDelete
         } else if (this.crmType == 'receivables') {
           request = crmReceivablesDelete
+        } else if (this.crmType == 'receivables_plan') {
+          request = crmReceivablesPlanDelete
         }
         request({
-          id: [this.id]
+          id: this.crmType == 'receivables_plan' ? this.id : [this.id]
         })
           .then(res => {
             this.$message({
@@ -389,6 +394,8 @@ export default {
       } else if (this.crmType == 'contract') {
         return this.forSelectionHandleItems(handleInfos, ['transfer', 'delete'])
       } else if (this.crmType == 'receivables') {
+        return this.forSelectionHandleItems(handleInfos, ['delete'])
+      } else if (this.crmType == 'receivables_plan') {
         return this.forSelectionHandleItems(handleInfos, ['delete'])
       } else if (this.crmType == 'product') {
         return this.forSelectionHandleItems(handleInfos, ['start', 'disable'])

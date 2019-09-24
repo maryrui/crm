@@ -2,7 +2,9 @@
     <div v-loading="loading"
          class="main-container">
         <filtrate-handle-view class="filtrate-bar"
-                              :showUserSelect="false"
+                              :showUserSelect="true"
+                              :showBalance="true"
+                              :showClient="true"
                               moduleType="ranking"
                               @load="loading=true"
                               @change="getDataList">
@@ -10,6 +12,9 @@
         <div class="content">
             <!--<div class="content-title">新增联系人数排行（按创建人、创建时间统计）</div>-->
             <div class="table-content">
+                <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '账款数据分析')">
+                    导出
+                </el-button>
                 <el-table :data="list"
                           height="800"
                           stripe
@@ -40,22 +45,28 @@
 
 <script>
     import rankingMixins from './mixins/ranking'
+    import exportTable from './mixins/exportTable'
     import { getAccountDatnum } from '@/api/businessIntelligence/accountDatnum'
 
     export default {
-        /** 新增联系人数排行 */
+        /** 账款数据分析 */
         name: 'ranking-add-contacts-statistics',
         data() {
             return {
-                rowSpanData: []
+                rowSpanData: [],
+                spanArr: [],
+                pos: [],
+                downloadLoading: false
             }
         },
-        mixins: [rankingMixins],
+        mixins: [rankingMixins, exportTable],
         computed: {},
         mounted() {
             this.fieldList = [
                 { field: 'contract_id', name: '订单编号' },
                 { field: 'name', name: '订单名称' },
+                { field: 'customer_name', name: '客户名称' },
+                { field: 'realname', name: '客户负责人' },
                 { field: 'money', name: '订单金额' },
                 { field: 'invoice_code', name: '发票编号' },
                 { field: 'invoce_money', name: '发票金额' },
@@ -76,42 +87,39 @@
                         this.loading = false
                     })
             },
-            objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-                // console.log(rowIndex, columnIndex)
-                for (var i = 0 ; i < this.rowSpanData.length; i++) {
-                    console.log(rowIndex)
-                    if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2) {
-                        if (rowIndex % this.rowSpanData[i] === 0) {
-                            return {
-                                rowspan: this.rowSpanData[i],
-                                colspan: 1
-                            }
+            getSpanArr(data) {
+                for (var i = 0; i < data.length; i++) {
+                    if (i === 0) {
+                        this.spanArr.push(1)
+                        this.pos = 0
+                    } else {
+                        // 判断当前元素与上一个元素是否相同
+                        if (data[i].contract_id === data[i - 1].contract_id) {
+                            this.spanArr[this.pos] += 1
+                            this.spanArr.push(0)
                         } else {
-                            return {
-                                rowspan: 0,
-                                colspan: 1
-                            }
-                        }
-                    }
-                    if (columnIndex === 3 || columnIndex === 4 || columnIndex === 7) {
-                        if (row.planLength) {
-                            if ( rowIndex % row.planLength === 0) {
-                                return {
-                                    rowspan: row.planLength,
-                                    colspan: 1
-                                }
-                            }
+                            this.spanArr.push(1)
+                            this.pos = i
                         }
                     }
                 }
-
+            },
+            objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+                    const _row = this.spanArr[rowIndex]
+                    const _col = _row > 0 ? 1 : 0
+                    return {
+                        rowspan: _row,
+                        colspan: _col
+                    }
+                }
             },
             processData(list) {
                 var arr = []
                 let rowSpanData = []
                 for (var i = 0; i < list.length; i++) {
                     this.rowSpanData.push(0)
-                    if (list[i].receivables.length) {
+                    if (list[i].receivables.length > 0) {
                         for (var j = 0; j < list[i].receivables.length; j++) {
                             if (list[i].receivables[j].plans.length) {
                                 for (var m = 0; m < list[i].receivables[j].plans.length; m++) {
@@ -119,6 +127,8 @@
                                     arr.push({
                                         balance:list[i].balance,
                                         contract_id: list[i].contract_id,
+                                        customer_name: list[i].customer_name,
+                                        realname: list[i].realname,
                                         money: list[i].money,
                                         name: list[i].name,
                                         return_money: list[i].receivables[j].money,
@@ -126,13 +136,15 @@
                                         invoice_code : list[i].receivables[j].plans[m].invoice_code,
                                         return_date: list[i].receivables[j].plans[m].return_date,
                                         invoce_money: list[i].receivables[j].plans[m].money,
-                                        debt: list[i].receivables[j].plans[m].money
+                                        debt: list[i].receivables[j].balance
                                     })
                                 }
                             }else{
                                 this.rowSpanData[i]++
                                 arr.push({
                                     balance:list[i].balance,
+                                    customer_name: list[i].customer_name,
+                                    realname: list[i].realname,
                                     contract_id: list[i].contract_id,
                                     money: list[i].money,
                                     name: list[i].name,
@@ -150,6 +162,8 @@
                         arr.push({
                             balance:list[i].balance,
                             contract_id: list[i].contract_id,
+                            customer_name: list[i].customer_name,
+                            realname: list[i].realname,
                             money: list[i].money,
                             name: list[i].name,
                             return_money: 0,
@@ -162,6 +176,7 @@
                     }
                 }
                 this.list =  arr
+                this.getSpanArr(arr)
             }
         }
     }

@@ -11,6 +11,9 @@
         <div id="axismain"></div>
       </div>
       <div class="table-content">
+        <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '客户来源分析')">
+          导出
+        </el-button>
         <el-table :data="list"
                   height="400"
                   stripe
@@ -18,7 +21,6 @@
                   highlight-current-row>
           <el-table-column v-for="(item, index) in fieldList"
                            :key="index"
-                           :fixed="index==0?true: false"
                            :min-width="index==0?180: 100"
                            align="center"
                            header-align="center"
@@ -34,6 +36,7 @@
 
 <script>
 import base from '../mixins/base'
+import exportTable from '../mixins/exportTable'
 import echarts from 'echarts'
 import { biAchievementPortraitAPI } from '@/api/businessIntelligence/customerPortrayal'
 
@@ -54,7 +57,7 @@ export default {
     }
   },
   props: {},
-  mixins: [base],
+  mixins: [base, exportTable],
   computed: {},
   created() {
     this.type = this.$route.params.type

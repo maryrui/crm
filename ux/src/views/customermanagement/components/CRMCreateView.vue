@@ -28,7 +28,7 @@
                   <div slot="label"
                        style="display: inline-block;">
                     <div style="margin:5px 0;font-size:12px;word-wrap:break-word;word-break:break-all;">
-                      {{item.data.name}}
+                      {{item.data.name}}<span style="color:#999" v-show="(item.data.types == 'crm_contract'&& item.data.field == 'num')|| (item.data.types == 'crm_receivables_plan'&& item.data.field == 'invoice_code')">(系统自动生成)</span>
                       <span style="color:#999;">
                         {{item.data.input_tips ? '（'+item.data.input_tips+'）':''}}
                       </span>
@@ -277,9 +277,9 @@ export default {
   mounted() {
     // 获取title展示名称
     document.body.appendChild(this.$el)
+      // debugger
     this.title = this.getTitle()
     this.getField()
-    console.log(this.action)
   },
   methods: {
     // 审批信息值更新
@@ -290,6 +290,7 @@ export default {
     fieldValueChange(data) {
       var item = this.crmForm.crmFields[data.index]
       item.value = data.value
+        // debugger
       //合同下处理合同状态
       if (
         this.crmType == 'business' &&
@@ -365,6 +366,7 @@ export default {
           }
         }
       } else if (this.crmType == 'receivables') {
+
         // 新建回款 选择客户 要将id交于 订单
         if (item.data.form_type == 'customer') {
           var planItem = null // 订单更改 重置回款计划
@@ -418,6 +420,60 @@ export default {
           }
         }
       }
+      else if (this.crmType == 'receivables_plan') {
+          // 新建回款 选择客户 要将id交于 订单
+          if (item.data.form_type == 'customer') {
+              var planItem = null // 订单更改 重置回款计划
+              for (let index = 0; index < this.crmForm.crmFields.length; index++) {
+                  const element = this.crmForm.crmFields[index]
+                  if (element.key === 'contract_id') {
+                      // 如果是订单 改变订单样式和传入客户ID
+                      if (item.value.length > 0) {
+                          element.disabled = false
+                          var customerItem = item.value[0]
+                          customerItem['form_type'] = 'customer'
+                          customerItem['params'] = { check_status: 2 }
+                          element['relation'] = customerItem
+                      } else {
+                          element.disabled = true
+                          element['relation'] = {}
+                          element.value = []
+                      }
+                  } else if (element.key === 'plan_id') {
+                      planItem = element
+                  }
+              }
+              if (planItem) {
+                  planItem.disabled = true
+                  planItem['relation'] = {}
+                  planItem.value = ''
+              }
+          } else if (item.data.form_type == 'contract') {
+              for (let index = 0; index < this.crmForm.crmFields.length; index++) {
+                  const element = this.crmForm.crmFields[index]
+                  if (element.key === 'name') {
+                      var contractItem = item.value[0]
+                      contractItem['form_type'] = 'contract'
+                      element['relation'] = contractItem
+                      element.value = contractItem.name
+                  }
+                  if (element.key === 'plan_id') {
+                      // 如果是回款 改变回款样式和传入客户ID
+                      if (item.value.length > 0) {
+                          element.disabled = false
+                          var contractItem = item.value[0]
+                          contractItem['form_type'] = 'contract'
+                          element['relation'] = contractItem
+                      } else {
+                          element.disabled = true
+                          element['relation'] = {}
+                          element.value = ''
+                      }
+                      break
+                  }
+              }
+          }
+      }
 
       //无事件的处理 后期可换成input实现
       if (
@@ -434,6 +490,7 @@ export default {
     },
     // 获取自定义字段
     getField() {
+        debugger
       this.loading = true
       // 获取自定义字段的更新时间
       var params = {}
@@ -446,7 +503,6 @@ export default {
       if (this.action.type == 'update') {
         params.action_id = this.action.id
       }
-
       filedGetField(params)
         .then(res => {
           this.getcrmRulesAndModel(res.data)
@@ -458,7 +514,6 @@ export default {
     },
     // 根据自定义字段获取自定义字段规则
     getcrmRulesAndModel(list) {
-        // console.log(list)
       let showStyleIndex = -1
       for (let index = 0; index < list.length; index++) {
         const item = list[index]
@@ -568,9 +623,17 @@ export default {
               params['value'] = this.action.data['contract'] ? this.action.data['contract'].name : ''
           }
           if (item.field === 'name' && this.crmType == 'receivables_plan') {
-              params['value'] = this.detail.name
+              params['value'] = this.detail ? this.detail.name : ''
               params['disabled'] = true // 是否可交互
           }
+          if (item.field === 'invoice_code' && this.crmType == 'receivables_plan') {
+              params['value'] = this.detail ? this.detail.invoice_code : ''
+              params['disabled'] = true // 是否可交互
+          }
+            if (item.field === 'num' && this.crmType == 'contract') {
+                params['value'] = this.detail ? this.detail.num : ''
+                params['disabled'] = true // 是否可交互
+            }
           this.crmForm.crmFields.push(params)
         }
       }
@@ -661,6 +724,8 @@ export default {
         }
         // 添加类型
         let crmTypeDisInfos = relativeDisInfos[this.crmType]
+          console.log(111)
+          console.log(crmTypeDisInfos)
         if (crmTypeDisInfos) {
           // 在哪个类型下添加
           let relativeTypeDisInfos = crmTypeDisInfos[this.action.crmType]
@@ -681,6 +746,10 @@ export default {
           } else if (item.form_type === 'receivables_plan') {
             return true
           }
+        } else if (this.crmType === 'receivables_plan') {
+            if (item.form_type === 'contract') {
+                return true
+            }
         }
       }
       return false

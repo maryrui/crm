@@ -38,7 +38,6 @@
         <el-table-column v-for="(item, index) in fieldList"
                          :key="index"
                          show-overflow-tooltip
-                         :fixed="index==0"
                          :prop="item.prop"
                          :label="item.label"
                          :width="item.width"

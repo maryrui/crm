@@ -130,6 +130,7 @@
                     <examine-info :id="detail.id"
                                   class="create-sections-content list-box"
                                   examineType="crm_complaint"
+                                  :itemData="detail"
                                   :flow_id="detail.flow_id">
                     </examine-info>
                 </create-sections>
@@ -140,7 +141,7 @@
 
 <script>
     import SlideView from "@/components/SlideView"
-    import ExamineInfo from '@/components/Examine/ExamineInfo'
+    import ExamineInfo from '@/components/Examine/ExamineInfo1'
     import CreateSections from '@/components/CreateSections'
     export default {
         name:  "complaintDetail",

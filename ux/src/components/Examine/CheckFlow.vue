@@ -24,7 +24,7 @@
           </flexbox>
           <flexbox class="cf-flow-item-info">
             <div class="cf-flow-item-name">{{item.check_user_id_info.realname}}</div>
-            <div><span>{{getStatusName(item.status)}}</span>了此申请</div>
+            <div><span>{{getStatusName(item.status)}}</span>了此申请 &nbsp;(用时:{{ item.wait_time ? item.wait_time : 0 }})</div>
           </flexbox>
           <div v-if="item.content"
                class="cf-flow-item-content">{{item.content}}

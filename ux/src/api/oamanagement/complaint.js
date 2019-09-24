@@ -30,7 +30,7 @@ export function checkComplaintOne(data) {
 // 新建客诉
 export function saveComplaint(data) {
     return request({
-        url: 'extend/wechat/complaint/save',
+        url: 'crm/complaint/save',
         method: 'post',
         data: data
     })
@@ -38,7 +38,15 @@ export function saveComplaint(data) {
 // 获取客诉类型
 export function getComplaintType() {
     return request({
-        url: 'extend/wechat/complaint/types',
+        url: 'admin/complaint/type/index',
         method: 'get'
+    })
+}
+
+// 获取部门员工树
+export function getComplaintUserTree() {
+    return request({
+        url: 'admin/users/tree',
+        method: 'post'
     })
 }

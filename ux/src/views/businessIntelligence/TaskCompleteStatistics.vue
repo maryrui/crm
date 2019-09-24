@@ -43,6 +43,9 @@
         <div id="axismain"></div>
       </div>
       <div class="table-content">
+        <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '业绩目标报表')">
+          导出
+        </el-button>
         <el-table :data="list"
                   stripe
                   border
@@ -65,6 +68,7 @@
 <script>
 import echarts from 'echarts'
 import { adminStructuresSubIndex, getSubUserByStructrue } from '@/api/common'
+import exportTable from './mixins/exportTable'
 import { biAchievementStatistics } from '@/api/businessIntelligence/bi'
 import moment from 'moment'
 
@@ -107,6 +111,7 @@ export default {
       axisOption: null
     }
   },
+  mixins: [exportTable],
   computed: {},
   mounted() {
     this.dateSelect = moment(new Date())

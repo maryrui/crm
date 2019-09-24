@@ -67,6 +67,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import {baseUrl} from "@/utils/env";
 import {
   crmCustomerExcelImport,
   crmCustomerExcelDownloadURL
@@ -172,7 +173,7 @@ export default {
     // 下载模板操作
     download() {
       var a = document.createElement('a')
-      a.href = window.BASE_URL +
+      a.href = baseUrl +
         {
           customer: crmCustomerExcelDownloadURL,
           leads: crmLeadsExcelDownloadURL,

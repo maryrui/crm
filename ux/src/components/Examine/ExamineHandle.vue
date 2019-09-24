@@ -23,7 +23,7 @@
                       @value-change="selectExamineUser"></xh-user-cell>
       </flexbox>
     </div>
-    <div v-if="status == 1 && detail.config == 0"
+    <div v-if="status == 1 && detail.config == 1"
          class="title">意见</div>
     <el-input v-model="content"
               type="textarea"
@@ -47,6 +47,10 @@ import {
   crmReceivablesCheck,
   crmReceivablesRevokeCheck
 } from '@/api/customermanagement/money'
+
+import {
+    crmReceivablesPlanCheck
+} from '@/api/customermanagement/receivablesPlan'
 import {
   oaExamineCheck,
   oaExamineRevokeCheck
@@ -202,6 +206,8 @@ export default {
         return oaExamineCheck
       } else if (this.examineType == 'crm_complaint') {
         return checkComplaintOne
+      } else if (this.examineType == 'crm_receivables_plan') {
+        return crmReceivablesPlanCheck
       }
     },
     handleClick(type) {

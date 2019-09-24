@@ -3,6 +3,7 @@
              class="d-view"
              v-bind:is="tabName"
              :crmType="crmType"
+             :dataDetail="dataDetail"
              :id="id"
              :listenerIDs="listenerIDs"
              :noListenerIDs="noListenerIDs"
@@ -19,6 +20,7 @@ import BusinessDetail from '../business/BusinessDetail'
 import ContractDetail from '../contract/ContractDetail'
 import ProductDetail from '../product/ProductDetail'
 import MoneyDetail from '../money/MoneyDetail'
+import InvoiceDetail from '../invoice/InvoiceDetail'
 
 export default {
   name: 'c-r-m-all-detail', //详情
@@ -29,7 +31,8 @@ export default {
     BusinessDetail,
     ContractDetail,
     ProductDetail,
-    MoneyDetail
+    MoneyDetail,
+    InvoiceDetail
   },
   watch: {
     crmType: function(type) {
@@ -47,6 +50,8 @@ export default {
         this.tabName = 'product-detail'
       } else if (this.crmType == 'receivables') {
         this.tabName = 'money-detail'
+      } else if (this.crmType == 'crm_receivables_plan') {
+        this.tabName = 'invoice-detail'
       }
     }
   },
@@ -86,6 +91,12 @@ export default {
       type: Array,
       default: () => {
         return ['el-table__body']
+      }
+    },
+    dataDetail : {
+      type: Object,
+      default: () => {
+          return {}
       }
     }
   },

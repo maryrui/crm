@@ -31,6 +31,8 @@ const getters = {
   //客户管理信息
   messageNum: state => state.customer.messageNum,
   messageOANum: state => state.oa.messageOANum,
+    // 配置信息
+    CRMConfig: state => state.app.CRMConfig
 
 }
 /**

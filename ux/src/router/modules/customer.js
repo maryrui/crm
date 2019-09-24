@@ -106,6 +106,18 @@ const customerRouter = {
       }
     },
     {
+      path: 'invoice', // 发票列表
+      component: () => import('@/views/customermanagement/invoice/InvoiceIndex'),
+      meta: {
+        requiresAuth: true,
+        title: '发票',
+        icon: 'contract',
+        index: 1,
+        type: 'crm',
+        subType: 'contract'
+      }
+    },
+    {
       path: 'money', // 回款列表
       component: () => import('@/views/customermanagement/money/MoneyIndex'),
       meta: {

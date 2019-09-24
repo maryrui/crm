@@ -16,7 +16,7 @@
                 <div
                      class="crm-create-body">
                     <div class="create-name">基本信息</div>
-                    <el-form :model="dynamicValidateForm" ref="crmComplaintForm"
+                        <el-form :model="dynamicValidateForm" ref="crmComplaintForm"
                              label-position="top"
                              class="crm-create-box">
                             <template v-for="(domain, index) in dynamicValidateForm.domains">
@@ -28,9 +28,13 @@
                                         :rules="{
                                         required: true, message: '类型不能为空', trigger: 'blur'
                                 }">
-                                <el-input v-model="domain.type"></el-input>
+                                  <div style="position:relative;">
+                                      <el-input v-model="domain.type"></el-input> <el-button @click.prevent="removeDomain(index)" icon="el-icon-delete" type="danger" circle style="position:absolute;top:3px;right:-60px"></el-button>
+                                  </div>
+
                                 </el-form-item>
-                                <el-form-item
+
+                              <!--  <el-form-item
                                         label="关联对象"
                                         :key="index"
                                         :prop="'domains.' + index + '.depart'"
@@ -42,8 +46,8 @@
                                     <el-select v-model="domain.depart" multiple placeholder="请选择" style="width:85%">
                                         <el-option v-for="(item,index) in team" :label="item.name" :value="item.id+''" :key="item.id"></el-option>
                                     </el-select>
-                                    <el-button @click.prevent="removeDomain(index)" icon="el-icon-delete" type="danger" circle></el-button>
-                                </el-form-item>
+
+                                </el-form-item>-->
                             </template>
 
                     </el-form>
@@ -79,14 +83,14 @@
                 dataList: [],
                 dynamicValidateForm: {
                     domains: [{
-                        type: "",
-                        depart:[]
+                        type: ""
+                        // depart:[]
                     }]
                 }
             }
         },
         created() {
-            this.getTemList()
+            // this.getTemList()
             this.fetchData()
         },
         methods: {
@@ -95,8 +99,8 @@
                     let arr = []
                     for (var i = 0; i < res.data.length; i++) {
                         arr.push({
-                            type: res.data[i].type,
-                            depart: res.data[i].depart.replace(/\,/g, ' ').trim().split(' ')
+                            type: res.data[i].type
+                            // depart: res.data[i].depart.replace(/\,/g, ' ').trim().split(' ')
                         })
                     }
                     this.dynamicValidateForm.domains = arr
@@ -146,8 +150,8 @@
             },
             complaintItemsAdd() {
                 this.dynamicValidateForm.domains.push({
-                    type: "",
-                    depart: ""
+                    type: ""
+                    // depart: ""
                 })
             }
         },
@@ -202,13 +206,14 @@
 
     /** 将其改变为flex布局 */
     .crm-create-box {
-        display: flex;
+        /*display: flex;*/
         flex-wrap: wrap;
         padding: 0 20px;
     }
 
     .crm-create-item {
         flex: 0 0 50%;
+        width:60%;
         flex-shrink: 0;
         padding-bottom: 10px;
     }

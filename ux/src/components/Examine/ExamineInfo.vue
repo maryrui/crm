@@ -217,10 +217,8 @@ export default {
     },
     // 撤回审批 通过 拒绝
     examineHandle(status) {
-        console.log(status)
       this.examineHandleInfo.status = status
       this.showExamineHandle = true
-        console.log(this.showExamineHandle)
     },
     // 获取状态名称
     getStatusName(status) {

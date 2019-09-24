@@ -7,6 +7,9 @@
                           @change="getProductDatalist">
     </filtrate-handle-view>
     <div class="content">
+      <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(headFieldList, list, '产品分析')">
+        导出
+      </el-button>
       <el-table id="crm-table"
                 :data="newList"
                 :height="tableHeight"
@@ -46,6 +49,7 @@ import ContractDetail from '@/views/customermanagement/contract/ContractDetail'
 import CustomerDetail from '@/views/customermanagement/customer/CustomerDetail'
 import ProductDetail from '@/views/customermanagement/product/ProductDetail'
 import base from '../mixins/base'
+import exportTable  from '../mixins/exportTable'
 
 function fieldFormatter(info) {
   if (info) {
@@ -97,7 +101,7 @@ export default {
       rowID: ''
     }
   },
-  mixins: [base],
+  mixins: [base, exportTable],
   computed: {},
   mounted() {
     var self = this

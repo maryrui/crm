@@ -120,7 +120,9 @@ export default {
             value: [] // 审批信息
           })
         })
-        .catch(() => {})
+        .catch(() => {
+            alert(123)
+        })
     },
     validateField(result) {
       if (this.examineInfo.config == 0) {

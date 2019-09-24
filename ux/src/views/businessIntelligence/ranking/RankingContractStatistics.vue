@@ -15,6 +15,9 @@
         <div id="axismain"></div>
       </div>
       <div class="table-content">
+        <el-button :loading="downloadLoading" style="margin:10px 0 10px 0;" type="primary" icon="el-icon-document" @click="handleDownload(fieldList, list, '订单金额排行')">
+          导出
+        </el-button>
         <el-table :data="list"
                   height="400"
                   stripe
@@ -44,6 +47,7 @@
 
 <script>
 import rankingMixins from '../mixins/ranking'
+import exportTable from '../mixins/exportTable'
 import echarts from 'echarts'
 import { biRankingContractAPI } from '@/api/businessIntelligence/ranking'
 
@@ -53,7 +57,7 @@ export default {
   data() {
     return {}
   },
-  mixins: [rankingMixins],
+  mixins: [rankingMixins, exportTable],
   computed: {},
   mounted() {
     this.fieldList = [

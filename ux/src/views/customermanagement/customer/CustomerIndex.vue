@@ -28,6 +28,7 @@
                 style="width: 100%"
                 :cell-style="cellStyle"
                 @row-click="handleRowClick"
+                @sort-change="sortChange"
                 @header-dragend="handleHeaderDragend"
                 @selection-change="handleSelectionChange">
         <el-table-column show-overflow-tooltip
@@ -36,7 +37,6 @@
                          width="55">
         </el-table-column>
         <el-table-column prop="business-check"
-                         fixed
                          :resizable='false'
                          label=""
                          width="38">
@@ -68,8 +68,8 @@
         </el-table-column>
         <el-table-column v-for="(item, index) in fieldList"
                          :key="index"
+                         sortable="custom"
                          show-overflow-tooltip
-                         :fixed="index==0"
                          :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
@@ -79,7 +79,8 @@
             <div class="table-head-name">{{scope.column.label}}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="pool_day"
+        <el-table-column v-if="CRMConfig.config == 1"
+                         prop="pool_day"
                          show-overflow-tooltip
                          :resizable='false'
                          label="距进入公海天数"
@@ -118,6 +119,7 @@
     <c-r-m-all-detail :visible.sync="showDview"
                       :crmType="rowType"
                       :id="rowID"
+                      @handle="handleHandle"
                       class="d-view">
     </c-r-m-all-detail>
     <fields-set :crmType="crmType"
@@ -127,68 +129,71 @@
 </template>
 
 <script>
-import CRMAllDetail from '@/views/customermanagement/components/CRMAllDetail'
-import BusinessCheck from './components/BusinessCheck' // 相关合同
-import table from '../mixins/table'
+    import CRMAllDetail from '@/views/customermanagement/components/CRMAllDetail'
+    import BusinessCheck from './components/BusinessCheck' // 相关商机
+    import table from '../mixins/table'
+    import { mapGetters } from 'vuex'
 
-export default {
-  /** 客户管理 的 客户列表 */
-  name: 'customerIndex',
-  components: {
-    CRMAllDetail,
-    BusinessCheck
-  },
-  mixins: [table],
-  data() {
-    return {
-      crmType: 'customer'
+    export default {
+        /** 客户管理 的 客户列表 */
+        name: 'customerIndex',
+        components: {
+            CRMAllDetail,
+            BusinessCheck
+        },
+        mixins: [table],
+        data() {
+            return {
+                crmType: 'customer'
+            }
+        },
+        computed: {
+            ...mapGetters(['CRMConfig'])
+        },
+        mounted() {},
+        methods: {
+            relativeBusinessClick(data) {
+                this.rowID = data.business_id
+                this.rowType = 'business'
+                this.showDview = true
+            },
+            /** 通过回调控制style */
+            cellStyle({ row, column, rowIndex, columnIndex }) {
+                if (column.property === 'name' || column.property === 'business-check') {
+                    return { color: '#3E84E9', cursor: 'pointer' }
+                } else {
+                    return ''
+                }
+            },
+            // 商机信息查看
+            businessCheckClick(e, scope) {
+                if (scope.row.business_count == 0) {
+                    return
+                }
+                this.$set(scope.row, 'show', !scope.row.show)
+                const popoverEl = e.target.parentNode
+                popoverEl.__vue__.showPopper = !scope.row.show
+            },
+            businessClose(e, scope) {
+                const popoverEl = e.parentNode
+                popoverEl.__vue__.showPopper = false
+                this.$set(scope.row, 'show', false)
+            }
+        }
     }
-  },
-  computed: {},
-  mounted() {},
-  methods: {
-    relativeBusinessClick(data) {
-      this.rowID = data.business_id
-      this.rowType = 'business'
-      this.showDview = true
-    },
-    /** 通过回调控制style */
-    cellStyle({ row, column, rowIndex, columnIndex }) {
-      if (column.property === 'name' || column.property === 'business-check') {
-        return { color: '#3E84E9', cursor: 'pointer' }
-      } else {
-        return ''
-      }
-    },
-    // 合同信息查看
-    businessCheckClick(e, scope) {
-      if (scope.row.business_count == 0) {
-        return
-      }
-      this.$set(scope.row, 'show', !scope.row.show)
-      const popoverEl = e.target.parentNode
-      popoverEl.__vue__.showPopper = !scope.row.show
-    },
-    businessClose(e, scope) {
-      const popoverEl = e.parentNode
-      popoverEl.__vue__.showPopper = false
-      this.$set(scope.row, 'show', false)
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/table.scss';
-.customer-lock {
-  color: #f15e64;
-}
+  @import '../styles/table.scss';
+  .customer-lock {
+    color: #f15e64;
+  }
 
-.el-table /deep/ tbody tr td:nth-child(2) {
-  border-right-width: 0;
-}
+  .el-table /deep/ tbody tr td:nth-child(2) {
+    border-right-width: 0;
+  }
 
-.el-table /deep/ tbody tr td:nth-child(3) {
-  border-right: 1px solid #E6E6E6;
-}
+  .el-table /deep/ tbody tr td:nth-child(3) {
+    border-right: 1px solid #e6e6e6;
+  }
 </style>
