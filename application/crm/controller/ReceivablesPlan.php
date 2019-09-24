@@ -234,7 +234,7 @@ class ReceivablesPlan extends ApiCommon
         $param = $this->param;
         $userInfo = $this->userInfo;
         $user_id = $userInfo['id'];
-        $contractModel = model('ReceivablesPlan');
+        $planModel = model('ReceivablesPlan');
         $examineStepModel = new \app\admin\model\ExamineStep();
         $examineRecordModel = new \app\admin\model\ExamineRecord();
         $examineFlowModel = new \app\admin\model\ExamineFlow();
@@ -247,7 +247,7 @@ class ReceivablesPlan extends ApiCommon
             return resultArray(['error' => $examineStepModel->getError()]);
         };
         //审批主体详情
-        $dataInfo = $contractModel->getDataById($param['id']);
+        $dataInfo = $planModel->getDataById($param['id']);
         $flowInfo = $examineFlowModel->getDataById($dataInfo['flow_id']);
         $is_end = 0; // 1审批结束
 
@@ -299,14 +299,14 @@ class ReceivablesPlan extends ApiCommon
         }
         //已审批人ID
         $resContract['flow_user_id'] = stringToArray($dataInfo['flow_user_id']) ? arrayToString(array_merge(stringToArray($dataInfo['flow_user_id']),[$user_id])) : arrayToString([$user_id]);
-        $resContract = db('crm_receivables_plan')->where(['contract_id' => $param['id']])->update($contractData);
+        $resContract = db('crm_receivables_plan')->where(['plan_id' => $param['id']])->update($contractData);
         if ($resContract) {
             //审批记录
             $resRecord = $examineRecordModel->createData($checkData);
             //审核通过，相关客户状态改为已成交
             if ($is_end == 1 && !empty($status)) {
                 //发送站内信
-                $sendContent = '您的申请【'.$dataInfo['name'].'】,'.$userInfo['realname'].'已审核通过,审批结束';
+                $sendContent = '您的发票申请【'.$dataInfo['invoice_code'].'】,'.$userInfo['realname'].'已审核通过,审批结束';
                 $resMessage = sendMessage($dataInfo['owner_user_id'], $sendContent, $param['id'], 1);
 
                 $customerData = [];
@@ -316,10 +316,10 @@ class ReceivablesPlan extends ApiCommon
             } else {
                 if ($status) {
                     //发送站内信
-                    $sendContent = '您的申请【'.$dataInfo['name'].'】,'.$userInfo['realname'].'已审核通过';
+                    $sendContent = '您的发票申请【'.$dataInfo['invoice_code'].'】,'.$userInfo['realname'].'已审核通过';
                     $resMessage = sendMessage($dataInfo['owner_user_id'], $sendContent, $param['id'], 1);
                 } else {
-                    $sendContent = '您的申请【'.$dataInfo['name'].'】,'.$userInfo['realname'].'已审核拒绝,审核意见：'.$param['content'];
+                    $sendContent = '您的发票申请【'.$dataInfo['invoice_code'].'】,'.$userInfo['realname'].'已审核拒绝,审核意见：'.$param['content'];
                     $resMessage = sendMessage($dataInfo['owner_user_id'], $sendContent, $param['id'], 1);
                 }
             }

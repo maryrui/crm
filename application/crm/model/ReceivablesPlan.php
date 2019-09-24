@@ -21,6 +21,7 @@ class ReceivablesPlan extends Common
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
     protected $autoWriteTimestamp = true;
+    private $statusArr = ['0'=>'待审核','1'=>'审核中','2'=>'审核通过','3'=>'已拒绝','4'=>'已撤回'];
 
     /**
      * [getDataList 回款计划list]
@@ -91,6 +92,7 @@ class ReceivablesPlan extends Common
             $list[$k]['contract_id_info']['contract_id'] = $v['contract_id'] ?: '';
             $list[$k]['customer_id_info']['name'] = $v['customer_name'] ?: '';
             $list[$k]['customer_id_info']['customer_id'] = $v['customer_id'] ?: '';
+            $list[$k]['check_status_info'] = $this->statusArr[$v['check_status']];
         }
         $data = [];
         $data['list'] = $list;

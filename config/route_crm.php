@@ -187,8 +187,10 @@ return [
 	// 【回款计划】详情
 	'crm/receivables_plan/read' => ['crm/receivables_plan/read', ['method' => 'POST']],	
 	// 【回款计划】删除
-	'crm/receivables_plan/delete' => ['crm/receivables_plan/delete', ['method' => 'POST']],				
-	
+	'crm/receivables_plan/delete' => ['crm/receivables_plan/delete', ['method' => 'POST']],
+    // 【回款计划】审批
+	'crm/receivables_plan/check' => ['crm/receivables_plan/check', ['method' => 'POST']],
+
 	// 【相关团队】列表
 	'crm/setting/team' => ['crm/setting/team', ['method' => 'POST']],
 	// 【相关团队】创建
