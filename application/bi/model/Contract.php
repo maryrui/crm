@@ -113,7 +113,7 @@ class Contract extends Common
             foreach ($receivables as $j => $v2) {
                 $plans = Db::name("crm_receivables_plan")
                     ->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
-                    ->where(['plan_id' => $v2['plan_id'], 'check_status' => 2])
+                    ->where(['invoice_code' => $v2['plan_id'], 'check_status' => 2])
                     ->select();
 
                 $contracts[$i]['receivables'][$j]['plans'] = $plans;
