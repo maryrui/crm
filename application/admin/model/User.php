@@ -753,8 +753,18 @@ class User extends Common
 				->alias('user')
 				->join('__ADMIN_STRUCTURE__ structure', 'structure.id = user.structure_id', 'LEFT')
 				->where(['user.id' => $id])->field('user.id,user.openid,username,img,thumb_img,realname,parent_id,structure.name as structure_name,structure.id as structure_id')->find();
-		$data['img'] = $data['img'] ? getFullPath($data['img']) : '';
-		$data['thumb_img'] = $data['thumb_img'] ? getFullPath($data['thumb_img']) : '';
+        $group = Db::name('AdminAccess')->alias('access')
+            ->join('__ADMIN_GROUP__ group', 'group.id = access.group_id', 'LEFT')
+            ->where(['access.user_id'=>$id])->field('distinct group.pid as group_id')
+            ->select();
+
+        $groupIds = [];
+        foreach ($group as $v){
+            $groupIds[]=$v['group_id'];
+        }
+        $data['img'] = $data['img'] ? getFullPath($data['img']) : '';
+        $data['thumb_img'] = $data['thumb_img'] ? getFullPath($data['thumb_img']) : '';
+        $data['groupIds']=$groupIds;
 		return $data ? : [];
 	}
 

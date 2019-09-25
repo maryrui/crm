@@ -23,7 +23,7 @@ class ReceivablesPlan extends ApiCommon
     {
         $action = [
             'permission'=>[''],
-            'allow'=>['index','save','read','update','delete']            
+            'allow'=>['index','save','read','update','delete','check','revokeCheck']
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
