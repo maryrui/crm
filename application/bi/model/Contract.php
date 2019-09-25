@@ -91,7 +91,7 @@ class Contract extends Common
 //            ->select();
         // 查找时间范围内的已审批的发票
         $plansContract = DB::name('crm_receivables_plan')->field('contract_id')
-            ->where('status', 'eq', 1)
+            ->where('check_status', 'eq', 2)
             ->where('create_time', $createTime)
             ->find();
         $whereArr['tract.contract_id'] = array('in', $plansContract);
