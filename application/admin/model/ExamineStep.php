@@ -51,7 +51,7 @@ class ExamineStep extends Common
         $resSuccess = true;
         $dataStep = [];
         foreach ($data as $k=>$v) {
-            if (!intval($v['status']) || (in_array($v['status'],[2,3]) && !$v['user_id'])) {
+            if (!intval($v['status'])) {
                 $resSuccess = false;
             }
             $dataStep[$k]['relation'] = 1;

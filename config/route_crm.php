@@ -157,7 +157,7 @@ return [
 	// 【产品】导入模板下载
 	'crm/product/excelDownload' => ['crm/product/excelDownload', ['method' => 'GET']],
 	// 【产品】导入
-	'crm/product/excelImport' => ['crm/product/excelImport', ['method' => 'POST']],			
+	'crm/product/excelImport' => ['crm/product/excelImport', ['method' => 'POST']],
 
 	// 【回款】列表
 	'crm/receivables/index' => ['crm/receivables/index', ['method' => 'POST']],
