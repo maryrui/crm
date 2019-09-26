@@ -299,6 +299,10 @@ class ReceivablesPlan extends ApiCommon
         }
         //已审批人ID
         $resContract['flow_user_id'] = stringToArray($dataInfo['flow_user_id']) ? arrayToString(array_merge(stringToArray($dataInfo['flow_user_id']),[$user_id])) : arrayToString([$user_id]);
+
+        if(isset($param['real_invoice'])){
+            $contractData['real_code'] = $param['real_invoice'];
+        }
         $resContract = db('crm_receivables_plan')->where(['plan_id' => $param['id']])->update($contractData);
         if ($resContract) {
             //审批记录
