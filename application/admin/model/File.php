@@ -19,7 +19,7 @@ class File extends Common
      * 我们约定每个模块的数据表都加上相同的前缀，比如CRM模块用crm作为数据表前缀
      */
 	protected $name = 'admin_file';
-	protected $module_arr = ['other','crm_leads','crm_customer','crm_contacts','crm_business','crm_product','crm_contract','oa_log','oa_examine','oa_examine_travel','work_task','admin_record','oa_travel','hrm_pact','hrm_file'];
+	protected $module_arr = ['other','crm_leads','crm_customer','crm_contacts','crm_business','crm_product','crm_contract','oa_log','oa_examine','oa_examine_travel','work_task','admin_record','oa_travel','hrm_pact','hrm_file', 'crm_complaint'];
 	
 	/**
 	 * [createData 添加附件]
@@ -101,6 +101,7 @@ class File extends Common
 		            		case 'oa_travel' : $r = db('oa_travel_file'); $r_name = 'travel_id'; break;
 							case 'hrm_pact' : $r = db('hrm_pact_file'); $r_name = 'pact_id'; break;
 							case 'hrm_file' : $r = db('hrm_user_file'); $r_name = 'user_id'; break;
+                            case 'crm_complaint' : $r = db('crm_complaint_file'); $r_name = 'complaint_id'; break;
 		            		default : break;
 		            	}
 		            	$rData = [];
@@ -184,6 +185,8 @@ class File extends Common
             		case 'oa_travel' : $r = db('oa_travel_file'); break;
 					case 'hrm_pact' : $r = db('hrm_pact_file'); break;
 					case 'hrm_file' : $r = db('hrm_user_file'); break;
+                    case 'crm_complaint' : $r = db('crm_complaint_file'); break;
+
             		default : break;
 				}
 				$resDel = $r->where(['file_id'=>$file_id])->delete();
@@ -245,6 +248,7 @@ class File extends Common
 			case 'oa_travel' : $r = db('oa_travel_file'); $module = db('oa_travel'); break;
 			case 'hrm_pact' : $r = db('hrm_pact_file'); $module = db('hrm_pact'); break;
 			case 'hrm_file' : $r = db('hrm_user_file'); $module = db('admin_user'); break;
+            case 'crm_complaint' : $r = db('crm_complaint_file'); $module = db('crm_complaint'); break;
 			default : break;
 		}
 		if ($r) {
@@ -276,7 +280,7 @@ class File extends Common
         $data = [];
         $data['list'] = $list ? : [];
         $data['dataCount'] = $dataCount ? : 0;
-        return $data;		
+        return $data;
 	}
 	
 	/**
@@ -330,7 +334,7 @@ class File extends Common
             $resFile = $moduleModel->allowField([$field,$thumb_field])->save($saveData, [$moduleModel->getPk() => $module_id]);
             if (!$resFile) {
 				$this->error = '上传失败';
-            	return false;            	
+            	return false;
             }
             return true;
         }		
@@ -360,6 +364,7 @@ class File extends Common
 			case 'oa_examine_travel' : $rDb = db('oa_examine_travel_file'); $r_name = 'travel_id'; break;
 			case 'admin_record' : $rDb = db('admin_record_file'); $r_name = 'record_id'; break;
 			case 'oa_travel' : $rDb = db('oa_travel_file'); $r_name = 'travel_id'; break;
+            case 'crm_complaint' : $rDb = db('crm_complaint_file'); $r_name = 'complaint_id'; break;
 		}
 
 		$res_success = true;

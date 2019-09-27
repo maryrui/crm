@@ -59,3 +59,26 @@ CREATE TABLE `crm_admin_complaint_type` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 SET FOREIGN_KEY_CHECKS=1;
+
+-- 投诉类型可以为null
+ALTER TABLE `5kcrm_crm_complaint`
+MODIFY COLUMN `type`  varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '投诉类型' AFTER `phone`;
+
+-- flow_user_id可以为null
+ALTER TABLE `5kcrm_crm_complaint`
+MODIFY COLUMN `flow_user_id`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' AFTER `check_user_id`;
+
+--
+ALTER TABLE `5kcrm_crm_complaint`
+MODIFY COLUMN `score`  int(11) NOT NULL DEFAULT 0 AFTER `flow_user_id`;
+
+-- 创建客诉附件表
+CREATE TABLE `5kcrm_crm_complaint_file` (
+`r_id`  int(11) NOT NULL ,
+`complaint_id`  int(11) NULL COMMENT '客诉id' ,
+`file_id`  int(11) NULL COMMENT '文件id' ,
+PRIMARY KEY (`r_id`)
+)
+;
+ALTER TABLE `5kcrm_crm_complaint_file`
+MODIFY COLUMN `r_id`  int(11) NOT NULL AUTO_INCREMENT FIRST ;

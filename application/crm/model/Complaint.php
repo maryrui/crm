@@ -48,10 +48,24 @@ class Complaint extends Common
     {
         $complaint = new Complaint();
         $param['create_time'] = time();
+
+        // 接收文件数据
+        $fileArr = $param['file'];
+        unset($param['file']);
+
         $complaint->data($param);
         $data = $complaint->save();
         if (!$data) {
             return resultArray(['error' => $complaint->getError()]);
+        }
+        //处理附件关系
+        if ($fileArr) {
+            $fileModel = new \app\admin\model\File();
+            $resData = $fileModel->createDataById($fileArr, 'crm_complaint', $data->id);
+            if ($resData == false) {
+                $this->error = '附件上传失败';
+                return false;
+            }
         }
         return resultArray(['data' => '添加成功']);
     }
