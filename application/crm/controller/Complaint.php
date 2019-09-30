@@ -45,6 +45,7 @@ class Complaint extends ApiCommon
     {
         $complaintModel = model("complaint");
         $header = Request::instance()->header();
+        $param = Request::instance()->request();
         $authKey = $header['authkey'];
         $cache = cache('Auth_'.$authKey);
         $userInfo = $cache['userInfo'];
