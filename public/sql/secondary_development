@@ -82,3 +82,18 @@ PRIMARY KEY (`r_id`)
 ;
 ALTER TABLE `5kcrm_crm_complaint_file`
 MODIFY COLUMN `r_id`  int(11) NOT NULL AUTO_INCREMENT FIRST ;
+
+-- 回款计划
+ALTER TABLE `5kcrm_crm_receivables_plan`
+MODIFY COLUMN `invoice_code`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发票编号' AFTER `plan_id`,
+MODIFY COLUMN `file`  varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '附件' AFTER `remark`,
+ADD COLUMN `real_code`  varchar(32) NULL COMMENT '真实发票编号' AFTER `file`,
+ADD COLUMN `invoicer`  varchar(32) NULL AFTER `real_code`,
+ADD COLUMN `tax_rate`  int(11) NULL COMMENT '税率' AFTER `invoicer`,
+ADD COLUMN `invoice_type`  varchar(12) NULL COMMENT '发票类型' AFTER `tax_rate`,
+ADD COLUMN `check_status`  smallint(255) NULL DEFAULT 0 COMMENT '状态：1-已处理' AFTER `invoice_type`,
+ADD COLUMN `flow_id`  int(11) NULL DEFAULT 0 COMMENT '审核流程ID' AFTER `check_status`,
+ADD COLUMN `order_id`  int(11) NULL DEFAULT 0 COMMENT '审核步骤排序ID' AFTER `flow_id`,
+ADD COLUMN `check_user_id`  varchar(255) NULL DEFAULT '' COMMENT '审批人IDs' AFTER `create_user_id`,
+ADD COLUMN `flow_user_id`  varchar(255) NULL DEFAULT '' AFTER `check_user_id`,
+ADD COLUMN `name`  varchar(255) NULL DEFAULT '' AFTER `update_time`;

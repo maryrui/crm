@@ -55,13 +55,14 @@ class Complaint extends Common
 
         $complaint->data($param);
         $data = $complaint->save();
+        $complaintId = $complaint->id;
         if (!$data) {
             return resultArray(['error' => $complaint->getError()]);
         }
         //处理附件关系
         if ($fileArr) {
             $fileModel = new \app\admin\model\File();
-            $resData = $fileModel->createDataById($fileArr, 'crm_complaint', $data->id);
+            $resData = $fileModel->createDataById($fileArr, 'crm_complaint', $complaintId);
             if ($resData == false) {
                 $this->error = '附件上传失败';
                 return false;
