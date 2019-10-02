@@ -210,7 +210,6 @@
                     .then(res => {
                         this.loading = false
                         this.examineInfo = res.data
-                        console.log(this.examineInfo)
                         this.$emit('value-change', {
                             config: res.data.config, // 审批类型
                             value: [] // 审批信息

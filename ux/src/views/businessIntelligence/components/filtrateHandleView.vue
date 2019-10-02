@@ -25,6 +25,7 @@
     <el-select v-if="showUserSelect"
                v-model="userSelectValue"
                :clearable="true"
+               filterable
                placeholder="选择员工">
       <el-option v-for="item in userOptions"
                  :key="item.id"
@@ -84,6 +85,7 @@
                v-if="showClient"
                clearable
                placeholder="选择客户"
+               filterable
                @change="customSelectChange">
       <el-option v-for="item in clientList"
                  :key="item.customer_id"

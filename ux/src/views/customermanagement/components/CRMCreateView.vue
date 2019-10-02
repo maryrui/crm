@@ -288,6 +288,7 @@ export default {
     },
     // 字段的值更新
     fieldValueChange(data) {
+        // debugger
       var item = this.crmForm.crmFields[data.index]
       item.value = data.value
         // debugger
@@ -511,7 +512,35 @@ export default {
       }
       filedGetField(params)
         .then(res => {
-          this.getcrmRulesAndModel(res.data)
+            var data = res.data
+            if (params.types == 'crm_receivables_plan' && params.action == 'save') {
+                data = res.data.filter((item) => {
+                   if (item.field == 'invoice_code') {
+                       return false
+                   }
+                   return true
+                })
+            }
+            if (params.types == 'crm_contract' && params.action == 'save') {
+                data = res.data.filter((item) => {
+                   if (item.field == 'num') {
+                       return false
+                   }
+                   return true
+                })
+            }
+            if (params.types == 'crm_receivables') {
+                data = res.data.filter((item) => {
+                   if (item.field == 'number' && params.action == 'save' ) {
+                       return false
+                   }
+                    if (item.field == 'customer_level' && params.action == 'save'|| params.action == 'update') {
+                        return false
+                    }
+                   return true
+                })
+            }
+          this.getcrmRulesAndModel(data)
           this.loading = false
         })
         .catch(() => {
@@ -520,6 +549,7 @@ export default {
     },
     // 根据自定义字段获取自定义字段规则
     getcrmRulesAndModel(list) {
+        // debugger
       let showStyleIndex = -1
       for (let index = 0; index < list.length; index++) {
         const item = list[index]
@@ -626,7 +656,11 @@ export default {
           params['styleIndex'] = showStyleIndex
           if (this.crmType == 'receivables' && item.field === 'contract_name') {
               params['disabled'] = true // 是否可交互
-              params['value'] = this.action.data['contract'] ? this.action.data['contract'].name : ''
+              if (this.action.type == 'update') {
+                  params['value'] = item.value // 编辑的值 在value字段
+              } else {
+                  params['value'] = this.action.data['contract'] ? this.action.data['contract'].name : ''
+              }
           }
           if (item.field === 'name' && this.crmType == 'receivables_plan') {
               params['value'] = this.detail ? this.detail.name : ''
@@ -730,8 +764,6 @@ export default {
         }
         // 添加类型
         let crmTypeDisInfos = relativeDisInfos[this.crmType]
-          console.log(111)
-          console.log(crmTypeDisInfos)
         if (crmTypeDisInfos) {
           // 在哪个类型下添加
           let relativeTypeDisInfos = crmTypeDisInfos[this.action.crmType]

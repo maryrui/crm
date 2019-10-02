@@ -22,6 +22,7 @@
         <examine-info :id="id"
                       class="examine-info-border"
                       examineType="crm_receivables_plan"
+                      :detail="dataDetail"
                       :flow_id="dataDetail.flow_id">
         </examine-info>
       </div>

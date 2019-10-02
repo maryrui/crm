@@ -23,6 +23,18 @@
                       @value-change="selectExamineUser"></xh-user-cell>
       </flexbox>
     </div>
+    <div style="margin-bottom:15px;" v-if="isFinance">
+      <p style="margin-bottom:5px;">真实票号</p>
+      <el-input
+          v-model="realInvoice"
+          type="textarea"
+          resize="none"
+          placeholder="请填写真实票号"
+          :rows="3"
+      >
+
+      </el-input>
+    </div>
     <div v-if="status == 1 && detail.config == 1"
          class="title">意见</div>
     <el-input v-model="content"
@@ -94,6 +106,12 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    detail: function(newVal, oldVal) {
+        this.detail = newVal
+    },
+    isFinance: function(newVal, oldVal) {
+        this.isFinance = newVal
     }
   },
   data() {
@@ -102,7 +120,8 @@ export default {
       showDialog: false,
       handleType: 1,
       selectUsers: [],
-      content: '' // 输入内容
+      content: '', // 输入内容
+      realInvoice: '' //真实票号
     }
   },
   props: {
@@ -128,9 +147,15 @@ export default {
     examineType: {
       type: String,
       default: ''
+    },
+    isFinance: {
+        type: Boolean,
+        default: false
     }
   },
-  mounted() {},
+  mounted() {
+      // console.log(this.detail)
+  },
   methods: {
     submitInfo() {
       if ((this.status == 0 || this.status == 2) && !this.content) {
@@ -172,7 +197,6 @@ export default {
     },
     // 通过 拒绝操作
     handlePassAndReject() {
-      this.loading = true
       var params = {
         id: this.id,
         status: this.status,
@@ -186,6 +210,17 @@ export default {
           params['check_user_id'] = this.selectUsers[0].id
         }
       }
+      if (this.isFinance) {
+          if (!this.realInvoice) {
+              this.$message({
+                  type: 'error',
+                  message: "真实票号是必填项"
+              })
+              return false
+          }
+          params['real_invoice'] = this.realInvoice
+      }
+        this.loading = true
       this.getExamineRequest()(params)
         .then(res => {
           this.loading = false

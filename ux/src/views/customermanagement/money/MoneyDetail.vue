@@ -56,7 +56,6 @@
 
 <script>
 import { crmReceivablesRead } from '@/api/customermanagement/money'
-
 import SlideView from '@/components/SlideView'
 import CRMDetailHead from '../components/CRMDetailHead'
 import CRMBaseInfo from '../components/CRMBaseInfo' // 基本信息

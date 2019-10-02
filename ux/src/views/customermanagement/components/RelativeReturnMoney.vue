@@ -146,8 +146,8 @@ export default {
       { prop: 'contract_id', width: '200', label: '订单名称' },
       { prop: 'invoice_code', width: '200', label: '发票编号' },
       { prop: 'money', width: '200', label: '发票金额' },
-      { prop: 'return_date', width: '200', label: '开票日期' }
-      // { prop: 'return_type', width: '200', label: '计划回款方式' },
+      { prop: 'return_date', width: '200', label: '开票日期' },
+      { prop: 'check_status_info', width: '200', label: '状态' }
       // { prop: 'remind', width: '200', label: '提前几日提醒' },
       // { prop: 'remark', width: '200', label: '备注' }
     ]
@@ -207,7 +207,7 @@ export default {
       if (this.crmType === 'customer') {
         return { customer_id: this.id, pageType: 'all' }
       } else if (this.crmType === 'contract') {
-        return { contract_id: this.id, pageType: 'all' }
+        return { contract_id: this.id, pageType: 'all'}
       }
       return {}
     },

@@ -134,6 +134,19 @@
                                   :flow_id="detail.flow_id">
                     </examine-info>
                 </create-sections>
+
+                <!--附件信息-->
+                <create-sections title="审核信息"
+                                 class="create-sections">
+                    <relativeFiles
+                            :id="detail.id"
+                            crmType="complaint"
+                            :isSeas="true"
+                            :detail="detail"
+                    >
+
+                    </relativeFiles>
+                </create-sections>
             </div>
         </flexbox>
     </slide-view>
@@ -141,6 +154,7 @@
 
 <script>
     import SlideView from "@/components/SlideView"
+    import relativeFiles from './RelativeFiles'
     import ExamineInfo from '@/components/Examine/ExamineInfo1'
     import CreateSections from '@/components/CreateSections'
     export default {
@@ -151,7 +165,7 @@
                 loading: false
             }
         },
-        components: { SlideView, ExamineInfo, CreateSections },
+        components: { SlideView, ExamineInfo, CreateSections, relativeFiles },
         methods: {
             hideView() {
                 this.$emit('hide-view')

@@ -28,19 +28,14 @@
                                 label="投诉内容"
                                 width="180">
                         </el-table-column>
-                        <el-table-column
-                                prop="create_time"
-                                label="日期"
-                                width="180">
-                        </el-table-column>
-                        <!-- <el-table-column
-                                 prop="name"
-                                 label="操作"
+                         <el-table-column
+                                 prop="create_time"
+                                 label="日期"
                                  width="180">
                              <template slot-scope="scope">
-                                 <el-button @click="changClick(scope.$index,scope.row)">确认处理</el-button>
+                                {{scope.row.create_time | filterTimestampToFormatTime}}
                              </template>
-                         </el-table-column>-->
+                         </el-table-column>
                     </el-table>
                 </div>
             </el-tab-pane>
@@ -84,7 +79,8 @@
                     company: "",
                     phone: "",
                     name: "",
-                    content: ""
+                    content: "",
+                    file_id: []
                 },
                 showNewDialog: false,
                 showDview: false,

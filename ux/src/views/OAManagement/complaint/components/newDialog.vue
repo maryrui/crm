@@ -183,8 +183,33 @@
             // 提交按钮
             submitBtn() {
                this.$refs['formData'].validate(valid => {
+                   var img = []
+                   var file = []
                    if (valid) {
-                        this.$emit('submitBtn', this.formData)
+                       if (this.fileList) {
+                           img = this.fileList.map(function(file, index, array) {
+                               if (file.response) {
+                                   return file.response.data[0].file_id
+                               } else if (file.file_id) {
+                                   return file.file_id
+                               }
+                               return ''
+                           })
+                       }
+                       if (this.imageFileList) {
+                           file = this.imageFileList.map(function(file, index, array) {
+                               if (file.response) {
+                                   return file.response.data[0].file_id
+                               } else if (file.file_id) {
+                                   return file.file_id
+                               }
+                               return ''
+                           })
+                       }
+                       if (img || file) {
+                           this.formData['file'] = img.concat(file)
+                       }
+                       this.$emit('submitBtn', this.formData)
                    }
                })
             },
@@ -208,7 +233,7 @@
                 this.imageFileList = fileList
             },
             beforeAvatarUpload(file, fileList) {
-                let accept = ['jpg', 'jpeg', 'png', 'gif', 'zip', 'rar', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'pdf', 'plain', 'msword']
+                let accept = ['jpg', 'jpeg', 'png', 'gif', 'zip', 'rar', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'pdf', 'plain', 'msword', 'vnd.ms-excel', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet']
                 let ft = file.type.split('/')[1]
                 if (accept.indexOf(ft) < 0) {
                     this.$message.error('暂不支持该格式')
@@ -302,6 +327,7 @@
                 this.fileList = fileList
             },
             handleFileRemove(file, fileList) {
+                console.log(file)
                 if (file.response || file.file_id) {
                     let save_name
                     if (file.response) {

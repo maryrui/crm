@@ -94,6 +94,7 @@
                     @close="showExamineHandle = false"
                     @save="examineHandleClick"
                     :id="id"
+                    :isFinance="isFinance"
                     :examineType="examineType"
                     :detail="examineInfo"
                     :status="examineHandleInfo.status"></examine-handle>
@@ -175,7 +176,8 @@ export default {
       examineInfo: {}, //审核信息
       showFlowPopover: false,
       examineHandleInfo: { status: 0 },
-      showExamineHandle: false // 审核操作
+      showExamineHandle: false, // 审核操作
+      isFinance: false //是否是财务
     }
   },
   props: {
@@ -186,10 +188,16 @@ export default {
     // 详情信息id
     id: [String, Number],
     // 审批流id
-    flow_id: [String, Number]
+    flow_id: [String, Number],
+      detail : {
+        type: Object,
+        default: () => {
+            return {}
+        }
+    }
   },
   mounted() {
-      console.log(this.examineInfo)
+      console.log(this.detail)
   },
   methods: {
     getFlowStepList() {
@@ -206,6 +214,17 @@ export default {
         .then(res => {
           this.loading = false
           this.examineInfo = res.data
+            /*判断是否是财务*/
+            if (this.detail) {
+                let item = this.examineInfo.stepList[this.detail['order_id']]
+                for (var i = 0; i < item.user_id_info.length; i++) {
+                    let groupItem = item.user_id_info[i].groupIds
+                    let index = groupItem.indexOf(4)
+                    if (index > -1) {
+                        this.isFinance = true
+                    }
+                }
+            }
           this.$emit('value-change', {
             config: res.data.config, // 审批类型
             value: [] // 审批信息

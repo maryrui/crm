@@ -27,7 +27,7 @@ const app = {
     SET_MESSAGENUM: (state, messageNum) => {
       let totalNum = 0
       for (let key in messageNum) {
-        if (key != 'totalNum') {
+        if (key != 'totalNum' && key != 'remindReceivablesPlan') {
           totalNum += (messageNum[key] || 0)
         }
       }

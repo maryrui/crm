@@ -33,7 +33,6 @@ export default {
 
   mounted() {
     if (this.canShowDetail) {
-
         if (this.crmType !== 'receivables_plan') {
             this.getDetial()
         }
