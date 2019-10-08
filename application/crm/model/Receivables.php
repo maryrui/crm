@@ -181,6 +181,29 @@ class Receivables extends Common
         foreach ($arrFieldAtt as $k => $v) {
             $param[$v] = arrayToString($param[$v]);
         }
+
+        // 自动生成回款编号
+        $prefix = 'hk';
+        $resData = db('crm_receivables')
+            ->where('number', 'not null')
+            ->order('receivables_id desc')
+            ->limit(1)
+            ->value('number');
+        // 当前年当前月
+        $yearAndMonth = date("Ym");
+        if (null != $resData) {
+            // 截取后四位流水号
+            $serialStr = substr($resData, -5);
+            // +1
+            $serialInt = intval($serialStr) + 1;
+            // 不足4位前导补0
+            $newSerial = sprintf("%05d", $serialInt);
+            $newNumber = $prefix . $yearAndMonth . $newSerial;
+        } else {
+            $newNumber = $prefix . $yearAndMonth . '00001';
+        }
+        $param['number'] = $newNumber;
+
         if ($this->data($param)->allowField(true)->save()) {
             $data = [];
             $data['receivables_id'] = $this->receivables_id;
