@@ -42,6 +42,10 @@ class ReceivablesPlan extends Common
         unset($request['user_id']);
 
         $request = $this->fmtRequest($request);
+        if(isset($request['map']['contract_id']) && !isset($request['map']['check_status'])){
+            $request['map']['check_status'] = 2;
+        }
+
         $requestMap = $request['map'] ?: [];
 
         $sceneModel = new \app\admin\model\Scene();
