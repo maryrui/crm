@@ -97,7 +97,8 @@ class Contract extends Common
         $whereArr['tract.contract_id'] = array('in', $plansContract);
 
         $contracts = Db::name('crm_contract')->alias('tract')
-            ->field('tract.contract_id,tract.name,tract.money,tract.owner_user_id,user.realname,tract.customer_id,customer.name as customer_name')
+            ->field('tract.contract_id,tract.name,tract.money,tract.owner_user_id,tract.num,user.realname,
+            tract.customer_id,customer.name as customer_name')
             ->join('__CRM_CUSTOMER__ customer', 'tract.customer_id = customer.customer_id')
             ->join('__ADMIN_USER__ user', 'tract.owner_user_id = user.id', 'LEFT')
             ->where($whereArr)
