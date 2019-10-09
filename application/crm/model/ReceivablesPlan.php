@@ -59,6 +59,28 @@ class ReceivablesPlan extends Common
         $map = $requestMap ? array_merge($sceneMap, $requestMap) : $sceneMap;
         //高级筛选
         $map = where_arr($map, 'crm', 'receivables_plan', 'index');
+        $authMap = [];
+        $auth_user_ids = $userModel->getUserByPer('crm', 'receivables_plan', 'index');
+        if (isset($map['receivables_plan.owner_user_id'])) {
+            if (!is_array($map['receivables_plan.owner_user_id'][1])) {
+                $map['receivables_plan.owner_user_id'][1] = [$map['receivables_plan.owner_user_id'][1]];
+            }
+            if ($map['receivables_plan.owner_user_id'][0] == 'neq') {
+                $auth_user_ids = array_diff($auth_user_ids, $map['receivables_plan.owner_user_id'][1]) ? : [];	//取差集
+            } else {
+                $auth_user_ids = array_intersect($map['receivables_plan.owner_user_id'][1], $auth_user_ids) ? : [];	//取交集
+            }
+            unset($map['receivables_plan.owner_user_id']);
+            $auth_user_ids = array_merge(array_unique(array_filter($auth_user_ids))) ? : ['-1'];
+            $authMap['receivables_plan.owner_user_id'] = array('in',$auth_user_ids);
+        } else {
+            $authMapData = [];
+            $authMapData['auth_user_ids'] = $auth_user_ids;
+            $authMapData['user_id'] = $user_id;
+            $authMap = function($query) use ($authMapData){
+                $query->where('receivables_plan.owner_user_id',array('in',$authMapData['auth_user_ids']));
+            };
+        }
 
         if ($map['receivables_plan.owner_user_id']) {
             $map['contract.owner_user_id'] = $map['receivables_plan.owner_user_id'];
@@ -68,7 +90,7 @@ class ReceivablesPlan extends Common
             ->alias('receivables_plan')
             ->join('__CRM_CONTRACT__ contract', 'receivables_plan.contract_id = contract.contract_id', 'LEFT')
             ->join('__CRM_CUSTOMER__ customer', 'receivables_plan.customer_id = customer.customer_id', 'LEFT')
-            ->where($map)
+            ->where($map)->where($authMap)
             ->limit(($request['page'] - 1) * $request['limit'], $request['limit'])
             ->field('receivables_plan.*,customer.name as customer_name,contract.name as contract_name')
             ->select();
@@ -76,7 +98,7 @@ class ReceivablesPlan extends Common
             ->alias('receivables_plan')
             ->join('__CRM_CONTRACT__ contract', 'receivables_plan.contract_id = contract.contract_id', 'LEFT')
             ->join('__CRM_CUSTOMER__ customer', 'receivables_plan.customer_id = customer.customer_id', 'LEFT')
-            ->where($map)
+            ->where($map)->where($authMap)
             ->count('plan_id');
         foreach ($list as $k => $v) {
             $list[$k]['create_user_id_info'] = $userModel->getUserById($v['create_user_id']);
