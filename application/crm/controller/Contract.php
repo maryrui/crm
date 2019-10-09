@@ -94,7 +94,7 @@ class Contract extends ApiCommon
         // $param['flow_user_id'] = $flow_user_id ? arrayToString($flow_user_id) : '';            
         $todayTime = getTimeByType('today');
         $count = $contractModel->where(['create_time'=>['between',[$todayTime[0],$todayTime[1]]]])->count();
-        $num = substr(strval($count+10000),1,4);
+        $num = substr(strval($count+10001),1,4);
         $param['num']=date("Ymd").$num;
         if ($contractModel->createData($param)) {
             return resultArray(['data' => '添加成功']);

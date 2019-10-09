@@ -42,12 +42,7 @@ class ReceivablesPlan extends Common
         unset($request['user_id']);
 
         $request = $this->fmtRequest($request);
-        if(isset($request['map']['contract_id']) && !isset($request['map']['check_status'])){
-            $request['map']['check_status'] = 2;
-        }
-
         $requestMap = $request['map'] ?: [];
-
         $sceneModel = new \app\admin\model\Scene();
         if ($scene_id) {
             //自定义场景
@@ -65,13 +60,6 @@ class ReceivablesPlan extends Common
         //高级筛选
         $map = where_arr($map, 'crm', 'receivables_plan', 'index');
 
-//        if (isset($map['search'])) {
-//            //普通筛选
-//            $map['name'] = ['like', '%' . $map['search'] . '%'];
-//            unset($map['search']);
-//        } else {
-//            $map = where_arr($map, 'crm', 'receivables_plan', 'index'); //高级筛选
-//        }
         if ($map['receivables_plan.owner_user_id']) {
             $map['contract.owner_user_id'] = $map['receivables_plan.owner_user_id'];
             unset($map['receivables_plan.owner_user_id']);

@@ -281,6 +281,39 @@ class Message extends ApiCommon
     }
 
     /**
+     * 待审核回款
+     * @author Michael_xu
+     * @return
+     */
+    public function checkReceivablesPlan()
+    {
+        $param = $this->param;
+        $userInfo = $this->userInfo;
+        $types = $param['types'];
+        $type = $param['type'] ? : 1;
+        $isSub = $param['isSub'] ? : '';
+        unset($param['types']);
+        unset($param['type']);
+        unset($param['isSub']);
+        $receivablesPlanModel = model('ReceivablesPlan');
+
+        if ($isSub) {
+            $param['owner_user_id'] = array('in',getSubUserId(false));
+        } else {
+            $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
+        }
+        switch ($type) {
+            case '1' : $param['check_status'] = ['lt','2']; break;
+            case '2' : $param['check_status'] = ['egt','2']; break;
+        }
+        $data = $receivablesPlanModel->getDataList($param);
+        if ($types == 'list') {
+            return resultArray(['data' => $data]);
+        }
+        return $data;
+    }
+
+    /**
      * 即将到期合同
      * @author Michael_xu
      * @return 

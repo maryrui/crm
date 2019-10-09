@@ -248,6 +248,7 @@ return [
 	'crm/message/checkcontract' => ['crm/message/checkcontract', ['method' => 'POST']],				
 	'crm/message/checkreceivables' => ['crm/message/checkreceivables', ['method' => 'POST']],				
 	'crm/message/remindreceivablesplan' => ['crm/message/remindreceivablesplan', ['method' => 'POST']],				
+	'crm/message/checkreceivablesplan' => ['crm/message/checkReceivablesPlan', ['method' => 'POST']],
 	'crm/message/endContract' => ['crm/message/endContract', ['method' => 'POST']],
 
 	// 【客户】标记跟进
