@@ -652,10 +652,13 @@ class Field extends Model
 						$setting = $businessStatusModel->getDataList($dataInfo['type_id']);				
 						$value = (int)$dataInfo[$v['field']] ? : '';
 					}
-				} elseif ($v['form_type'] == 'receivables_plan') {
-					//回款计划期数
-					$value = $dataInfo[$v['field']] ? db('crm_receivables_plan')->where(['plan_id' => $dataInfo[$v['field']]])->value('num') : '';
-				} elseif ($v['form_type'] == 'business_cause' || $v['form_type'] == 'examine_cause') {
+				}
+				// end-e 注释掉，保证返回的是发票的数据
+//				elseif ($v['form_type'] == 'receivables_plan') {
+//					//回款计划期数
+//					//$value = $dataInfo[$v['field']] ? db('crm_receivables_plan')->where(['plan_id' => $dataInfo[$v['field']]])->value('num') : '';
+//				}
+				elseif ($v['form_type'] == 'business_cause' || $v['form_type'] == 'examine_cause') {
 					$whereTravel = [];
 					$whereTravel['examine_id'] = $dataInfo['examine_id'];
 					$travelList = db('oa_examine_travel')->where($whereTravel)->select() ? : [];
