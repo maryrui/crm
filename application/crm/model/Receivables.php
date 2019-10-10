@@ -183,7 +183,7 @@ class Receivables extends Common
         }
 
         // 自动生成回款编号
-        $prefix = 'hk';
+        $prefix = 'HK';
         $resData = db('crm_receivables')
             ->where('number', 'not null')
             ->order('receivables_id desc')
