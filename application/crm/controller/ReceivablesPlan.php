@@ -60,6 +60,12 @@ class ReceivablesPlan extends ApiCommon
         $examineStepModel = new \app\admin\model\ExamineStep();
         $param = $this->param;
         $userInfo = $this->userInfo;
+        $contractModel = model('Contract');
+        $contract = $contractModel->getDataById($param['contract_id']);
+        $check_status = $contract['check_status'];
+        if($check_status!=2){
+            return resultArray(['error' => '订单流程审批未结束或未通过！']);
+        }
         $param['create_user_id'] = $userInfo['id'];
         $param['owner_user_id'] = $userInfo['id'];
         $examineFlowModel = new \app\admin\model\ExamineFlow();

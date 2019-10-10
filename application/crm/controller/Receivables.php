@@ -58,6 +58,13 @@ class Receivables extends ApiCommon
     {
         $receivablesModel = model('Receivables');
         $param = $this->param;
+        $contractModel = model('Contract');
+        $contract = $contractModel->getDataById($param['contract_id']);
+        $check_status = $contract['check_status'];
+        if($check_status!=2){
+            return resultArray(['error' => '订单流程审批未结束或未通过！']);
+        }
+
         $userInfo = $this->userInfo;
         $examineStepModel = new \app\admin\model\ExamineStep();
         $param['create_user_id'] = $userInfo['id'];
