@@ -92,7 +92,7 @@ class ReceivablesPlan extends Common
             ->join('__CRM_CUSTOMER__ customer', 'receivables_plan.customer_id = customer.customer_id', 'LEFT')
             ->where($map)->where($authMap)
             ->limit(($request['page'] - 1) * $request['limit'], $request['limit'])
-            ->field('receivables_plan.*,customer.name as customer_name,contract.name as contract_name')
+            ->field('receivables_plan.*,customer.name as customer_name,contract.name as contract_name, contract.num as contract_num')
             ->select();
         $dataCount = db('crm_receivables_plan')
             ->alias('receivables_plan')
