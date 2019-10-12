@@ -97,3 +97,11 @@ ADD COLUMN `order_id`  int(11) NULL DEFAULT 0 COMMENT '审核步骤排序ID' AFT
 ADD COLUMN `check_user_id`  varchar(255) NULL DEFAULT '' COMMENT '审批人IDs' AFTER `create_user_id`,
 ADD COLUMN `flow_user_id`  varchar(255) NULL DEFAULT '' AFTER `check_user_id`,
 ADD COLUMN `name`  varchar(255) NULL DEFAULT '' AFTER `update_time`;
+
+-- 回款模块新增字段，客户级别、发票金额
+ALTER TABLE `5kcrm_crm_receivables`
+ADD COLUMN `customer_level`  varchar(255) NULL COMMENT '客户级别' AFTER `contract_name`,
+ADD COLUMN `receivables_plan_money`  decimal(18,2) NULL AFTER `customer_level`;
+
+-- admin_field表增加字段，参照localhost行110，111
+
