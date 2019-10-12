@@ -94,7 +94,10 @@ class Contract extends Common
             ->where('check_status', 'eq', 2)
             ->where('create_time', $createTime)
             ->column('contract_id');
-        $whereArr['tract.contract_id'] = array('in', $plansContract);
+        if (false == empty($plansContract)) {
+            $contractIds = array_unique($plansContract);
+            $whereArr['tract.contract_id'] = array('in', $contractIds);
+        }
 
         $contracts = Db::name('crm_contract')->alias('tract')
             ->field('tract.contract_id,tract.name,tract.money,tract.owner_user_id,tract.num,user.realname,
@@ -104,26 +107,63 @@ class Contract extends Common
             ->where($whereArr)
             ->select();
         foreach ($contracts as $i => $v) {
-            $balance = $v['money'];
-            $receivables = Db::name("crm_receivables")
-                ->field(['plan_id', 'money'])
+            // 未合并相同发票下的回款
+//            $balance = $v['money'];
+//            $receivables = Db::name("crm_receivables")
+//                ->field(['plan_id', 'money'])
+//                ->where(['contract_id' => $v['contract_id']])
+//                ->select();
+//
+//            $contracts[$i]['receivables'] = $receivables;
+//            foreach ($receivables as $j => $v2) {
+//                $plans = Db::name("crm_receivables_plan")
+//                    ->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
+//                    ->where(['invoice_code' => $v2['plan_id'], 'check_status' => 2])
+//                    ->select();
+//
+//                $contracts[$i]['receivables'][$j]['plans'] = $plans;
+//                $contracts[$i]['receivables'][$j]['balance'] = $plans[0]['money'] - $v2['money'];
+//                foreach ($plans as $plan) {
+//                    $balance = $balance - $plan['money'];
+//                }
+//            }
+//            $contracts[$i]['balance'] = $balance;
+
+            // 订单总金额，暂未使用
+            $contractBalance = $v['money'];
+
+            // 同一个订单的所有发票
+            $receivablesPlan = Db::name("crm_receivables_plan")
+                ->field(['invoice_code', 'money'])
                 ->where(['contract_id' => $v['contract_id']])
                 ->select();
 
-            $contracts[$i]['receivables'] = $receivables;
-            foreach ($receivables as $j => $v2) {
-                $plans = Db::name("crm_receivables_plan")
-                    ->field(['plan_id', 'return_date', 'money', 'status', 'invoice_code'])
-                    ->where(['invoice_code' => $v2['plan_id'], 'check_status' => 2])
+            $contracts[$i]['receivables_plan'] = $receivablesPlan;
+
+            // 已开发票的总金额
+            $receivablesPlanTotalMoney = 0;
+            // 已回款的总金额
+            $receivableTotalMoney = 0;
+
+            foreach ($receivablesPlan as $j => $v2) {
+                $receivablesPlanTotalMoney += $v2['money'];
+                $receivables = Db::name("crm_receivables")
+                    ->field(['plan_id', 'return_time', 'money'])
+                    ->where(['plan_id' => $v2['invoice_code'], 'check_status' => 2])
                     ->select();
 
-                $contracts[$i]['receivables'][$j]['plans'] = $plans;
-                $contracts[$i]['receivables'][$j]['balance'] = $plans[0]['money'] - $v2['money'];
-                foreach ($plans as $plan) {
-                    $balance = $balance - $plan['money'];
+                // 保存最后一次回款的日期
+                $receivableReturnDate = '';
+                foreach ($receivables as $receivable) {
+                    $receivableTotalMoney += $receivable['money'];
+                    $receivableReturnDate = $receivable['return_date'];
                 }
+                $contracts[$i]['receivables_plan'][$j]['balance'] = $receivableTotalMoney;
+                $contracts[$i]['receivables_plan'][$j]['return_date'] = $receivableReturnDate;
             }
-            $contracts[$i]['balance'] = $balance;
+
+            // 当前订单未回款金额 = 已开发票总金额 - 已回款总金额
+            $contracts[$i]['balance'] = $receivablesPlanTotalMoney - $receivableTotalMoney;
         }
 
         // 已回款，删除balance > 0的元素
