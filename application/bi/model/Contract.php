@@ -135,17 +135,19 @@ class Contract extends Common
             // 同一个订单的所有发票
             $receivablesPlan = Db::name("crm_receivables_plan")
                 ->field(['invoice_code', 'money'])
-                ->where(['contract_id' => $v['contract_id']])
+                ->where(['contract_id' => $v['contract_id'], 'check_status' => 2])
                 ->select();
 
             $contracts[$i]['receivables_plan'] = $receivablesPlan;
 
             // 已开发票的总金额
             $receivablesPlanTotalMoney = 0;
-            // 已回款的总金额
+            // 一个订单下已回款的总金额
             $receivableTotalMoney = 0;
 
             foreach ($receivablesPlan as $j => $v2) {
+                // 一张发票下的所有回款
+                $planReceivableTotal = 0;
                 $receivablesPlanTotalMoney += $v2['money'];
                 $receivables = Db::name("crm_receivables")
                     ->field(['plan_id', 'return_time', 'money'])
@@ -155,11 +157,16 @@ class Contract extends Common
                 // 保存最后一次回款的日期
                 $receivableReturnDate = '';
                 foreach ($receivables as $receivable) {
-                    $receivableTotalMoney += $receivable['money'];
-                    $receivableReturnDate = $receivable['return_date'];
+                    $planReceivableTotal += $receivable['money'];
+                    $receivableReturnDate = $receivable['return_time'];
                 }
-                $contracts[$i]['receivables_plan'][$j]['balance'] = $receivableTotalMoney;
+                // 一张发票下所有的回款金额
+                $contracts[$i]['receivables_plan'][$j]['receivables_money'] = $planReceivableTotal;
+                // 一张发票下欠款的金额
+                $contracts[$i]['receivables_plan'][$j]['balance'] = $v2['money'] - $planReceivableTotal;
                 $contracts[$i]['receivables_plan'][$j]['return_date'] = $receivableReturnDate;
+                // 一个订单下已回款的总金额
+                $receivableTotalMoney += $planReceivableTotal;
             }
 
             // 当前订单未回款金额 = 已开发票总金额 - 已回款总金额
