@@ -141,14 +141,14 @@ class Contract extends Common
             $contracts[$i]['receivables_plan'] = $receivablesPlan;
 
             // 已开发票的总金额
-            $receivablesPlanTotalMoney = 0;
+            $receivablesPlanTotalMoney = '0';
             // 一个订单下已回款的总金额
-            $receivableTotalMoney = 0;
+            $receivableTotalMoney = '0';
 
             foreach ($receivablesPlan as $j => $v2) {
                 // 一张发票下的所有回款
-                $planReceivableTotal = 0;
-                $receivablesPlanTotalMoney += $v2['money'];
+                $planReceivableTotal = '0';
+                $receivablesPlanTotalMoney = bcadd($planReceivableTotal, $v2['money'], 2);
                 $receivables = Db::name("crm_receivables")
                     ->field(['plan_id', 'return_time', 'money'])
                     ->where(['plan_id' => $v2['invoice_code'], 'check_status' => 2])
@@ -157,21 +157,21 @@ class Contract extends Common
                 // 保存最后一次回款的日期
                 $receivableReturnDate = '';
                 foreach ($receivables as $receivable) {
-                    $planReceivableTotal += $receivable['money'];
+                    $planReceivableTotal = bcadd($planReceivableTotal, $receivable['money'], 2);
                     $receivableReturnDate = $receivable['return_time'];
                 }
 
                 // 一张发票下所有的回款金额
                 $contracts[$i]['receivables_plan'][$j]['receivables_money'] = $planReceivableTotal;
                 // 一张发票下欠款的金额
-                $contracts[$i]['receivables_plan'][$j]['balance'] = $v2['money'] - $planReceivableTotal;
+                $contracts[$i]['receivables_plan'][$j]['balance'] = bcsub($v2['money'], $planReceivableTotal, 2);
                 $contracts[$i]['receivables_plan'][$j]['return_date'] = $receivableReturnDate;
                 // 一个订单下已回款的总金额
-                $receivableTotalMoney += $planReceivableTotal;
+                $receivableTotalMoney = bcadd($planReceivableTotal, $receivableTotalMoney, 2);
             }
 
             // 当前订单未回款金额 = 已开发票总金额 - 已回款总金额
-            $contracts[$i]['balance'] = $receivablesPlanTotalMoney - $receivableTotalMoney;
+            $contracts[$i]['balance'] = bcsub($receivablesPlanTotalMoney, $receivableTotalMoney, 2);
         }
 
         // 已回款，删除balance > 0的元素
