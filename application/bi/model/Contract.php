@@ -160,6 +160,7 @@ class Contract extends Common
                     $planReceivableTotal += $receivable['money'];
                     $receivableReturnDate = $receivable['return_time'];
                 }
+
                 // 一张发票下所有的回款金额
                 $contracts[$i]['receivables_plan'][$j]['receivables_money'] = $planReceivableTotal;
                 // 一张发票下欠款的金额
