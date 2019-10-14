@@ -114,7 +114,7 @@ const customerRouter = {
         icon: 'contract',
         index: 1,
         type: 'crm',
-        subType: 'contract'
+        subType: 'receivables_plan'
       }
     },
     {

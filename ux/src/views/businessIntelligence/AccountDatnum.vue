@@ -21,14 +21,6 @@
                           border
                           :span-method="objectSpanMethod"
                           highlight-current-row>
-                    <!--<el-table-column align="center"
-                                     header-align="center"
-                                     show-overflow-tooltip
-                                     label="公司总排名">
-                        <template slot-scope="scope">
-                            {{scope.$index + 1}}
-                        </template>
-                    </el-table-column>-->
                     <el-table-column v-for="(items, index) in fieldList"
                                      :key="index"
                                      align="center"
@@ -56,27 +48,26 @@
                 rowSpanData: [],
                 spanArr: [],
                 pos: [],
-                downloadLoading: false
+                downloadLoading: false,
+                fieldList: [
+                    { field: 'contract_id', name: '订单编号' },
+                    { field: 'name', name: '订单名称' },
+                    { field: 'customer_name', name: '客户名称' },
+                    { field: 'realname', name: '客户负责人' },
+                    { field: 'money', name: '订单金额' },
+                    { field: 'invoice_code', name: '发票编号' },
+                    { field: 'invoice_money', name: '发票金额' },
+                    { field: 'return_date', name: '回款日期' },
+                    { field: 'return_money', name: '回款金额' },
+                    { field: 'debt', name: '欠款金额' }
+                ]
             }
         },
         mixins: [rankingMixins, exportTable],
         computed: {},
-        mounted() {
-            this.fieldList = [
-                { field: 'contract_id', name: '订单编号' },
-                { field: 'name', name: '订单名称' },
-                { field: 'customer_name', name: '客户名称' },
-                { field: 'realname', name: '客户负责人' },
-                { field: 'money', name: '订单金额' },
-                { field: 'invoice_code', name: '发票编号' },
-                { field: 'invoce_money', name: '发票金额' },
-                { field: 'return_date', name: '回款日期' },
-                { field: 'return_money', name: '回款金额' },
-                { field: 'debt', name: '欠款金额' }
-            ]
-        },
         methods: {
             getDataList(params) {
+                this.list = []
                 this.loading = true
                 getAccountDatnum(params)
                     .then(res => {
@@ -116,66 +107,40 @@
             },
             processData(list) {
                 var arr = []
-                let rowSpanData = []
                 for (var i = 0; i < list.length; i++) {
-                    this.rowSpanData.push(0)
-                    if (list[i].receivables.length > 0) {
-                        for (var j = 0; j < list[i].receivables.length; j++) {
-                            if (list[i].receivables[j].plans.length) {
-                                for (var m = 0; m < list[i].receivables[j].plans.length; m++) {
-                                    this.rowSpanData[i]++
-                                    arr.push({
-                                        balance:list[i].balance,
-                                        contract_id: list[i].contract_id,
-                                        customer_name: list[i].customer_name,
-                                        realname: list[i].realname,
-                                        money: list[i].money,
-                                        name: list[i].name,
-                                        return_money: list[i].receivables[j].money,
-                                        planLength:list[i].receivables[j].plans.length,
-                                        invoice_code : list[i].receivables[j].plans[m].invoice_code,
-                                        return_date: list[i].receivables[j].plans[m].return_date,
-                                        invoce_money: list[i].receivables[j].plans[m].money,
-                                        debt: list[i].receivables[j].balance
-                                    })
-                                }
-                            }else{
-                                this.rowSpanData[i]++
-                                arr.push({
-                                    balance:list[i].balance,
-                                    customer_name: list[i].customer_name,
-                                    realname: list[i].realname,
-                                    contract_id: list[i].contract_id,
-                                    money: list[i].money,
-                                    name: list[i].name,
-                                    return_money: 0,
-                                    planLength: 0,
-                                    invoice_code : 0,
-                                    return_date: 0,
-                                    invoce_money: 0,
-                                    debt: 0
-                                })
-                            }
+                    if (list[i].receivables_plan.length > 0) {
+                        for (var j = 0; j < list[i].receivables_plan.length; j++) {
+                            arr.push({
+                                contract_id: list[i].num,
+                                customer_name: list[i].customer_name,
+                                realname: list[i].realname,
+                                money: list[i].money,
+                                name: list[i].name,
+                                return_money: list[i].receivables_plan[j].receivables_money,
+                                invoice_money: list[i].receivables_plan[j].money,
+                                invoice_code: list[i].receivables_plan[j].invoice_code,
+                                return_date: list[i].receivables_plan[j].return_date,
+                                debt: list[i].receivables_plan[j].balance
+                            })
                         }
-                    }else{
-                        this.rowSpanData[i]++
+                    } else {
                         arr.push({
-                            balance:list[i].balance,
-                            contract_id: list[i].contract_id,
+                            contract_id: list[i].num,
                             customer_name: list[i].customer_name,
                             realname: list[i].realname,
                             money: list[i].money,
                             name: list[i].name,
                             return_money: 0,
-                            planLength: 0,
-                            invoice_code : 0,
+                            invoice_code: 0,
                             return_date: 0,
-                            invoce_money: 0,
+                            invoice_money: 0,
                             debt: 0
                         })
                     }
                 }
                 this.list =  arr
+                this.spanArr = []
+                this.pos = []
                 this.getSpanArr(arr)
             }
         }

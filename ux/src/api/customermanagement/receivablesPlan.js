@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // crm 新建产品
-export function crmReceivablesPlanDelete(query) {
+export function crmReceivablesPlanDelete(data) {
     return request({
-        url: 'crm/receivables_plan/delete',
-        method: 'get',
-        params: query
+      url: 'crm/receivables_plan/delete',
+      method: 'post',
+      data: data
     })
 }
 

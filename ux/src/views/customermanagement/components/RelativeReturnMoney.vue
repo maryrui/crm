@@ -142,8 +142,8 @@ export default {
     this.planFieldList = [
       // { prop: 'num', width: '200', label: '期数' },
       // { prop: 'customer_id', width: '200', label: '客户名称' },
-      { prop: 'contract_id', width: '200', label: '订单编号' },
-      { prop: 'contract_id', width: '200', label: '订单名称' },
+      { prop: 'contract_num', width: '200', label: '订单编号' },
+      { prop: 'contract_name', width: '200', label: '订单名称' },
       { prop: 'invoice_code', width: '200', label: '发票编号' },
       { prop: 'money', width: '200', label: '发票金额' },
       { prop: 'return_date', width: '200', label: '开票日期' },
@@ -156,7 +156,7 @@ export default {
 
     this.fieldList = [
       // { prop: 'number', width: '200', label: '回款编号' },
-      { prop: 'contract_id', width: '200', label: '订单编号' },
+      { prop: 'contract_num', width: '200', label: '订单编号' },
       { prop: 'contract_name', width: '200', label: '订单名称' },
         { prop: 'plan_id', width: '200', label: '发票编号' },
       // { prop: 'contract_money', width: '200', label: '订单金额' },
@@ -313,7 +313,7 @@ export default {
     fieldFormatter(row, column) {
       // 如果需要格式化
       if (column.property === 'contract_id') {
-        return row.contract_id_info.name
+        return row.contract_id_info.contract_id
       } else if (column.property === 'customer_id') {
         return row.customer_id_info.name
       } else if (column.property === 'create_time') {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <c-r-m-list-head title="发票管理"
-                     placeholder="请输入发票名称"
+                     placeholder="请输入发票编号"
                      @on-handle="listHeadHandle"
                      @on-search="crmSearch"
                      main-title="新建发票"

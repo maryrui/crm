@@ -99,7 +99,16 @@ export default {
       default: () => {
           return {}
       }
-  }
+    }
+  },
+  watch: {
+      dataDetail: {
+          handler: function(val, oldval) {
+              this.dataDetail = val
+              this.setHead()
+          },
+          deep: true //对象内部的属性监听，也叫深度监听
+      }
   },
   data() {
     return {
@@ -157,13 +166,16 @@ export default {
     }
   },
   mounted() {
-      this.headDetails[0].value = this.dataDetail.invoice_code
-      this.headDetails[1].value = this.dataDetail.customer_name
-      this.headDetails[2].value = this.dataDetail.contract_name
-      this.headDetails[3].value = this.dataDetail.invoicer
-      this.headDetails[4].value = this.dataDetail.return_type
+     this.setHead()
   },
   methods: {
+    setHead() {
+        this.headDetails[0].value = this.dataDetail.invoice_code
+        this.headDetails[1].value = this.dataDetail.customer_name
+        this.headDetails[2].value = this.dataDetail.contract_name
+        this.headDetails[3].value = this.dataDetail.invoicer
+        this.headDetails[4].value = this.dataDetail.return_type
+    },
     getDetial() {
       this.loading = true
       crmContractRead({

@@ -48,9 +48,9 @@ export default {
   methods: {
     /**
      * 当某一行被点击时会触发该事件
-     * @param {*} row 
-     * @param {*} column 
-     * @param {*} event 
+     * @param {*} row
+     * @param {*} column
+     * @param {*} event
      */
     handleRowClick(row, column, event) {
       if (this.crmType === 'leads') {
@@ -158,14 +158,14 @@ export default {
         'followCustomer': crmMessageFollowCustomerAPI,
         'checkContract': crmMessageCheckContractAPI,
         'checkReceivables': crmMessageCheckReceivablesAPI,
-        'remindReceivablesPlan': crmMessagRemindreceivablesplanAPI,
+        'checkReceivablesPlan': crmMessagRemindreceivablesplanAPI,
         'endContract': crmMessagEndContractAPI,
       } [this.infoType]
     },
 
     /** 获取字段 */
     getFieldList() {
-      if (this.crmType == 'receivables_plan') {
+    /*  if (this.crmType == 'receivables_plan') {
         let list = [{
             field: 'num',
             form_type: 'text',
@@ -209,7 +209,7 @@ export default {
         ]
         this.handelFieldList(list)
         return
-      }
+      }*/
 
       filedGetField({
           types: 'crm_' + this.crmType,

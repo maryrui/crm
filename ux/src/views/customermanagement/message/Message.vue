@@ -99,14 +99,14 @@ export default {
           tips: '',
           hidden: false
         },
-       /* {
-          name: '待回款提醒',
+        {
+          name: '待审核发票',
           crmType: 'receivables_plan',
-          infoType: 'remindReceivablesPlan',
+          infoType: 'checkReceivablesPlan',
           num: 0,
           tips: '',
           hidden: false
-        },*/
+        },
         {
           name: '即将到期的订单',
           crmType: 'contract',

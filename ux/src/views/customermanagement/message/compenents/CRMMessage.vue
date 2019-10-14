@@ -252,11 +252,10 @@ export default {
         this.infoType == 'checkReceivables'
       ) {
         return [{ name: '待审核', value: 1 }, { name: '已审核', value: 2 }]
-      } else if (this.infoType == 'remindReceivablesPlan') {
+      } else if (this.infoType == 'checkReceivablesPlan') {
         return [
-          { name: '待回款', value: 1 },
-          { name: '已回款', value: 2 },
-          { name: '已逾期', value: 3 }
+          { name: '待审核', value: 1 },
+          { name: '已审核', value: 2 }
         ]
       } else if (this.infoType == 'endContract') {
         return [{ name: '即将到期', value: 1 }, { name: '已到期', value: 2 }]

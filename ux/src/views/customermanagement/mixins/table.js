@@ -257,7 +257,7 @@ export default {
                                     type: 'crm',
                                     formatter: fieldFormatter
                                 }
-                            } else if (element.field === 'status_id' || element.field === 'type_id' || element.field === 'category_id' || element.field === 'plan_id') {
+                            } else if (element.field === 'status_id' || element.field === 'type_id' || element.field === 'category_id' ) {
                                 function fieldFormatter(info) {
                                     return info ? info : ''
                                 }

@@ -288,7 +288,7 @@ export default {
     },
     // 字段的值更新
     fieldValueChange(data) {
-        // debugger
+        debugger
       var item = this.crmForm.crmFields[data.index]
       item.value = data.value
         // debugger
@@ -386,7 +386,17 @@ export default {
                 element['relation'] = {}
                 element.value = []
               }
-            } else if (element.key === 'plan_id') {
+            }
+            if (element.key === 'customer_level') {
+                if (item.value.length > 0) {
+                    var customerItem = item.value[0]
+                    customerItem['form_type'] = 'customer'
+                    element.value = customerItem.level
+                } else {
+                    element.value = []
+                }
+            }
+            else if (element.key === 'plan_id') {
               planItem = element
             }
           }
@@ -396,38 +406,54 @@ export default {
             planItem.value = ''
           }
         } else if (item.data.form_type == 'contract') {
-          for (let index = 0; index < this.crmForm.crmFields.length; index++) {
-            const element = this.crmForm.crmFields[index]
-            if (element.key === 'contract_name') {
-                if (item.value.length > 0) {
-                    var contractItem = item.value[0]
-                    contractItem['form_type'] = 'contract'
-                    element['relation'] = contractItem
-                    element.value = contractItem.name
-                } else {
-                    element.disabled = true
-                    element['relation'] = {}
-                    element.value = ''
+            for (let index = 0; index < this.crmForm.crmFields.length; index++) {
+                const element = this.crmForm.crmFields[index]
+                if (element.key === 'contract_name') {
+                    if (item.value.length > 0) {
+                        var contractItem = item.value[0]
+                        contractItem['form_type'] = 'contract'
+                        element['relation'] = contractItem
+                        element.value = contractItem.name
+                    } else {
+                        element.disabled = true
+                        element['relation'] = {}
+                        element.value = ''
+                    }
+                }
+                if (element.key === 'plan_id') {
+                    // 如果是回款 改变回款样式和传入客户ID
+                    if (item.value.length > 0) {
+                        element.disabled = false
+                        var contractItem = item.value[0]
+                        contractItem['form_type'] = 'contract'
+                        element['relation'] = contractItem
+                    } else {
+                        element.disabled = true
+                        element['relation'] = {}
+                        element.value = ''
+                    }
+                    break
                 }
             }
-            if (element.key === 'plan_id') {
-              // 如果是回款 改变回款样式和传入客户ID
-              if (item.value.length > 0) {
-                element.disabled = false
-                var contractItem = item.value[0]
-                contractItem['form_type'] = 'contract'
-                element['relation'] = contractItem
-              } else {
-                element.disabled = true
-                element['relation'] = {}
-                element.value = ''
-              }
-              break
+        } else if (item.data.form_type == 'receivables_plan') {
+            for (let index = 0; index < this.crmForm.crmFields.length; index++) {
+                const element = this.crmForm.crmFields[index]
+                if (element.key === 'receivables_plan_money') {
+                    // 如果是回款 改变回款样式和传入客户ID
+                    if (item.value.length > 0) {
+                        var contractItem = item.value
+                        element['relation'] = contractItem
+                        element['value'] = contractItem.split('-')[1]
+                    } else {
+                        element.disabled = true
+                        element['relation'] = {}
+                        element.value = ''
+                    }
+                    break
+                }
             }
-          }
         }
-      }
-      else if (this.crmType == 'receivables_plan') {
+      } else if (this.crmType == 'receivables_plan') {
           // 新建回款 选择客户 要将id交于 订单
           if (item.data.form_type == 'customer') {
               var planItem = null // 订单更改 重置回款计划
@@ -513,6 +539,7 @@ export default {
       filedGetField(params)
         .then(res => {
             var data = res.data
+            // debugger
             if (params.types == 'crm_receivables_plan' && params.action == 'save') {
                 data = res.data.filter((item) => {
                    if (item.field == 'invoice_code') {
@@ -534,9 +561,9 @@ export default {
                    if (item.field == 'number' && params.action == 'save' ) {
                        return false
                    }
-                    if (item.field == 'customer_level' && params.action == 'save'|| params.action == 'update') {
+                  /*  if (item.field == 'customer_level' && params.action == 'save'|| params.action == 'update') {
                         return false
-                    }
+                    }*/
                    return true
                 })
             }
@@ -654,12 +681,26 @@ export default {
           params['data'] = item
           params['disabled'] = false // 是否可交互
           params['styleIndex'] = showStyleIndex
-          if (this.crmType == 'receivables' && item.field === 'contract_name') {
-              params['disabled'] = true // 是否可交互
-              if (this.action.type == 'update') {
-                  params['value'] = item.value // 编辑的值 在value字段
-              } else {
-                  params['value'] = this.action.data['contract'] ? this.action.data['contract'].name : ''
+          if (this.crmType == 'receivables') {
+              if (item.field === 'contract_name'){
+                  params['disabled'] = true // 是否可交互
+                  if (this.action.type == 'update') {
+                      params['value'] = item.value // 编辑的值 在value字段
+                  } else {
+                      params['value'] = this.action.data['contract'] ? this.action.data['contract'].name : ''
+                  }
+              }
+              if (item.field === 'customer_level') {
+                  params['disabled'] = true // 是否可交互
+                  if (this.action.type == 'update') {
+                      params['value'] = item.value // 编辑的值 在value字段
+                  }
+              }
+              if (item.field === 'receivables_plan_money') {
+                  params['disabled'] = true // 是否可交互
+                  if (this.action.type == 'update') {
+                      params['value'] = item.value // 编辑的值 在value字段
+                  }
               }
           }
           if (item.field === 'name' && this.crmType == 'receivables_plan') {
