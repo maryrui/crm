@@ -53,6 +53,7 @@ export default {
      * @param {*} event
      */
     handleRowClick(row, column, event) {
+      debugger
       if (this.crmType === 'leads') {
         this.rowID = row.leads_id
         this.rowType = 'leads'
@@ -110,7 +111,7 @@ export default {
         }
         this.showDview = true
       } else if (this.crmType === 'receivables_plan') {
-        if (column.property === 'customer_id') {
+       /* if (column.property === 'customer_id') {
           this.rowID = row.customer_id_info.customer_id
           this.rowType = 'customer'
           this.showDview = true
@@ -118,7 +119,11 @@ export default {
           this.rowID = row.contract_id
           this.rowType = 'contract'
           this.showDview = true
-        }
+        }*/
+          this.rowID = row.plan_id
+          this.dataItem = row
+          this.rowType = 'crm_receivables_plan'
+          this.showDview = true
       }
     },
 

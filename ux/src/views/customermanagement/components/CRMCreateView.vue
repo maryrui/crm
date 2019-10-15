@@ -288,7 +288,7 @@ export default {
     },
     // 字段的值更新
     fieldValueChange(data) {
-        debugger
+        // debugger
       var item = this.crmForm.crmFields[data.index]
       item.value = data.value
         // debugger
@@ -694,6 +694,12 @@ export default {
                   params['disabled'] = true // 是否可交互
                   if (this.action.type == 'update') {
                       params['value'] = item.value // 编辑的值 在value字段
+                  } else {
+                      if (this.action.data['customer']) {
+                          params['value'] =  this.action.data['customer'] ? this.action.data['customer'].level : ''
+                      } else {
+                          params['value'] = this.action.data['contract'] ?  this.action.data['contract'].level : ''
+                      }
                   }
               }
               if (item.field === 'receivables_plan_money') {
@@ -701,6 +707,9 @@ export default {
                   if (this.action.type == 'update') {
                       params['value'] = item.value // 编辑的值 在value字段
                   }
+              }
+              if (item.field === 'number') {
+                  params['disabled'] = true // 是否可交互
               }
           }
           if (item.field === 'name' && this.crmType == 'receivables_plan') {

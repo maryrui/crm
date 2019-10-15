@@ -125,6 +125,7 @@
 
     <!-- 相关详情页面 -->
     <c-r-m-all-detail :visible.sync="showDview"
+                      :dataDetail="dataItem"
                       :crmType="rowType"
                       :id="rowID">
     </c-r-m-all-detail>
@@ -186,6 +187,7 @@ export default {
 
   data() {
     return {
+      dataItem: {},
       optionsType: 0,
       isSubType: 0, // 是否是下属
       /** 高级筛选 */
