@@ -71,7 +71,9 @@ class Message extends ApiCommon
         $checkContract = $this->checkContract();
         $data['checkContract'] = $checkContract['dataCount'] ? : ''; 
         $checkReceivables = $this->checkReceivables();
-        $data['checkReceivables'] = $checkReceivables['dataCount'] ? : ''; 
+        $data['checkReceivables'] = $checkReceivables['dataCount'] ? : '';
+        $checkReceivablesPlan = $this->checkReceivablesPlan();
+        $data['checkReceivablesPlan'] = $checkReceivablesPlan['dataCount'] ? : '';
         $remindReceivablesPlan = $this->remindReceivablesPlan();
         $data['remindReceivablesPlan'] = $remindReceivablesPlan['dataCount'] ? : '';
         if ($configData['contract_config'] == 1) {
@@ -236,9 +238,13 @@ class Message extends ApiCommon
         } else {
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
         }          
+//        switch ($type) {
+//            case '1' : $param['check_status'] = ['lt','2']; break;
+//            case '2' : $param['check_status'] = ['egt','2']; break;
+//        }
         switch ($type) {
-            case '1' : $param['check_status'] = ['lt','2']; break;
-            case '2' : $param['check_status'] = ['egt','2']; break;
+            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'2']; break;
+            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'2']; break;
         }
         $data = $receivablesModel->getDataList($param);
         if ($types == 'list') {
@@ -303,8 +309,8 @@ class Message extends ApiCommon
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
         }
         switch ($type) {
-            case '1' : $param['check_status'] = ['lt','2']; break;
-            case '2' : $param['check_status'] = ['egt','2']; break;
+            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'2']; break;
+            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'2']; break;
         }
         $data = $receivablesPlanModel->getDataList($param);
         if ($types == 'list') {

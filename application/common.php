@@ -157,7 +157,7 @@ function where_arr($array = [], $m = '', $c = '', $a = '')
                 $k = 'name';
                 $c = 'contacts.';
             }
-            if ($k == 'check_status' && is_array($v)) $v['value'] = $checkStatusArray[$v['value']] ? : '0';
+//            if ($k == 'check_status' && is_array($v)) $v['value'] = $checkStatusArray[$v['value']] ? : '0';
             if (is_array($v)) {
                 if ($v['state']) {
                     $address_where[] = '%'.$v['state'].'%';
@@ -193,6 +193,7 @@ function where_arr($array = [], $m = '', $c = '', $a = '')
                     if (in_array($k, $check_field_arr)) {
                         $where[$c.$k] = field($v['value'], 'contains');
                     } else {
+                        $aa = $v;
                         $where[$c.$k] = field($v['value'], $v['condition']);
                     }
                 } elseif (in_array($v['condition'], ['is_empty','is_not_empty'])) {

@@ -53,7 +53,7 @@ class ReceivablesPlan extends Common
         }
         if ($search) {
             //普通筛选
-            $sceneMap['number'] = ['condition' => 'contains','value' => $search,'form_type' => 'text','name' => '发票编号'];
+            $sceneMap['invoice_code'] = ['condition' => 'contains','value' => $search,'form_type' => 'text','name' => '发票编号'];
         }
         //优先级：普通筛选>高级筛选>场景
         $map = $requestMap ? array_merge($sceneMap, $requestMap) : $sceneMap;
@@ -86,6 +86,12 @@ class ReceivablesPlan extends Common
             $map['contract.owner_user_id'] = $map['receivables_plan.owner_user_id'];
             unset($map['receivables_plan.owner_user_id']);
         }
+
+        if ($request['order_type'] && $request['order_field']) {
+            $order = trim($request['order_field']) . ' ' . trim($request['order_type']);
+        } else {
+            $order = 'receivables_plan.update_time desc';
+        }
         $list = db('crm_receivables_plan')
             ->alias('receivables_plan')
             ->join('__CRM_CONTRACT__ contract', 'receivables_plan.contract_id = contract.contract_id', 'LEFT')
@@ -93,6 +99,7 @@ class ReceivablesPlan extends Common
             ->where($map)->where($authMap)
             ->limit(($request['page'] - 1) * $request['limit'], $request['limit'])
             ->field('receivables_plan.*,customer.name as customer_name,contract.name as contract_name, contract.num as contract_num')
+            ->order($order)
             ->select();
         $dataCount = db('crm_receivables_plan')
             ->alias('receivables_plan')
