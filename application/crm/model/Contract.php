@@ -337,7 +337,7 @@ class Contract extends Common
 		$dataInfo['create_user_info'] = isset($dataInfo['create_user_id']) ? $userModel->getUserById($dataInfo['create_user_id']) : [];
 		$dataInfo['owner_user_id_info'] = isset($dataInfo['owner_user_id']) ? $userModel->getUserById($dataInfo['owner_user_id']) : []; 
 		$dataInfo['business_id_info'] = $dataInfo['business_id'] ? db('crm_business')->where(['business_id' => $dataInfo['business_id']])->field('business_id,name')->find() : [];
-        $dataInfo['customer_id_info'] = $dataInfo['customer_id'] ? db('crm_customer')->where(['customer_id' => $dataInfo['customer_id']])->field('customer_id,name')->find() : [];		
+        $dataInfo['customer_id_info'] = $dataInfo['customer_id'] ? db('crm_customer')->where(['customer_id' => $dataInfo['customer_id']])->field('customer_id,name,level')->find() : [];
         //回款金额
         $receivablesMoney = $receivablesModel->getMoneyByContractId($id);
         $dataInfo['receivablesMoney'] = $receivablesMoney ? : [];
