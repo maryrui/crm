@@ -157,7 +157,7 @@ function where_arr($array = [], $m = '', $c = '', $a = '')
                 $k = 'name';
                 $c = 'contacts.';
             }
-//            if ($k == 'check_status' && is_array($v)) $v['value'] = $checkStatusArray[$v['value']] ? : '0';
+            if ($k == 'check_status' && is_array($v)) $v['value'] = $checkStatusArray[$v['value']] ? : '0';
             if (is_array($v)) {
                 if ($v['state']) {
                     $address_where[] = '%'.$v['state'].'%';

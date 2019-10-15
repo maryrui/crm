@@ -205,8 +205,8 @@ class Message extends ApiCommon
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
         }
         switch ($type) {
-            case '1' : $param['check_status'] = ['lt','2']; break;
-            case '2' : $param['check_status'] = ['egt','2']; break;
+            case '1' : $param['check_status'] = ['lt','审核通过']; break;
+            case '2' : $param['check_status'] = ['egt','审核通过']; break;
         }
         $data = $contractModel->getDataList($param);
         if ($types == 'list') {
@@ -237,14 +237,10 @@ class Message extends ApiCommon
             $param['owner_user_id'] = array('in',getSubUserId(false));
         } else {
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
-        }          
-//        switch ($type) {
-//            case '1' : $param['check_status'] = ['lt','2']; break;
-//            case '2' : $param['check_status'] = ['egt','2']; break;
-//        }
+        }
         switch ($type) {
-            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'2']; break;
-            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'2']; break;
+            case '1' : $param['check_status'] = ['lt','审核通过']; break;
+            case '2' : $param['check_status'] = ['egt','审核通过']; break;
         }
         $data = $receivablesModel->getDataList($param);
         if ($types == 'list') {
@@ -309,8 +305,8 @@ class Message extends ApiCommon
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
         }
         switch ($type) {
-            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'2']; break;
-            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'2']; break;
+            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'审核通过']; break;
+            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'审核通过']; break;
         }
         $data = $receivablesPlanModel->getDataList($param);
         if ($types == 'list') {

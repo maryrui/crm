@@ -724,7 +724,7 @@ class Field extends Model
             ->field('field,name,form_type,setting')
             ->order('order_id asc, field_id asc, update_time desc')
             ->select();
-        if (in_array($types, ['crm_contract', 'crm_receivables'])) {
+        if (in_array($types, ['crm_contract', 'crm_receivables', 'crm_receivables_plan'])) {
             $field_arr = [
                 '0' => [
                     'field' => 'check_status',
