@@ -74,8 +74,8 @@ class Message extends ApiCommon
         $data['checkReceivables'] = $checkReceivables['dataCount'] ? : '';
         $checkReceivablesPlan = $this->checkReceivablesPlan();
         $data['checkReceivablesPlan'] = $checkReceivablesPlan['dataCount'] ? : '';
-        $remindReceivablesPlan = $this->remindReceivablesPlan();
-        $data['remindReceivablesPlan'] = $remindReceivablesPlan['dataCount'] ? : '';
+//        $remindReceivablesPlan = $this->remindReceivablesPlan();
+//        $data['remindReceivablesPlan'] = $remindReceivablesPlan['dataCount'] ? : '';
         if ($configData['contract_config'] == 1) {
             $endContract = $this->endContract();
             $data['endContract'] = $endContract['dataCount'] ? : '';  
