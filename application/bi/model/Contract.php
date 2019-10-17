@@ -150,12 +150,12 @@ class Contract extends Common
                 $planReceivableTotal = '0';
                 $receivablesPlanTotalMoney = bcadd($planReceivableTotal, $v2['money'], 2);
                 $receivables = Db::name("crm_receivables")
-                    ->field(['plan_id', 'return_time', 'money'])
+                    ->field(['plan_id', 'number', 'return_time', 'money'])
                     ->where(['plan_id' => $v2['invoice_code'], 'check_status' => 2])
                     ->select();
 
-                // 保存最后一次回款的日期
-                $receivableReturnDate = '';
+                $contracts[$i]['receivables_plan'][$j]['receivables'] = $receivables;
+
                 foreach ($receivables as $receivable) {
                     $planReceivableTotal = bcadd($planReceivableTotal, $receivable['money'], 2);
                     $receivableReturnDate = $receivable['return_time'];
@@ -165,7 +165,6 @@ class Contract extends Common
                 $contracts[$i]['receivables_plan'][$j]['receivables_money'] = $planReceivableTotal;
                 // 一张发票下欠款的金额
                 $contracts[$i]['receivables_plan'][$j]['balance'] = bcsub($v2['money'], $planReceivableTotal, 2);
-                $contracts[$i]['receivables_plan'][$j]['return_date'] = $receivableReturnDate;
                 // 一个订单下已回款的总金额
                 $receivableTotalMoney = bcadd($planReceivableTotal, $receivableTotalMoney, 2);
             }
