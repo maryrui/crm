@@ -49,9 +49,11 @@ class Complaint extends ApiCommon
         $authKey = $header['authkey'];
         $cache = cache('Auth_'.$authKey);
         $userInfo = $cache['userInfo'];
-        $param['user_ids'] = ['like','%,'.$userInfo['id'].',%'];
-        $param['structure_ids'] = ['like','%,'.$userInfo['structure_id'].',%'];
+//        $param['user_ids'] = ['like','%,'.$userInfo['id'].',%'];
+//        $param['structure_ids'] = ['like','%,'.$userInfo['structure_id'].',%'];
 
+        $param['user_id'] = $userInfo['id'];
+        $param['structure_id'] = $userInfo['structure_id'];
         $data = $complaintModel->getDataList($param);
         return resultArray(['data' => $data]);
     }

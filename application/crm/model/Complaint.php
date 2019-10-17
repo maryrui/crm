@@ -24,22 +24,33 @@ class Complaint extends Common
 
     public function getDataList($request)
     {
-        $params['examine.user_ids'] = $request['user_ids'];
-        $params['examine.structure_ids'] = $request['structure_ids'];
-
         $list =db('crm_complaint')
             ->alias('complaint')
             ->join('__ADMIN_EXAMINE_FLOW__ examine','complaint.flow_id=examine.flow_id')
-            ->whereOr($params)
+            ->where(function ($query)use ($request){
+                $query->where('examine.user_ids', array('like','%,'.$request['user_id'].',%'))
+                    ->whereor('examine.structure_ids', array('like','%,'.$request['structure_id'].',%'));
+            })
+            ->where(function ($query)use ($request){
+                $query->where('complaint.create_user_id', $request['user_id'])
+                    ->whereor('complaint.check_user_id', array('like','%,'.$request['user_id'].',%'));
+            })
             ->field('complaint.*')
             ->limit(($request['page']-1)*$request['limit'], $request['limit'])
             ->order("complaint.create_time desc")
             ->select();
-        Db::table('crm_complaint')->getLastSql();
+        //Db::table('crm_complaint')->getLastSql();
         $dataCount =db('crm_complaint')
             ->alias('complaint')
             ->join('admin_examine_flow examine','complaint.flow_id=examine.flow_id')
-            ->whereOr($params)
+            ->where(function ($query)use ($request){
+                $query->where('examine.user_ids', array('like','%,'.$request['user_id'].',%'))
+                    ->whereor('examine.structure_ids', array('like','%,'.$request['structure_id'].',%'));
+            })
+            ->where(function ($query)use ($request){
+                $query->where('complaint.create_user_id', $request['user_id'])
+                    ->whereor('complaint.check_user_id', array('like','%,'.$request['user_id'].',%'));
+            })
             ->count();
         $data['list'] = $list;
         $data['dataCount'] = $dataCount ? : 0;
