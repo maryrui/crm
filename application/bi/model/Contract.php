@@ -148,7 +148,8 @@ class Contract extends Common
             foreach ($receivablesPlan as $j => $v2) {
                 // 一张发票下的所有回款
                 $planReceivableTotal = '0';
-                $receivablesPlanTotalMoney = bcadd($planReceivableTotal, $v2['money'], 2);
+
+                $receivablesPlanTotalMoney = bcadd($receivablesPlanTotalMoney, $v2['money'], 2);
                 $receivables = Db::name("crm_receivables")
                     ->field(['plan_id', 'number', 'return_time', 'money'])
                     ->where(['plan_id' => $v2['invoice_code'], 'check_status' => 2])
