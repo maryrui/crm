@@ -23,7 +23,7 @@ class Message extends ApiCommon
     {
         $action = [
             'permission'=>[''],
-            'allow'=>['num','todaycustomer','followleads','followcustomer','checkcontract','checkreceivables','remindreceivablesplan','endcontract']            
+            'allow'=>['num','todaycustomer','followleads','followcustomer','checkcontract','checkreceivables','checkreceivablesplan','remindreceivablesplan','endcontract']
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
@@ -239,8 +239,8 @@ class Message extends ApiCommon
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
         }
         switch ($type) {
-            case '1' : $param['check_status'] = ['lt','审核通过']; break;
-            case '2' : $param['check_status'] = ['egt','审核通过']; break;
+            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'审核通过']; break;
+            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'审核通过']; break;
         }
         $data = $receivablesModel->getDataList($param);
         if ($types == 'list') {

@@ -26,31 +26,35 @@ class Complaint extends Common
     {
         $list =db('crm_complaint')
             ->alias('complaint')
-            ->join('__ADMIN_EXAMINE_FLOW__ examine','complaint.flow_id=examine.flow_id')
+            ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
+            ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
             ->where(function ($query)use ($request){
-                $query->where('examine.user_ids', array('like','%,'.$request['user_id'].',%'))
-                    ->whereor('examine.structure_ids', array('like','%,'.$request['structure_id'].',%'));
+                $query->where('flow.user_ids', array('like','%,'.$request['user_id'].',%'))
+                    ->whereor('flow.structure_ids', array('like','%,'.$request['structure_id'].',%'));
             })
             ->where(function ($query)use ($request){
                 $query->where('complaint.create_user_id', $request['user_id'])
-                    ->whereor('complaint.check_user_id', array('like','%,'.$request['user_id'].',%'));
+                    ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
             })
             ->field('complaint.*')
             ->limit(($request['page']-1)*$request['limit'], $request['limit'])
             ->order("complaint.create_time desc")
+            ->Distinct(true)
             ->select();
-        //Db::table('crm_complaint')->getLastSql();
+        Db::table('crm_complaint')->getLastSql();
         $dataCount =db('crm_complaint')
             ->alias('complaint')
-            ->join('admin_examine_flow examine','complaint.flow_id=examine.flow_id')
+            ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
+            ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
             ->where(function ($query)use ($request){
-                $query->where('examine.user_ids', array('like','%,'.$request['user_id'].',%'))
-                    ->whereor('examine.structure_ids', array('like','%,'.$request['structure_id'].',%'));
+                $query->where('flow.user_ids', array('like','%,'.$request['user_id'].',%'))
+                    ->whereor('flow.structure_ids', array('like','%,'.$request['structure_id'].',%'));
             })
             ->where(function ($query)use ($request){
                 $query->where('complaint.create_user_id', $request['user_id'])
-                    ->whereor('complaint.check_user_id', array('like','%,'.$request['user_id'].',%'));
+                    ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
             })
+            ->Distinct(true)
             ->count();
         $data['list'] = $list;
         $data['dataCount'] = $dataCount ? : 0;
