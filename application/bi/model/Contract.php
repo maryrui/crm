@@ -174,18 +174,32 @@ class Contract extends Common
             $contracts[$i]['balance'] = bcsub($receivablesPlanTotalMoney, $receivableTotalMoney, 2);
         }
 
-        // 已回款，删除balance > 0的元素
+        // 已回款，删除receivables中的balance > 0的元素
         if ($balanceFlag == 1) {
             foreach ($contracts as $key => $value) {
-                if ($value['balance'] > 0) {
+                foreach ($value['receivables_plan'] as $k => $v) {
+                    if ($v['balance'] > 0) {
+                        unset($contracts[$key]['receivables_plan'][$k]);
+                    }
+                }
+            }
+            foreach ($contracts as $key => $value) {
+                if (empty($value['receivables_plan'])) {
                     unset($contracts[$key]);
                 }
             }
         }
-        // 未回款，删除balance == 0的元素
+        // 未回款，删除receivables中的balance = 0的元素
         if ($balanceFlag == 2) {
             foreach ($contracts as $key => $value) {
-                if ($value['balance'] == 0) {
+                foreach ($value['receivables_plan'] as $k => $v) {
+                    if ($v['balance'] == 0) {
+                        unset($contracts[$key]['receivables_plan'][$k]);
+                    }
+                }
+            }
+            foreach ($contracts as $key => $value) {
+                if (empty($value['receivables_plan'])) {
                     unset($contracts[$key]);
                 }
             }
