@@ -347,8 +347,8 @@ class Business extends ApiCommon
             $data['status_time'] = time();
         }
         if ($is_end == 1) {
-            // 赢单后，自动生成编号，编号规则是：签约公司字母简称+年份（4位）+自动流水号（4位）
-            // 例如：壹墨签订的合同：YM20190001
+            // 赢单后，自动生成编号，编号规则是：签约公司字母简称+年月（201909）+自动流水号（4位）
+            // 例如：壹墨签订的合同：YM2019090001
             $companyShort = array(
                 '上海壹墨图文设计制作有限公司' => 'YM',
                 '上海宝谊文化传播有限公司' => 'BY',
@@ -373,18 +373,23 @@ class Business extends ApiCommon
                 ->order('business_id desc')
                 ->limit(1)
                 ->value('crm_ihutnj');
-            // 当前年份
-            $year = date("Y");
+            // 当前年月
+            $yearMonth = date("Ym");
             if (null != $businessCode) {
                 // 截取后四位流水号
                 $serialStr = substr($businessCode, -4);
-                // +1
-                $serialInt = intval($serialStr) + 1;
-                // 不足4位前导补0
-                $newSerial = sprintf("%04d", $serialInt);
-                $newBusinessCode = $short . $year . $newSerial;
+                // 流水号到9999时，重置为0001
+                if ($serialStr == '9999') {
+                    $newBusinessCode = $short . $yearMonth . '0001';
+                } else {
+                    // +1
+                    $serialInt = intval($serialStr) + 1;
+                    // 不足4位前导补0
+                    $newSerial = sprintf("%04d", $serialInt);
+                    $newBusinessCode = $short . $yearMonth . $newSerial;
+                }
             } else {
-                $newBusinessCode = $short . $year . '0001';
+                $newBusinessCode = $short . $yearMonth . '0001';
             }
             $data['crm_ihutnj'] = $newBusinessCode;
         }
