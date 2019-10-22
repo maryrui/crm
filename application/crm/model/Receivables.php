@@ -190,22 +190,23 @@ class Receivables extends Common
             ->limit(1)
             ->value('number');
         // 当前年当前月
-        $yearAndMonth = date("Ymd");
+        $ymd = date("Ymd");
         if (null != $resData) {
-            // 截取后四位流水号
-            $serialStr = substr($resData, -5);
-            // 流水号到9999时，重置为0001
-            if ($serialStr == '9999') {
-                $newNumber = $prefix . $yearAndMonth . '0001';
-            } else {
+            // 检查是否今日的编号
+            $tmpPrefix = $prefix . $ymd;
+            if ($tmpPrefix == substr($resData, 0, 10)) {
+                // 截取后四位流水号
+                $serialStr = substr($resData, -5);
                 // +1
                 $serialInt = intval($serialStr) + 1;
                 // 不足4位前导补0
                 $newSerial = sprintf("%04d", $serialInt);
-                $newNumber = $prefix . $yearAndMonth . $newSerial;
+                $newNumber = $prefix . $ymd . $newSerial;
+            } else {
+                $newNumber = $prefix . $ymd . '0001';
             }
         } else {
-            $newNumber = $prefix . $yearAndMonth . '0001';
+            $newNumber = $prefix . $ymd . '0001';
         }
         $param['number'] = $newNumber;
 

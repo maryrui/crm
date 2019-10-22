@@ -373,23 +373,24 @@ class Business extends ApiCommon
                 ->order('business_id desc')
                 ->limit(1)
                 ->value('crm_ihutnj');
-            // 当前年月
-            $yearMonth = date("Ym");
+            // 当前年月日
+            $ymd = date("Ymd");
             if (null != $businessCode) {
-                // 截取后四位流水号
-                $serialStr = substr($businessCode, -4);
-                // 流水号到9999时，重置为0001
-                if ($serialStr == '9999') {
-                    $newBusinessCode = $short . $yearMonth . '0001';
-                } else {
+                //检查当前编号
+                $tmpPrefix = $short . $ymd;
+                if ($tmpPrefix == substr($businessCode, 0, 10)) {
+                    // 截取后四位流水号
+                    $serialStr = substr($businessCode, -4);
                     // +1
                     $serialInt = intval($serialStr) + 1;
                     // 不足4位前导补0
                     $newSerial = sprintf("%04d", $serialInt);
-                    $newBusinessCode = $short . $yearMonth . $newSerial;
+                    $newBusinessCode = $short . $ymd . $newSerial;
+                } else {
+                    $newBusinessCode = $short . $ymd . '0001';
                 }
             } else {
-                $newBusinessCode = $short . $yearMonth . '0001';
+                $newBusinessCode = $short . $ymd . '0001';
             }
             $data['crm_ihutnj'] = $newBusinessCode;
         }
