@@ -105,6 +105,7 @@ class Contract extends Common
             ->join('__CRM_CUSTOMER__ customer', 'tract.customer_id = customer.customer_id')
             ->join('__ADMIN_USER__ user', 'tract.owner_user_id = user.id', 'LEFT')
             ->where($whereArr)
+            ->where('tract.create_time', $createTime)
             ->select();
         foreach ($contracts as $i => $v) {
             // 未合并相同发票下的回款
