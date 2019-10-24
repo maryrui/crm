@@ -242,13 +242,14 @@ return [
 
 	// 【代办事项】今日需联系
 	'crm/message/todayCustomer' => ['crm/message/todayCustomer', ['method' => 'POST']],				
-	'crm/message/num' => ['crm/message/num', ['method' => 'POST']],		
+	'crm/message/num' => ['crm/message/num', ['method' => 'POST']],
 	'crm/message/followleads' => ['crm/message/followleads', ['method' => 'POST']],				
 	'crm/message/followcustomer' => ['crm/message/followcustomer', ['method' => 'POST']],				
 	'crm/message/checkcontract' => ['crm/message/checkcontract', ['method' => 'POST']],				
 	'crm/message/checkreceivables' => ['crm/message/checkreceivables', ['method' => 'POST']],				
 	'crm/message/remindreceivablesplan' => ['crm/message/remindreceivablesplan', ['method' => 'POST']],				
 	'crm/message/checkreceivablesplan' => ['crm/message/checkReceivablesPlan', ['method' => 'POST']],
+	'crm/message/checkcomplaint' => ['crm/message/checkComplaint', ['method' => 'POST']],
 	'crm/message/endContract' => ['crm/message/endContract', ['method' => 'POST']],
 
 	// 【客户】标记跟进
@@ -270,6 +271,7 @@ return [
     'crm/complaint/read' => ['crm/complaint/read', ['method' => 'POST']],
     'crm/complaint/check' => ['crm/complaint/check', ['method' => 'POST']],
     'crm/complaint/save' => ['crm/complaint/save', ['method' => 'POST']],
+    'crm/complaint/update' => ['crm/complaint/update', ['method' => 'POST']],
 
     // MISS路由
 	'__miss__'  => 'admin/base/miss',

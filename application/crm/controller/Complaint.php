@@ -53,8 +53,9 @@ class Complaint extends ApiCommon
 //        $param['structure_ids'] = ['like','%,'.$userInfo['structure_id'].',%'];
 
         $param['user_id'] = $userInfo['id'];
-        $param['structure_id'] = $userInfo['structure_id'];
+        unset($param['status']);
         $data = $complaintModel->getDataList($param);
+
         return resultArray(['data' => $data]);
     }
 
@@ -152,7 +153,12 @@ class Complaint extends ApiCommon
     public function update()
     {
         $complaintModel = model("complaint");
-        $param = $this->param;
+        $param = Request::instance()->request();
+        $dataInfo = $complaintModel->where(['id' => $param['id']])->find();
+        if ($dataInfo['check_status']!=0) {
+            return resultArray(['error' => '当前状态为审批中或已审批通过，不可编辑']);
+        }
+
         $data = $complaintModel->updateDataById($param);
         if (!$data) {
             return resultArray(['error' => $complaintModel->getError()]);

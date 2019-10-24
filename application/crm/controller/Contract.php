@@ -95,7 +95,7 @@ class Contract extends ApiCommon
         $todayTime = getTimeByType('today');
         $count = $contractModel->where(['create_time'=>['between',[$todayTime[0],$todayTime[1]]]])->count();
         $num = substr(strval($count+10001),1,4);
-        $param['num']=date("Ymd").$num;
+        $param['num']='DD'.date("Ymd").$num;
         if ($contractModel->createData($param)) {
             return resultArray(['data' => '添加成功']);
         } else {
