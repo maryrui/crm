@@ -21,68 +21,10 @@ class Complaint extends Common
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
     protected $autoWriteTimestamp = true;
+    private $statusArr = ['0'=>'待审核','1'=>'审核中','2'=>'审核通过','3'=>'已拒绝','4'=>'已撤回'];
 
     public function getDataList($request)
     {
-        $userModel = new \app\admin\model\User();
-        $search = $request['search'];
-        $user_id = $request['user_id'];
-        $scene_id = (int)$request['scene_id'];
-        unset($request['scene_id']);
-        unset($request['search']);
-        unset($request['user_id']);
-
-        $request = $this->fmtRequest($request);
-        $requestMap = $request['map'] ?: [];
-        $sceneModel = new \app\admin\model\Scene();
-        if ($scene_id) {
-            //自定义场景
-            $sceneMap = $sceneModel->getDataById($scene_id, $user_id, 'complaint') ? : [];
-        } else {
-            //默认场景
-            $sceneMap = $sceneModel->getDefaultData('complaint', $user_id) ? : [];
-        }
-        if ($search) {
-            //普通筛选
-            $sceneMap['invoice_code'] = ['condition' => 'contains','value' => $search,'form_type' => 'text','name' => '发票编号'];
-        }
-        //优先级：普通筛选>高级筛选>场景
-        $map = $requestMap ? array_merge($sceneMap, $requestMap) : $sceneMap;
-        //高级筛选
-        $map = where_arr($map, 'crm', 'complaint', 'index');
-        $authMap = [];
-        $auth_user_ids = $userModel->getUserByPer('crm', 'complaint', 'index');
-        if (isset($map['complaint.create_user_id'])) {
-            if (!is_array($map['complaint.create_user_id'][1])) {
-                $map['complaint.create_user_id'][1] = [$map['complaint.create_user_id'][1]];
-            }
-            if ($map['complaint.create_user_id'][0] == 'neq') {
-                $auth_user_ids = array_diff($auth_user_ids, $map['complaint.create_user_id'][1]) ? : [];	//取差集
-            } else {
-                $auth_user_ids = array_intersect($map['complaint.create_user_id'][1], $auth_user_ids) ? : [];	//取交集
-            }
-            unset($map['complaint.create_user_id']);
-            $auth_user_ids = array_merge(array_unique(array_filter($auth_user_ids))) ? : ['-1'];
-            $authMap['complaint.create_user_id'] = array('in',$auth_user_ids);
-        } else {
-            $authMapData = [];
-            $authMapData['auth_user_ids'] = $auth_user_ids;
-            $authMapData['user_id'] = $user_id;
-            $temp = [] ;
-            foreach ($authMapData['auth_user_ids'] as $k=>$v){
-                $temp[] = ['like','%'.$v.'%'];
-            }
-            $authMap = function($query) use ($authMapData,$temp){
-                $query->where('complaint.create_user_id',array('in',$authMapData['auth_user_ids']))
-                    ->whereor('step.user_id', $temp,'or');
-            };
-        }
-
-        if ($map['complaint.create_user_id']) {
-            $map['contract.create_user_id'] = $map['complaint.create_user_id'];
-            unset($map['complaint.create_user_id']);
-        }
-
         if ($request['order_type'] && $request['order_field']) {
             $order = trim($request['order_field']) . ' ' . trim($request['order_type']);
         } else {
@@ -93,15 +35,56 @@ class Complaint extends Common
             ->alias('complaint')
             ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
             ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
-            ->where($map)->where($authMap)
-//            ->where(function ($query)use ($request){
-//                $query->where('flow.user_ids', array('like','%,'.$request['user_id'].',%'))
-//                    ->whereor('flow.structure_ids', array('like','%,'.$request['structure_id'].',%'));
-//            })
-//            ->where(function ($query)use ($request){
-//                $query->where('complaint.create_user_id', $request['user_id'])
-//                    ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
-//            })
+            ->where(function ($query)use ($request){
+                $query->where('flow.user_ids', array('like','%,'.$request['user_id'].',%'))
+                    ->whereor('flow.structure_ids', array('like','%,'.$request['structure_id'].',%'));
+            })
+            ->where(function ($query)use ($request){
+                $query->where('complaint.create_user_id', $request['user_id'])
+                    ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
+            })
+            ->field('complaint.*')
+            ->Distinct(true)
+            ->limit(($request['page']-1)*$request['limit'], $request['limit'])
+            ->order($order)
+            ->select();
+        foreach ($list as $k => $v) {
+            $list[$k]['check_status_info'] = $this->statusArr[$v['check_status']];
+        }
+
+        $dataCount =db('crm_complaint')
+            ->alias('complaint')
+            ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
+            ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
+            ->where(function ($query)use ($request){
+                $query->where('flow.user_ids', array('like','%,'.$request['user_id'].',%'))
+                    ->whereor('flow.structure_ids', array('like','%,'.$request['structure_id'].',%'));
+            })
+            ->where(function ($query)use ($request){
+                $query->where('complaint.create_user_id', $request['user_id'])
+                    ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
+            })
+            ->count('DISTINCT complaint.id');
+        $data['list'] = $list;
+        $data['dataCount'] = $dataCount ? : 0;
+        return $data;
+    }
+
+    public function getMessageList($request){
+        $request = $this->fmtRequest($request);
+        $requestMap = $request['map'] ?: [];
+        $map = where_arr($requestMap, 'crm', 'complaint', 'index');
+        if ($request['order_type'] && $request['order_field']) {
+            $order = trim($request['order_field']) . ' ' . trim($request['order_type']);
+        } else {
+            $order = 'complaint.update_time desc';
+        }
+
+        $list =db('crm_complaint')
+            ->alias('complaint')
+            ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
+            ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
+            ->where($map)
             ->field('complaint.*')
             ->Distinct(true)
             ->limit(($request['page']-1)*$request['limit'], $request['limit'])
@@ -112,15 +95,7 @@ class Complaint extends Common
             ->alias('complaint')
             ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
             ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
-            ->where($map)->where($authMap)
-//            ->where(function ($query)use ($request){
-//                $query->where('flow.user_ids', array('like','%,'.$request['user_id'].',%'))
-//                    ->whereor('flow.structure_ids', array('like','%,'.$request['structure_id'].',%'));
-//            })
-//            ->where(function ($query)use ($request){
-//                $query->where('complaint.create_user_id', $request['user_id'])
-//                    ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
-//            })
+            ->where($map)
             ->count('DISTINCT complaint.id');
         $data['list'] = $list;
         $data['dataCount'] = $dataCount ? : 0;

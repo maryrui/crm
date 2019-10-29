@@ -23,7 +23,7 @@ class Message extends ApiCommon
     {
         $action = [
             'permission'=>[''],
-            'allow'=>['num','todaycustomer','followleads','followcustomer','checkcontract','checkreceivables','checkreceivablesplan','remindreceivablesplan','endcontract','checkComplaint']
+            'allow'=>['num','todaycustomer','followleads','followcustomer','checkcontract','checkreceivables','checkreceivablesplan','remindreceivablesplan','endcontract','checkcomplaint']
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
@@ -295,7 +295,7 @@ class Message extends ApiCommon
         $param = $this->param;
         $userInfo = $this->userInfo;
         $types = $param['types'];
-        $type = $param['type'] ? : 1;
+        $type = $param['type'];
         $isSub = $param['isSub'] ? : '';
         unset($param['types']);
         unset($param['type']);
@@ -303,6 +303,10 @@ class Message extends ApiCommon
         $complaintModel = model('Complaint');
 
         if ($isSub) {
+//            foreach (getSubUserId(false) as $k=>$v){
+//                $temp[] = ['like','%'.$v.'%'];
+//            }
+//            $param['check_user_id'] = [$temp,'or'];
             $param['create_user_id'] = array('in',getSubUserId(false));
         } else {
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
@@ -311,8 +315,7 @@ class Message extends ApiCommon
             case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'审核通过']; break;
             case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'审核通过']; break;
         }
-        $param['user_id'] = $userInfo['id'];
-        $data = $complaintModel->getDataList($param);
+        $data = $complaintModel->getMessageList($param);
         if ($types == 'list') {
             return resultArray(['data' => $data]);
         }
