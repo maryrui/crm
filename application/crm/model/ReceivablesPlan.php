@@ -8,9 +8,6 @@ namespace app\crm\model;
 
 use think\Db;
 use app\admin\model\Common;
-use think\Request;
-use think\Validate;
-
 class ReceivablesPlan extends Common
 {
     /**
@@ -155,13 +152,19 @@ class ReceivablesPlan extends Common
             $this->error = $validate->getError();
             return false;
         }
-        if ($param['file_ids']) $param['file'] = arrayToString($param['file_ids']); //附件
         //期数规则（1,2,3..）
         $maxNum = db('crm_receivables_plan')->where(['contract_id' => $param['contract_id']])->max('num');
         $param['num'] = $maxNum ? $maxNum + 1 : 1;
         //提醒日期
         $param['remind_date'] = $param['remind'] ? date('Y-m-d', strtotime($param['return_date']) - 86400 * $param['remind']) : $param['return_date'];
         if ($this->data($param)->allowField(true)->save()) {
+            $id = $this->plan_id;
+            $fileModel = new \app\crm\model\ReceivablesPlanFile();
+            $files = [];
+            foreach ($param['file'] as $k=>$v){
+                $files[] = ['plan_id'=>$id,'file_id'=>$v];
+            }
+            $fileModel->insertAll($files);
             $data = [];
             $data['plan_id'] = $this->plan_id;
             return $data;

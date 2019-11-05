@@ -36,10 +36,6 @@ class Complaint extends Common
             ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
             ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
             ->where(function ($query)use ($request){
-                $query->where('flow.user_ids', array('like','%,'.$request['user_id'].',%'))
-                    ->whereor('flow.structure_ids', array('like','%,'.$request['structure_id'].',%'));
-            })
-            ->where(function ($query)use ($request){
                 $query->where('complaint.create_user_id', $request['user_id'])
                     ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
             })
@@ -56,10 +52,6 @@ class Complaint extends Common
             ->alias('complaint')
             ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
             ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
-            ->where(function ($query)use ($request){
-                $query->where('flow.user_ids', array('like','%,'.$request['user_id'].',%'))
-                    ->whereor('flow.structure_ids', array('like','%,'.$request['structure_id'].',%'));
-            })
             ->where(function ($query)use ($request){
                 $query->where('complaint.create_user_id', $request['user_id'])
                     ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
