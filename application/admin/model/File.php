@@ -19,7 +19,7 @@ class File extends Common
      * 我们约定每个模块的数据表都加上相同的前缀，比如CRM模块用crm作为数据表前缀
      */
     protected $name = 'admin_file';
-    protected $module_arr = ['other', 'crm_leads', 'crm_customer', 'crm_contacts', 'crm_business', 'crm_product', 'crm_contract', 'oa_log', 'oa_examine', 'oa_examine_travel', 'work_task', 'admin_record', 'oa_travel', 'hrm_pact', 'hrm_file', 'crm_complaint'];
+    protected $module_arr = ['other', 'crm_leads', 'crm_customer', 'crm_contacts', 'crm_business', 'crm_product', 'crm_contract', 'oa_log', 'oa_examine', 'oa_examine_travel', 'work_task', 'admin_record', 'oa_travel', 'hrm_pact', 'hrm_file', 'crm_complaint','crm_receivables_plan'];
 
     /**
      * [createData 添加附件]
@@ -330,6 +330,11 @@ class File extends Common
                 $r = db('crm_contract_file');
                 $module = db('crm_contract');
                 break;
+            case 'crm_receivables_plan' :
+                $r = db('crm_receivables_plan');
+                $module = db('crm_receivables_plan');
+                $isReceivablesPlan = true;
+                break;
             case 'oa_log' :
                 $r = db('oa_log_file');
                 $module = db('oa_log');
@@ -373,6 +378,9 @@ class File extends Common
         if ($r) {
             if (isset($isComplaint)) {
                 $fileIds = $r->where(['complaint_id' => intval($request['module_id'])])->column('file_id');
+            } if (isset($isReceivablesPlan)) {
+                $file = $r->where(['plan_id' => intval($request['module_id'])])->column('file');
+                $fileIds = stringToArray($file['0']);
             } else {
                 $fileIds = $r->where([$module->getPk() => intval($request['module_id'])])->column('file_id');
             }

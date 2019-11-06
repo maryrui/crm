@@ -295,7 +295,7 @@ class Message extends ApiCommon
         $param = $this->param;
         $userInfo = $this->userInfo;
         $types = $param['types'];
-        $type = $param['type'];
+        $type = $param['type']?:1;
         $isSub = $param['isSub'] ? : '';
         unset($param['types']);
         unset($param['type']);
