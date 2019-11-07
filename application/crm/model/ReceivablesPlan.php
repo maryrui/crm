@@ -108,6 +108,7 @@ class ReceivablesPlan extends Common
             $list[$k]['create_user_id_info'] = $userModel->getUserById($v['create_user_id']);
             $list[$k]['contract_id_info']['name'] = $v['contract_name'] ?: '';
             $list[$k]['contract_id_info']['contract_id'] = $v['contract_id'] ?: '';
+            $list[$k]['contract_id_info']['contract_num'] = $v['contract_num'] ?: '';
             $list[$k]['customer_id_info']['name'] = $v['customer_name'] ?: '';
             $list[$k]['customer_id_info']['customer_id'] = $v['customer_id'] ?: '';
             $list[$k]['check_status_info'] = $this->statusArr[$v['check_status']];
