@@ -222,7 +222,7 @@ export default {
 
     // 展示筛选
     showFilterView() {
-      if (this.crmType == 'receivables_plan') {
+      if (this.crmType == 'receivables_plan' || this.crmType == 'complaint') {
         return false
       }
       return true
@@ -261,6 +261,8 @@ export default {
         ]
       } else if (this.infoType == 'endContract') {
         return [{ name: '即将到期', value: 1 }, { name: '已到期', value: 2 }]
+      } else if (this.infoType == 'checkComplaint') {
+          return [{ name: '待审核', value: 1 }, { name: '已审核', value: 2 }]
       }
 
       return []

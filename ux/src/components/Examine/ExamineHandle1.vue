@@ -162,6 +162,7 @@
             submitInfo() {
                 if ((this.status == 0 || this.status == 2) && !this.content) {
                     this.$message.error(this.placeholder)
+                    return
                 } else {
                     if (this.status == 0) {
                         // 1通过0拒绝2撤回
@@ -201,7 +202,6 @@
             },
             // 通过 拒绝操作
             handlePassAndReject() {
-                this.loading = true
                 var params = {
                     id: this.id,
                     status: this.status,
@@ -218,6 +218,7 @@
                         })
                         return false
                     }
+                    this.loading = true
                     params['departmentVal'] = this.departmentVal
                     params['visitorVal'] = this.visitorVal
                     params['type'] = this.type

@@ -14,6 +14,7 @@
              class="d-container">
       <c-r-m-detail-head crmType="receivables_plan"
                          @handle="detailHeadHandle"
+                         :isSeas="!showEditorBtn"
                          @close="hideView"
                          :headDetails="headDetails"
                          :id="id">
@@ -22,9 +23,28 @@
         <examine-info :id="id"
                       class="examine-info-border"
                       examineType="crm_receivables_plan"
+                      @checkCreatedId="checkCreatedId"
                       :detail="dataDetail"
                       :flow_id="dataDetail.flow_id">
         </examine-info>
+      </div>
+      <div class="tabs">
+        <el-tabs v-model="tabCurrentName"
+                 @tab-click="handleClick">
+          <el-tab-pane v-for="(item, index) in tabnames"
+                       :key="index"
+                       :label="item.label"
+                       :name="item.name"></el-tab-pane>
+        </el-tabs>
+      </div>
+      <div class="t-loading-content"
+           id="follow-log-content">
+        <keep-alive>
+          <component v-bind:is="tabName"
+                     crmType="receivables_plan"
+                     :detail="detailData"
+                     :id="id"></component>
+        </keep-alive>
       </div>
     </flexbox>
     <c-r-m-create-view v-if="isCreate"
@@ -50,6 +70,7 @@ import RelativeFiles from '../components/RelativeFiles' //相关附件
 import ExamineInfo from '@/components/Examine/ExamineInfo'
 
 import CRMCreateView from '../components/CRMCreateView' // 新建页面
+import { mapGetters } from 'vuex'
 
 import moment from 'moment'
 import detail from '../mixins/detail'
@@ -107,21 +128,31 @@ export default {
               this.dataDetail = val
               this.setHead()
           },
-          deep: true //对象内部的属性监听，也叫深度监听
+          deep: true // 对象内部的属性监听，也叫深度监听
+      },
+      created_id: {
+          handler: function(val, oldval) {
+              this.created_id = val
+          },
+          deep: true // 对象内部的属性监听，也叫深度监听
       }
   },
   data() {
     return {
       loading: false, // 展示加载loading
       crmType: 'receivables_plan',
+      created_id: '', // 判断当前账户是不是发起人
+      detailData: {},
       headDetails: [
         { title: '发票编号', value: '' },
         { title: '客户名称', value: '' },
         { title: '订单名称', value: '' },
         { title: '发票方', value: '' },
+        { title: '真实票号', value: '' },
+        { title: '开票金额', value: '' },
         { title: '回款方式', value: '' }
       ],
-      tabCurrentName: 'followlog',
+      tabCurrentName: 'basicinfo',
       isCreate: false // 编辑操作
     }
   },
@@ -160,10 +191,16 @@ export default {
       // }
       // tempsTabs.push({ label: '相关团队', name: 'team' })
       tempsTabs.push({ label: '附件', name: 'file' })
-      tempsTabs.push({ label: '操作记录', name: 'operationlog' })
+      // tempsTabs.push({ label: '操作记录', name: 'operationlog' })
 
       return tempsTabs
-    }
+    },
+      ...mapGetters([
+          'userInfo'
+      ]),
+      showEditorBtn() {
+         return this.created_id == this.userInfo.id
+      }
   },
   mounted() {
      this.setHead()
@@ -174,7 +211,9 @@ export default {
         this.headDetails[1].value = this.dataDetail.customer_name
         this.headDetails[2].value = this.dataDetail.contract_name
         this.headDetails[3].value = this.dataDetail.invoicer
-        this.headDetails[4].value = this.dataDetail.return_type
+        this.headDetails[4].value = this.dataDetail.real_code
+        this.headDetails[5].value = this.dataDetail.money
+        this.headDetails[6].value = this.dataDetail.return_type
     },
     getDetial() {
       this.loading = true
@@ -198,6 +237,10 @@ export default {
     handleClick(tab, event) {},
     editSaveSuccess() {
       this.getDetial()
+    },
+    /* 编辑按钮的方法，子组件传参 */
+    checkCreatedId(id) {
+        this.created_id = id
     }
   }
 }

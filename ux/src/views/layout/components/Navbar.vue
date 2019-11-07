@@ -112,8 +112,6 @@ export default {
   },
   mounted() {
     this.navIndexChild = this.navIndex
-      console.log(this.messageOANum)
-      console.log(this.messageNum)
   },
   methods: {
     navItemsClick(type) {

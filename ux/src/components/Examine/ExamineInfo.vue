@@ -173,11 +173,11 @@ export default {
   data() {
     return {
       loading: false,
-      examineInfo: {}, //审核信息
+      examineInfo: {}, // 审核信息
       showFlowPopover: false,
       examineHandleInfo: { status: 0 },
       showExamineHandle: false, // 审核操作
-      isFinance: false //是否是财务
+      isFinance: false // 是否是财务
     }
   },
   props: {
@@ -197,7 +197,6 @@ export default {
     }
   },
   mounted() {
-      console.log(this.detail)
   },
   methods: {
     getFlowStepList() {
@@ -217,6 +216,7 @@ export default {
             /*判断是否是财务*/
             if (this.detail) {
                 let item = this.examineInfo.stepList[this.detail['order_id']]
+                this.$emit('checkCreatedId', this.detail.create_user_id)
                 for (var i = 0; i < item.user_id_info.length; i++) {
                     let groupItem = item.user_id_info[i].groupIds
                     let index = groupItem.indexOf(4)

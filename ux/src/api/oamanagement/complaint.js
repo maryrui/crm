@@ -1,9 +1,17 @@
 import request from '@/utils/request'
 
-// 获取投诉列表
+// 获取投诉列表 auditComplaintList
 export function getComplaintList(data) {
     return request({
         url: 'crm/complaint/index',
+        method: 'post',
+        data: data
+    })
+}
+// 获取待审核客诉列表
+export function auditComplaintList(data) {
+    return request({
+        url: 'crm/message/checkcomplaint',
         method: 'post',
         data: data
     })
@@ -31,6 +39,14 @@ export function checkComplaintOne(data) {
 export function saveComplaint(data) {
     return request({
         url: 'crm/complaint/save',
+        method: 'post',
+        data: data
+    })
+}
+// 编辑客诉
+export function updateComplaint(data) {
+    return request({
+        url: 'crm/complaint/update',
         method: 'post',
         data: data
     })

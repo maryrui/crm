@@ -154,10 +154,9 @@ export default {
   watch: {
       headDetails: {
           handler: function(val, oldval) {
-              console.log(val)
               this.headDetails = val
           },
-          deep: true //对象内部的属性监听，也叫深度监听
+          deep: true // 对象内部的属性监听，也叫深度监听
       }
   },
   mounted() {

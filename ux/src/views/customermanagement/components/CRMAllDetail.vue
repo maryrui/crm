@@ -21,6 +21,7 @@ import ContractDetail from '../contract/ContractDetail'
 import ProductDetail from '../product/ProductDetail'
 import MoneyDetail from '../money/MoneyDetail'
 import InvoiceDetail from '../invoice/InvoiceDetail'
+import ComplaintDetail from '../../OAManagement/complaint/components/complaintDetail'
 
 export default {
   name: 'c-r-m-all-detail', //详情
@@ -32,7 +33,8 @@ export default {
     ContractDetail,
     ProductDetail,
     MoneyDetail,
-    InvoiceDetail
+    InvoiceDetail,
+    ComplaintDetail
   },
   watch: {
     crmType: function(type) {
@@ -52,6 +54,8 @@ export default {
         this.tabName = 'money-detail'
       } else if (this.crmType == 'crm_receivables_plan') {
         this.tabName = 'invoice-detail'
+      } else if (this.crmType == 'complaint') {
+          this.tabName = 'complaint-detail'
       }
     }
   },

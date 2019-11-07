@@ -114,6 +114,14 @@ export default {
           num: 0,
           tips: '根据“订单到期时间”及设置的“提前提醒天数”提醒',
           hidden: false
+        },
+        {
+            name: '客诉提醒',
+            crmType: 'complaint',
+            infoType: 'checkComplaint',
+            num: 0,
+            tips: '',
+            hidden: false
         }
       ]
     }
@@ -143,6 +151,7 @@ export default {
           element.num = this.messageNum[element.infoType] || 0
           element.hidden = false
         } else {
+            // 显示路由
           element.hidden = true
         }
       }

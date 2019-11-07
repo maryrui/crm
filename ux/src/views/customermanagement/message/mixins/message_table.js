@@ -12,6 +12,7 @@ import {
   crmMessagRemindreceivablesplanAPI
 } from '@/api/customermanagement/message'
 
+import { auditComplaintList } from '@/api/oamanagement/complaint'
 import {
   getDateFromTimestamp
 } from '@/utils'
@@ -53,7 +54,6 @@ export default {
      * @param {*} event
      */
     handleRowClick(row, column, event) {
-      debugger
       if (this.crmType === 'leads') {
         this.rowID = row.leads_id
         this.rowType = 'leads'
@@ -124,6 +124,11 @@ export default {
           this.dataItem = row
           this.rowType = 'crm_receivables_plan'
           this.showDview = true
+      } else if (this.crmType === 'complaint') {
+          this.rowID = row.id
+          this.dataItem = row
+          this.rowType = 'complaint'
+          this.showDview = true
       }
     },
 
@@ -147,7 +152,6 @@ export default {
         .then(res => {
           this.list = res.data.list
           this.total = res.data.dataCount
-
           this.loading = false
         })
         .catch(() => {
@@ -165,56 +169,53 @@ export default {
         'checkReceivables': crmMessageCheckReceivablesAPI,
         'checkReceivablesPlan': crmMessagRemindreceivablesplanAPI,
         'endContract': crmMessagEndContractAPI,
+        'checkComplaint': auditComplaintList
       } [this.infoType]
     },
 
     /** 获取字段 */
     getFieldList() {
-    /*  if (this.crmType == 'receivables_plan') {
-        let list = [{
-            field: 'num',
+      if (this.crmType == 'complaint') {
+        let list = [
+            {
+                field: 'id',
+                form_type: 'text',
+                id: '客诉编号'
+            },
+            {
+            field: 'company',
             form_type: 'text',
-            name: '期数'
-          },
-          {
-            field: 'customer_id',
-            form_type: 'customer_id',
+            width: 180,
             name: '客户名称'
           },
           {
-            field: 'contract_id',
-            form_type: 'contract_id',
-            name: '订单编号'
+            field: 'name',
+            width: 200,
+            form_type: 'name',
+            name: '客户联系人'
           },
           {
-            field: 'money',
+            field: 'phone',
             form_type: 'text',
-            name: '计划回款金额'
+            width: 180,
+            name: '联系人电话'
           },
           {
-            field: 'return_date',
+            field: 'content',
             form_type: 'text',
-            name: '计划回款日期'
+            width: 400,
+            name: '客诉内容'
           },
           {
-            field: 'return_type',
-            form_type: 'text',
-            name: '计划回款方式'
-          },
-          {
-            field: 'remind',
-            form_type: 'text',
-            name: '提前几日提醒'
-          },
-          {
-            prop: 'remark',
-            form_type: 'text',
-            name: '备注'
+            field: 'create_time',
+            form_type: 'datetime',
+            width: 180,
+            name: '投诉日期'
           }
         ]
         this.handelFieldList(list)
         return
-      }*/
+      }
 
       filedGetField({
           types: 'crm_' + this.crmType,

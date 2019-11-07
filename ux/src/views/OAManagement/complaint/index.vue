@@ -1,6 +1,6 @@
 <template>
-    <div class="complaint_box complaint-main-container">
-        <el-button type="primary" class="newBtn" @click="createBtn">新建客诉</el-button>
+    <div class="complaint_box complaint-main-container" id = "complaint-main-container">
+        <el-button type="primary" class="newBtn" @click="createBtn('created')">新建客诉</el-button>
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="客户投诉" name="pending">
                 <div class="box-list">
@@ -11,16 +11,16 @@
                             style="width: 100%">
                         <el-table-column
                                 prop="company"
-                                label="公司名称">
+                                label="客户名称">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                label="姓名"
+                                label="客户联系人"
                                 width="180">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                label="电话"
+                                label="联系人电话"
                                 width="180">
                         </el-table-column>
                         <el-table-column
@@ -30,12 +30,17 @@
                         </el-table-column>
                          <el-table-column
                                  prop="create_time"
-                                 label="日期"
+                                 label="投诉日期"
                                  width="180">
                              <template slot-scope="scope">
                                 {{scope.row.create_time | filterTimestampToFormatTime}}
                              </template>
                          </el-table-column>
+                        <el-table-column
+                                prop="check_status_info"
+                                label="状态"
+                                width="180">
+                        </el-table-column>
                     </el-table>
                 </div>
             </el-tab-pane>
@@ -55,7 +60,7 @@
                     @close="newClose"
                     @submitBtn="submitBtn">
         </new-dialog>
-        <complaint-detail v-if="showDview" @hide-view="showDview=false" :detail="detail" :id="detail.id"></complaint-detail>
+        <complaint-detail v-if="showDview" @hide-view="showDview=false" :dataDetail="detail" :id="detail.id" @handleClick="handleClick" @getList="getList"></complaint-detail>
     </div>
 </template>
 
@@ -93,12 +98,11 @@
             newDialog
         },
         created() {
-            this.fetchData()
+            this.getList()
         },
         methods: {
-            fetchData() {
+            getList() {
                 getComplaintList({
-                    status: this.activeName == 'pending' ? 0 : 1,
                     limit: this.pageSize,
                     page: this.pageIndex
                 }).then(res => {
@@ -108,6 +112,7 @@
             },
             handleClick() {
                 // this.fetchData()
+                this.showNewDialog = true
             },
             changClick(index, row) {
                 this.$confirm('确认处理过该投诉, 是否继续?', '提示', {
@@ -131,7 +136,8 @@
 
                 })
             },
-            createBtn() {
+            createBtn(data) {
+                this.type = data
                 this.showNewDialog = true
             },
             // 关闭新建页面
@@ -149,7 +155,7 @@
                         this.newLoading = false
                         this.$message.success('新建成功')
                         this.formData = {}
-                        this.fetchData()
+                        this.getList()
                         this.newClose()
                     }
                 }).catch(err => {
@@ -159,7 +165,7 @@
             },
             paginaClick(val) {
                 this.pageIndex = val
-                this.fetchData();
+                this.getList()
             },
             tableClick(item) {
                this.detail = item

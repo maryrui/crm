@@ -90,6 +90,7 @@
                        @click="addEmployees"> 关联员工 </el-button>
           </flexbox>
           <el-table :data="tableData"
+                    height="600"
                     style="width: 100%">
             <el-table-column :prop="item.field"
                              show-overflow-tooltip
@@ -112,6 +113,17 @@
               </template>
             </el-table-column>
           </el-table>
+          <div class="p-contianer">
+            <el-pagination class="p-bar"
+                           @size-change="handleSizeChange"
+                           @current-change="handleCurrentChange"
+                           :current-page="currentPage"
+                           :page-sizes="pageSizes"
+                           :page-size.sync="pageSize"
+                           layout="slot, total, sizes, prev, pager, next, jumper"
+                           :total="total">
+            </el-pagination>
+          </div>
         </div>
         <!-- 权限管理 -->
         <div class="jurisdiction-box"
@@ -229,7 +241,7 @@ export default {
       newEmployeeVisible: false,
       // 选择员工
       newDialogSelectUsers: [],
-      /**选择的角色 */
+      /** 选择的角色 */
       newDialogSelectRoles: [],
       // 选中的角色
       roleActive: null,
@@ -242,7 +254,12 @@ export default {
       // 权限加载中
       jurisdictionLoading: false,
       // 列表加载中
-      menuLoading: false
+      menuLoading: false,
+      // 分页
+      currentPage: 1,
+      total: 0,
+      pageSize: 15,
+      pageSizes: [15, 30, 60, 100]
     }
   },
   computed: {},
@@ -523,10 +540,13 @@ export default {
     getUserListWithRole(role) {
       this.menuLoading = true
       adminUsersIndex({
-        group_id: role.id
+        group_id: role.id,
+        page: this.currentPage,
+        limit: this.pageSize
       })
         .then(res => {
           this.tableData = res.data.list
+          this.total = res.data.dataCount
           this.menuLoading = false
         })
         .catch(err => {
@@ -655,7 +675,16 @@ export default {
         .catch(() => {
           this.jurisdictionLoading = false
         })
-    }
+    },
+    // 分页
+    handleCurrentChange(val) {
+        this.currentPage = val
+        this.getUserListWithRole(this.roleActive)
+    },
+      handleSizeChange(val) {
+          this.pageSize = val
+          this.getUserListWithRole(this.roleActive)
+      }
   }
 }
 </script>

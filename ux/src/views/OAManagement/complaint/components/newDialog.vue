@@ -168,11 +168,11 @@
             document.body.appendChild(this.$el)
         },
         methods: {
-            fetchData() {
+           /* fetchData() {
                 getComplaintType().then(res => {
                     this.formList = res.data
                 })
-            },
+            },*/
             close() {
                 if (this.$route.query.routerKey == 1) {
                     this.$router.go(-1)

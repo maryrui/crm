@@ -194,7 +194,7 @@ export default {
                                     return time
                                 }
                                 this.formatterRules[element.field] = {
-                                    formatter: fieldFormatter
+                                        formatter: fieldFormatter
                                 }
                             } else if (element.form_type === 'datetime') {
                                 function fieldFormatter(time) {
@@ -249,7 +249,7 @@ export default {
                                     formatter: fieldFormatter
                                 }
                                 /** 联系人 客户 商机 合同*/
-                            } else if (element.field === 'contacts_id' || element.field === 'customer_id' || element.field === 'business_id' || element.field === 'contract_id') {
+                            } else if (element.field === 'contacts_id' || element.field === 'customer_id' || element.field === 'business_id') {
                                 function fieldFormatter(info) {
                                     return info ? info.name : ''
                                 }
@@ -257,7 +257,15 @@ export default {
                                     type: 'crm',
                                     formatter: fieldFormatter
                                 }
-                            } else if (element.field === 'status_id' || element.field === 'type_id' || element.field === 'category_id' ) {
+                            } else if (element.field === 'contract_id') {
+                                function fieldFormatter(info) {
+                                    return info ? info.contract_num : ''
+                                }
+                                this.formatterRules[element.field] = {
+                                    type: 'crm',
+                                    formatter: fieldFormatter
+                                }
+                            } else if (element.field === 'status_id' || element.field === 'type_id' || element.field === 'category_id') {
                                 function fieldFormatter(info) {
                                     return info ? info : ''
                                 }
