@@ -161,7 +161,7 @@ class Leads extends Common
             ->join('__ADMIN_RECORD__ record','leads.leads_id=record.types_id')
             ->join('__ADMIN_USER__ user', 'user.id=record.create_user_id')
             ->where($param)
-            ->field('leads.name,record.next_time,record.content,record.category,user.openid')
+            ->field('leads.name,leads.update_time,record.next_time,record.content,record.category,user.openid')
             ->select();
         return $list;
     }

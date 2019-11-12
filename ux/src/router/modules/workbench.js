@@ -10,7 +10,8 @@ const workbenchRouter = {
   meta: {
     title: '工作台'
   },
-  children: [{
+  children: [
+      {
       path: 'index',
       component: () => import('@/views/OAManagement/workbench/index'),
       meta: {

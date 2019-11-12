@@ -198,7 +198,7 @@ class Business extends Common
             ->join('__ADMIN_RECORD__ record','business.business_id=record.types_id')
             ->join('__ADMIN_USER__ user', 'user.id=record.create_user_id')
             ->where($param)
-            ->field('business.name,record.next_time,record.content,record.category,user.openid')
+            ->field('business.name,business.crm_ihutnj,business.update_time,record.next_time,record.content,record.category,user.openid')
             ->select();
         return $list;
     }

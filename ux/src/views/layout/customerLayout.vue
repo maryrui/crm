@@ -53,7 +53,7 @@ export default {
     ...mapGetters(['crm', 'crmRouters']),
     // 快捷添加
     quickAddList() {
-      var addItems = []
+      var addItems = [];
       if (this.crm.leads && this.crm.leads.save) {
         addItems.push({
           icon: 'leads',
