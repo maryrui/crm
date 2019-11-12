@@ -73,7 +73,7 @@ class Crontab
             if($openId){
                 $data = array(
                     'first'=>["value"=>"合同跟进提醒"],
-                    'keyword1'=>["value"=>$item['crm_ihutnj']],
+                    'keyword1'=>["value"=>$item['crm_rcmkid']],
                     'keyword2'=>["value"=>date('Y-m-s h:i:s', $item['update_time'])],
                     'remark'=>["value"=>"合同名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']]
                 );
