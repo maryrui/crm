@@ -364,15 +364,13 @@ class Business extends ApiCommon
                 '上海染三文化传播有限公司' => 'RS',
                 '其他' => 'QT',
             );
-            // localhost 'crm_fsfojh';
-            // 生产环境 'crm_axgllm'
-            $short = $companyShort[$businessInfo['crm_axgllm']];
+            $short = $companyShort[$businessInfo['crm_yjhwgr']];
             $businessCode = db('crm_business')
-                ->where('crm_ihutnj', 'not null')
-                ->where('crm_ihutnj', 'like', "{$short}%")
+                ->where('crm_rcmkid', 'not null')
+                ->where('crm_rcmkid', 'like', "{$short}%")
                 ->order('business_id desc')
                 ->limit(1)
-                ->value('crm_ihutnj');
+                ->value('crm_rcmkid');
             // 当前年月日
             $ymd = date("Ymd");
             if (null != $businessCode) {
@@ -392,7 +390,7 @@ class Business extends ApiCommon
             } else {
                 $newBusinessCode = $short . $ymd . '0001';
             }
-            $data['crm_ihutnj'] = $newBusinessCode;
+            $data['crm_rcmkid'] = $newBusinessCode;
         }
         $res = db('crm_business')->where(['business_id' => $param['business_id']])->update($data);
         if (!$res) {
