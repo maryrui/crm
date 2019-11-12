@@ -130,7 +130,7 @@ class ReceivablesPlan extends Common
         $list = Db::name('crm_receivables_plan')->alias('plan')
             ->join('__CRM_CONTRACT__ contract', 'plan.contract_id=contract.contract_id')
             ->join('__ADMIN_USER__ user', 'user.id=plan.create_user_id')
-            ->field('plan.return_date,plan.invoice_code,plan.update_time,plan.money,contract.name,user.openid')
+            ->field('plan.return_date,plan.invoice_code,plan.update_time,plan.money,plan.return_type,contract.name,user.openid')
             ->where($param)
             ->select();
         return $list;

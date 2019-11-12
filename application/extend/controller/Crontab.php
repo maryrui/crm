@@ -21,6 +21,10 @@ class Crontab
         $this->contract();
     }
 
+    //{{first.DATA}}
+    //订单编号：{{keyword1.DATA}}
+    //更新时间：{{keyword2.DATA}}
+    //{{remark.DATA}}
     public function receivablesPlan()
     {
         $model = new \app\crm\model\ReceivablesPlan();
@@ -33,12 +37,11 @@ class Crontab
                     'first'=>["value"=>"发票跟进提醒"],
                     'keyword1'=>["value"=>$item['invoice_code']],
                     'keyword2'=>["value"=>date('Y-m-s h:i:s', $item['update_time'])],
-                    'remark'=>["value"=>"合同名称：".$item['name']."，回款金额：".$item['money']."，回款方式：".$item['return_type']]
+                    'remark'=>["value"=>"订单名称：".$item['name']."，发票金额：".$item['money']."，支付方式：".$item['return_type']]
                 );
                 $message->template($openId,$data);
             }
         }
-
     }
 
     public function customer()
