@@ -7,6 +7,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\Structure;
 use think\Request;
 use think\Session;
 use think\Hook;
@@ -230,7 +231,7 @@ class Users extends ApiCommon
             $userList[$k]['username'] = $v['realname'];
             $userList[$k]['thumb_img'] = $v['thumb_img'] ? getFullPath($v['thumb_img']) : '';
         }
-        return resultArray(['data' => $userList ? : []]); 
+        return resultArray(['data' => $userList ? : []]);
     }
 
     /**
@@ -449,4 +450,13 @@ class Users extends ApiCommon
             return resultArray(['error' => '修改失败，请重试！']);
         }
     }
+
+    /**
+     * 员工批量导入
+     */
+//    public function userExcelImport()
+//    {
+//        $file = request()->file('file');
+//        var_dump($file);
+//    }
 }
