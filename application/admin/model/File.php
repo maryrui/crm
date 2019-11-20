@@ -144,6 +144,10 @@ class File extends Common
                                 $r = db('crm_complaint_file');
                                 $r_name = 'complaint_id';
                                 break;
+                            case 'crm_receivables_plan' :
+                                $r = db('crm_receivables_plan_file');
+                                $r_name = 'plan_id';
+                                break;
                             default :
                                 break;
                         }
@@ -257,7 +261,9 @@ class File extends Common
                     case 'crm_complaint' :
                         $r = db('crm_complaint_file');
                         break;
-
+                    case 'crm_receivables_plan' :
+                        $r = db('crm_receivables_plan_file');
+                        break;
                     default :
                         break;
                 }
@@ -330,11 +336,11 @@ class File extends Common
                 $r = db('crm_contract_file');
                 $module = db('crm_contract');
                 break;
-            case 'crm_receivables_plan' :
-                $r = db('crm_receivables_plan');
-                $module = db('crm_receivables_plan');
-                $isReceivablesPlan = true;
-                break;
+//            case 'crm_receivables_plan' :
+//                $r = db('crm_receivables_plan');
+//                $module = db('crm_receivables_plan');
+//                $isReceivablesPlan = true;
+//                break;
             case 'oa_log' :
                 $r = db('oa_log_file');
                 $module = db('oa_log');
@@ -367,6 +373,10 @@ class File extends Common
                 $r = db('hrm_user_file');
                 $module = db('admin_user');
                 break;
+            case 'crm_receivables_plan':
+                $r = db('crm_receivables_plan_file');
+                $module = db('crm_receivables_plan');
+                break;
             case 'crm_complaint' :
                 $r = db('crm_complaint_file');
                 $module = db('crm_complaint');
@@ -378,10 +388,7 @@ class File extends Common
         if ($r) {
             if (isset($isComplaint)) {
                 $fileIds = $r->where(['complaint_id' => intval($request['module_id'])])->column('file_id');
-            } if (isset($isReceivablesPlan)) {
-                $file = $r->where(['plan_id' => intval($request['module_id'])])->column('file');
-                $fileIds = stringToArray($file['0']);
-            } else {
+            }  else {
                 $fileIds = $r->where([$module->getPk() => intval($request['module_id'])])->column('file_id');
             }
             $request['file_id'] = ['in', $fileIds];

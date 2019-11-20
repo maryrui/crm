@@ -557,6 +557,10 @@ class User extends Common
 	public function updateOpenid($param)
     {
         $data['openid']=$param['openid'];
+        if(Db::name('AdminUser')->where('openid ='.openid)->find()){
+            $this->error ='绑定成功!';
+            return false;
+        }
         $flag = Db::name('AdminUser')->where('mobile ='.$param['mobile'])->update($data);
         if ($flag) {
             return $flag;

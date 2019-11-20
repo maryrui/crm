@@ -197,6 +197,7 @@ class ReceivablesPlan extends ApiCommon
     public function delete()
     {
         $userModel = new \app\admin\model\User();
+        $receivablesPlanModel = model('ReceivablesPlan');
         $param = $this->param;
         $userInfo = $this->userInfo;
         $plan_id = $param['id'];
@@ -218,7 +219,7 @@ class ReceivablesPlan extends ApiCommon
                 header('Content-Type:application/json; charset=utf-8');
                 exit(json_encode(['code'=>102,'error'=>'无权操作']));
             }
-            $res = model('ReceivablesPlan')->delDataById($plan_id);
+            $res =$receivablesPlanModel->delDataById($plan_id);
             if (!$res) {
                 return resultArray(['error' => model('ReceivablesPlan')->getError()]);
             }

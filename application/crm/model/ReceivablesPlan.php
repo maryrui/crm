@@ -112,6 +112,8 @@ class ReceivablesPlan extends Common
             $list[$k]['customer_id_info']['name'] = $v['customer_name'] ?: '';
             $list[$k]['customer_id_info']['customer_id'] = $v['customer_id'] ?: '';
             $list[$k]['check_status_info'] = $this->statusArr[$v['check_status']];
+            $files = db('crm_receivables_plan_file')->where(['plan_id'=>$v['plan_id']])->column('file_id');
+            $list[$k]['file'] = arrayToString($files);
         }
         $data = [];
         $data['list'] = $list;
@@ -153,7 +155,8 @@ class ReceivablesPlan extends Common
             $this->error = $validate->getError();
             return false;
         }
-        if ($param['file']) $param['file'] = arrayToString($param['file']); //附件
+        if ($param['file']) $fileList = $param['file']; //附件
+        unset($param['file']);
         //期数规则（1,2,3..）
         $maxNum = db('crm_receivables_plan')->where(['contract_id' => $param['contract_id']])->max('num');
         $param['num'] = $maxNum ? $maxNum + 1 : 1;
@@ -162,6 +165,11 @@ class ReceivablesPlan extends Common
         if ($this->data($param)->allowField(true)->save()) {
             $data = [];
             $data['plan_id'] = $this->plan_id;
+            $files = [];
+            foreach ($fileList as $v){
+                $files[]=["plan_id"=>$this->plan_id,'file_id'=>$v];
+            }
+            db('crm_receivables_plan_file')->insertAll($files);
             return $data;
         } else {
             $this->error = '添加失败';
@@ -195,12 +203,20 @@ class ReceivablesPlan extends Common
             $this->error = $validate->getError();
             return false;
         }
-        if ($param['file']) $param['file'] = arrayToString($param['file']); //附件
+        if ($param['file']) $fileList = $param['file']; //附件
+        unset($param['file']);
+
         //提醒日期
         $param['remind_date'] = $param['remind'] ? date('Y-m-d', strtotime($param['return_date']) - 86400 * $param['remind']) : $param['return_date'];
         if ($this->allowField(true)->save($param, ['plan_id' => $plan_id])) {
             $data = [];
             $data['plan_id'] = $plan_id;
+            $files = [];
+            foreach ($fileList as $v){
+                $files[]=["plan_id"=>$plan_id,'file_id'=>$v];
+            }
+            db('crm_receivables_plan_file')->where(['plan_id'=>$plan_id])->delete();
+            db('crm_receivables_plan_file')->insertAll($files);
             return $data;
         } else {
             $this->error = '编辑失败';
@@ -224,7 +240,32 @@ class ReceivablesPlan extends Common
         $userModel = new \app\admin\model\User();
         $dataInfo['create_user_info'] = $userModel->getUserById($dataInfo['create_user_id']);
         $dataInfo['plan_id'] = $id;
+        $files = db('crm_receivables_plan_file')->where(['plan_id'=>$id])->column('file_id');
+        $dataInfo['file'] = arrayToString($files);
+
         return $dataInfo;
+    }
+
+
+    /**
+     * 回款计划数据
+     * @param  $id 回款计划ID
+     * @return
+     */
+    public function delDataById($id = '')
+    {
+        Db::startTrans();
+        try {
+            db('crm_receivables_plan')->where(['plan_id'=>$id])->delete();
+            db('crm_receivables_plan_file')->where(['plan_id'=>$id])->delete();
+            // 提交事务
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            return false;
+        }
     }
 
     //模拟自定义字段返回
