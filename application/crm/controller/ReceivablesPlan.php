@@ -93,8 +93,13 @@ class ReceivablesPlan extends ApiCommon
         }
         $param['check_user_id'] = is_array($check_user_id) ? ','.implode(',',$check_user_id).',' : $check_user_id;
         $todayTime = getTimeByType('today');
-        $count = $receivablesPlanModel->where(['create_time'=>['between',[$todayTime[0],$todayTime[1]]]])->count();
-        $num = substr(strval($count+10001),1,4);
+        $list = $receivablesPlanModel->where(['create_time'=>['between',[$todayTime[0],$todayTime[1]]]])->select();
+        $sn = 0;
+        if(count($list) >0){
+            $lastSn = $list[count($list)-1]["invoice_code"];
+            $sn =  intval(substr($lastSn,-4));
+        }
+        $num = substr(strval($sn+10001),1,4);
         $param['invoice_code']='FP'.date("Ymd").$num;
         $res = $receivablesPlanModel->createData($param);
         if ($res) {

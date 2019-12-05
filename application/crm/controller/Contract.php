@@ -93,8 +93,13 @@ class Contract extends ApiCommon
         // $flow_user_id = $examineFlowModel->getUserByFlow($examineFlowData['flow_id'], $param['create_user_id']); 
         // $param['flow_user_id'] = $flow_user_id ? arrayToString($flow_user_id) : '';            
         $todayTime = getTimeByType('today');
-        $count = $contractModel->where(['create_time'=>['between',[$todayTime[0],$todayTime[1]]]])->count();
-        $num = substr(strval($count+10001),1,4);
+        $list = $contractModel->where(['create_time'=>['between',[$todayTime[0],$todayTime[1]]]])->select();
+        $sn = 0;
+        if(count($list) >0){
+            $lastSn = $list[count($list)-1]["invoice_code"];
+            $sn =  intval(substr($lastSn,-4));
+        }
+        $num = substr(strval($sn+10001),1,4);
         $param['num']='DD'.date("Ymd").$num;
         if ($contractModel->createData($param)) {
             return resultArray(['data' => '添加成功']);
