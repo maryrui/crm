@@ -268,6 +268,10 @@ class Field extends ApiCommon
                             exit(json_encode(['code'=>102,'error'=>'无权操作']));
                         }                        
                         break;
+                    case 'crm_complaint' :
+                        $complaintPlanModel = new \app\crm\model\Complaint();
+                        $dataInfo = $complaintPlanModel->getDataById(intval($param['action_id']));
+                        break;
                 } 
             }
         }
