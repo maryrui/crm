@@ -134,9 +134,10 @@ class Contract extends Common
             $contractBalance = $v['money'];
 
             // 同一个订单的所有发票
-            $receivablesPlan = Db::name("crm_receivables_plan")
-                ->field(['invoice_code', 'money'])
-                ->where(['contract_id' => $v['contract_id'], 'check_status' => 2])
+            $receivablesPlan = Db::name("crm_receivables_plan")->alias('plan')
+                ->field(['plan.invoice_code', 'plan.money', 'user.realname', 'plan.create_time'])
+                ->join('__ADMIN_USER__ user', 'plan.create_user_id = user.id')
+                ->where(['plan.contract_id' => $v['contract_id'], 'plan.check_status' => 2])
                 ->select();
 
             $contracts[$i]['receivables_plan'] = $receivablesPlan;
