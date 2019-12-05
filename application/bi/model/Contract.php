@@ -131,7 +131,7 @@ class Contract extends Common
 //            $contracts[$i]['balance'] = $balance;
 
             // 订单总金额，暂未使用
-            $contractBalance = $v['money'];
+            //$contractBalance = $v['money'];
 
             // 同一个订单的所有发票
             $receivablesPlan = Db::name("crm_receivables_plan")->alias('plan')
