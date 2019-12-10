@@ -175,13 +175,26 @@ class Contract extends Common
             // 当前订单未回款金额 = 已开发票总金额 - 已回款总金额
             $contracts[$i]['balance'] = bcsub($receivablesPlanTotalMoney, $receivableTotalMoney, 2);
         }
-
-        // 已回款，删除receivables中的balance > 0的元素
-        if ($balanceFlag == 1) {
-            foreach ($contracts as $key => $value) {
-                foreach ($value['receivables_plan'] as $k => $v) {
-                    if ($v['balance'] > 0) {
-                        unset($contracts[$key]['receivables_plan'][$k]);
+        if ($balanceFlag == 0) {
+            return $contracts;
+        } else {
+            // 已回款，删除receivables中的balance > 0的元素
+            if ($balanceFlag == 1) {
+                foreach ($contracts as $key => $value) {
+                    foreach ($value['receivables_plan'] as $k => $v) {
+                        if ($v['balance'] > 0) {
+                            unset($contracts[$key]['receivables_plan'][$k]);
+                        }
+                    }
+                }
+            }
+            // 未回款，删除receivables中的balance = 0的元素
+            if ($balanceFlag == 2) {
+                foreach ($contracts as $key => $value) {
+                    foreach ($value['receivables_plan'] as $k => $v) {
+                        if ($v['balance'] == 0) {
+                            unset($contracts[$key]['receivables_plan'][$k]);
+                        }
                     }
                 }
             }
@@ -190,22 +203,8 @@ class Contract extends Common
                     unset($contracts[$key]);
                 }
             }
+            $arr = array_values($contracts);
+            return $arr;
         }
-        // 未回款，删除receivables中的balance = 0的元素
-        if ($balanceFlag == 2) {
-            foreach ($contracts as $key => $value) {
-                foreach ($value['receivables_plan'] as $k => $v) {
-                    if ($v['balance'] == 0) {
-                        unset($contracts[$key]['receivables_plan'][$k]);
-                    }
-                }
-            }
-            foreach ($contracts as $key => $value) {
-                if (empty($value['receivables_plan'])) {
-                    unset($contracts[$key]);
-                }
-            }
-        }
-        return $contracts;
     }
 }
