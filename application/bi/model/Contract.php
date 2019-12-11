@@ -153,7 +153,7 @@ class Contract extends Common
 
                 $receivablesPlanTotalMoney = bcadd($receivablesPlanTotalMoney, $v2['money'], 2);
                 $receivables = Db::name("crm_receivables")
-                    ->field(['plan_id', 'number', 'return_time', 'money'])
+                    ->field(['plan_id', 'number', 'create_time', 'money'])
                     ->where(['plan_id' => $v2['invoice_code'], 'check_status' => 2])
                     ->select();
 
