@@ -121,7 +121,7 @@ class Receivables extends Common
             $list[$k]['customer_id_info']['customer_id'] = $v['customer_id'] ?: '';
             $list[$k]['customer_id_info']['name'] = $v['customer_name'] ?: '';
             $list[$k]['contract_id_info']['contract_id'] = $v['contract_id'] ?: '';
-            $list[$k]['contract_id_info']['name'] = $v['contract_num'] ?: '';
+            $list[$k]['contract_id_info']['contract_num'] = $v['contract_num'] ?: '';
             $list[$k]['contract_id_info']['money'] = $v['contract_money'] ?: '0.00';
             $list[$k]['contract_money'] = $v['contract_money'] ?: '0.00';
             foreach ($userField as $key => $val) {
