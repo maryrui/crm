@@ -41,7 +41,7 @@
     import rankingMixins from './mixins/ranking'
     import exportTable from './mixins/exportTable'
     import { getAccountDatnum } from '@/api/businessIntelligence/accountDatnum'
-
+    import { timestampToFormatTime } from "@/utils"
     export default {
         /** 账款数据分析 */
         name: 'ranking-add-contacts-statistics',
@@ -57,6 +57,7 @@
                 detSum: 0,
                 downloadLoading: false,
                 fieldList: [
+                    { field: 'index', name: 'id' },
                     { field: 'contract_id', name: '订单编号' },
                     { field: 'name', name: '订单名称' },
                     { field: 'customer_name', name: '客户名称' },
@@ -65,6 +66,8 @@
                     { field: 'invoice_code', name: '发票编号' },
                     { field: 'invoice_money', name: '发票金额' },
                     { field: 'debt', name: '欠款金额' },
+                    { field: 'realnames', name: '开票申请人' },
+                    { field: 'create_time', name: '开票申请时间' },
                     { field: 'return_num', name: '回款编号' },
                     { field: 'return_money', name: '回款金额' },
                     { field: 'return_date', name: '回款日期' }
@@ -122,20 +125,23 @@
                         sums[index] = '总价'
                         return
                     }
-                    if (index === 1 || index === 2 || index === 3 || index === 5 || index === 8 || index === 10) {
-                        sums[index] = ''
-                        return
-                    }
-                    if (index === 4) {
+                    if (index === 5) {
                         sums[index] = this.sum + '元'
                         return
                     }
-                    if (index === 6) {
+                    if (index === 7) {
                         sums[index] = this.codeSum + '元'
                         return
                     }
-                    if (index === 7) {
+                    if (index === 8) {
                         sums[index] = this.detSum + '元'
+                        return
+                    }
+                    if (index === 12) {
+                        sums[index] = this.return_money + '元'
+                        return
+                    } else {
+                        sums[index] = ''
                         return
                     }
                     const values = data.map(item => Number(item[column.property]))
@@ -164,7 +170,7 @@
                         colspan: _col
                     }
                 }
-                if (columnIndex === 5 || columnIndex === 6 || columnIndex === 7) {
+                if (columnIndex === 5 || columnIndex === 6 || columnIndex === 7 || columnIndex === 8 || columnIndex === 9) {
                     const _row1 = this.codeArr[rowIndex]
                     const _col1 = _row1 > 0 ? 1 : 0
                     return {
@@ -178,15 +184,18 @@
                 this.sum = 0
                 this.codeSum = 0
                 this.detSum = 0
+                this.return_money = 0
                 for (var i = 0; i < list.length; i++) {
-                    this.sum += parseFloat(list[i].money)
                     if (list[i].receivables_plan.length > 0) {
                         for (var j = 0; j < list[i].receivables_plan.length; j++) {
                             this.codeSum += parseFloat(list[i].receivables_plan[j].money)
+                            this.sum += parseFloat(list[i].money)
                             this.detSum += parseFloat(list[i].receivables_plan[j].balance)
                             if (list[i].receivables_plan[j].receivables.length > 0) {
                                 for (var m = 0; m < list[i].receivables_plan[j].receivables.length; m++) {
+                                    this.return_money += parseFloat(list[i].receivables_plan[j].receivables[m].money)
                                     arr.push({
+                                        index: i + 1,
                                         contract_id: list[i].num,
                                         customer_name: list[i].customer_name,
                                         realname: list[i].realname,
@@ -195,13 +204,16 @@
                                         return_money: list[i].receivables_plan[j].receivables[m].money,
                                         invoice_money: list[i].receivables_plan[j].money,
                                         invoice_code: list[i].receivables_plan[j].invoice_code,
-                                        return_date: list[i].receivables_plan[j].receivables[m].return_time,
+                                        return_date: list[i].receivables_plan[j].receivables[m].create_time ? timestampToFormatTime(list[i].receivables_plan[j].receivables[m].create_time).replace('T', ' ').split('+')[0] : 0,
                                         return_num: list[i].receivables_plan[j].receivables[m].number,
+                                        realnames: list[i].receivables_plan[j].realname,
+                                        create_time: list[i].receivables_plan[j].create_time ? timestampToFormatTime(list[i].receivables_plan[j].create_time).replace('T', ' ').split('+')[0] : 0,
                                         debt: list[i].receivables_plan[j].balance
                                     })
                                 }
                             } else {
                                 arr.push({
+                                    index: i + 1,
                                     contract_id: list[i].num,
                                     customer_name: list[i].customer_name,
                                     realname: list[i].realname,
@@ -211,6 +223,8 @@
                                     invoice_money: list[i].receivables_plan[j].money,
                                     invoice_code: list[i].receivables_plan[j].invoice_code,
                                     debt: list[i].receivables_plan[j].balance,
+                                    realnames: list[i].receivables_plan[j].realname,
+                                    create_time:list[i].receivables_plan[j].create_time ? timestampToFormatTime(list[i].receivables_plan[j].create_time).replace('T', ' ').split('+')[0] : 0,
                                     return_date: 0,
                                     return_num: 0
                                 })
@@ -218,12 +232,15 @@
                         }
                     } else {
                         arr.push({
+                            index: i + 1,
                             contract_id: list[i].num,
                             customer_name: list[i].customer_name,
                             realname: list[i].realname,
                             money: list[i].money,
                             name: list[i].name,
                             return_money: 0,
+                            realnames: 0,
+                            create_time: 0,
                             invoice_code: 0,
                             return_date: 0,
                             return_num: 0,
