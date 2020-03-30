@@ -157,7 +157,7 @@ return [
 	// 【产品】导入模板下载
 	'crm/product/excelDownload' => ['crm/product/excelDownload', ['method' => 'GET']],
 	// 【产品】导入
-	'crm/product/excelImport' => ['crm/product/excelImport', ['method' => 'POST']],			
+	'crm/product/excelImport' => ['crm/product/excelImport', ['method' => 'POST']],
 
 	// 【回款】列表
 	'crm/receivables/index' => ['crm/receivables/index', ['method' => 'POST']],
@@ -187,8 +187,10 @@ return [
 	// 【回款计划】详情
 	'crm/receivables_plan/read' => ['crm/receivables_plan/read', ['method' => 'POST']],	
 	// 【回款计划】删除
-	'crm/receivables_plan/delete' => ['crm/receivables_plan/delete', ['method' => 'POST']],				
-	
+	'crm/receivables_plan/delete' => ['crm/receivables_plan/delete', ['method' => 'POST']],
+    // 【回款计划】审批
+	'crm/receivables_plan/check' => ['crm/receivables_plan/check', ['method' => 'POST']],
+
 	// 【相关团队】列表
 	'crm/setting/team' => ['crm/setting/team', ['method' => 'POST']],
 	// 【相关团队】创建
@@ -240,12 +242,14 @@ return [
 
 	// 【代办事项】今日需联系
 	'crm/message/todayCustomer' => ['crm/message/todayCustomer', ['method' => 'POST']],				
-	'crm/message/num' => ['crm/message/num', ['method' => 'POST']],		
+	'crm/message/num' => ['crm/message/num', ['method' => 'POST']],
 	'crm/message/followleads' => ['crm/message/followleads', ['method' => 'POST']],				
 	'crm/message/followcustomer' => ['crm/message/followcustomer', ['method' => 'POST']],				
 	'crm/message/checkcontract' => ['crm/message/checkcontract', ['method' => 'POST']],				
 	'crm/message/checkreceivables' => ['crm/message/checkreceivables', ['method' => 'POST']],				
 	'crm/message/remindreceivablesplan' => ['crm/message/remindreceivablesplan', ['method' => 'POST']],				
+	'crm/message/checkreceivablesplan' => ['crm/message/checkReceivablesPlan', ['method' => 'POST']],
+	'crm/message/checkcomplaint' => ['crm/message/checkComplaint', ['method' => 'POST']],
 	'crm/message/endContract' => ['crm/message/endContract', ['method' => 'POST']],
 
 	// 【客户】标记跟进
@@ -267,6 +271,7 @@ return [
     'crm/complaint/read' => ['crm/complaint/read', ['method' => 'POST']],
     'crm/complaint/check' => ['crm/complaint/check', ['method' => 'POST']],
     'crm/complaint/save' => ['crm/complaint/save', ['method' => 'POST']],
+    'crm/complaint/update' => ['crm/complaint/update', ['method' => 'POST']],
 
     // MISS路由
 	'__miss__'  => 'admin/base/miss',

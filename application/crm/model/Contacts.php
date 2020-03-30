@@ -173,7 +173,7 @@ class Contacts extends Common
             ->join('__ADMIN_RECORD__ record','contacts.contacts_id=record.types_id')
             ->join('__ADMIN_USER__ user', 'user.id=record.create_user_id')
             ->where($param)
-            ->field('contacts.name,record.next_time,record.content,record.category,user.openid')
+            ->field('contacts.name,contacts.update_time,record.next_time,record.content,record.category,user.openid')
             ->select();
         return $list;
     }

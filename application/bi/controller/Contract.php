@@ -23,7 +23,7 @@ class Contract extends ApiCommon
     {
         $action = [
             'permission' => [''],
-            'allow' => ['analysis', 'summary']
+            'allow' => ['analysis', 'summary', 'accounts']
         ];
         Hook::listen('check_auth', $action);
         $request = Request::instance();
@@ -251,11 +251,15 @@ class Contract extends ApiCommon
 
     public function accounts()
     {
+        if (!checkPerByAction('bi', 'contract', 'read')) {
+            header('Content-Type:application/json; charset=utf-8');
+            exit(json_encode(['code' => 102, 'error' => '无权操作']));
+        }
         $userModel = new \app\admin\model\User();
         $model = new \app\bi\model\Contract();
         $param = $this->param;
         $create_time = [];
-        $timeType = isset($param['type']) ? $param['type']:'today';
+        $timeType = isset($param['type']) ? $param['type'] : 'today';
         if (isset($param['type'])) {
             $paramTime = getTimeByType($timeType);
             $create_time = array('between', array($paramTime[0], $paramTime[1]));
@@ -274,13 +278,57 @@ class Contract extends ApiCommon
         }
         $perUserIds = $userModel->getUserByPer('crm', 'contract', 'read'); //权限范围内userIds
         $userIds = $map_user_ids ? array_intersect($map_user_ids, $perUserIds) : $perUserIds; //数组交集
-        $whereArr['owner_user_id'] = array('in', $userIds);
-        $whereArr['check_status'] = array('eq', 2);
-        $whereArr['create_time'] = $create_time;
-
-
-        $list = $model->getAccounts($whereArr);
+        $whereArr['tract.owner_user_id'] = array('in', $userIds);
+        $whereArr['tract.check_status'] = array('eq', 2);
+//        if (isset($param['contract_name'])) {
+//            $whereArr['tract.name'] = field($param['contract_name']['value'], $param['contract_name']['condition']);
+//        }
+//        if (isset($param['contract_money'])) {
+//            $whereArr['tract.money'] = field($param['contract_money']['value'], $param['contract_money']['condition']);
+//        }
+//        if (isset($param['customer_name'])) {
+//            $whereArr['user.realname'] = field($param['customer_name']['value'], $param['customer_name']['condition']);
+//        }
+//        // 订单发票金额
+//        if (isset($param['money'])) {
+//            $whereArrReceivablesPlan['money'] = field($param['money']['value'], $param['money']['condition']);
+//        }
+//        // 回款金额
+//        if (isset($param['receivables_money'])) {
+//            $whereArrReceivables['money'] = field($param['receivables_money']['value'], $param['receivables_money']['condition']);
+//        }
+//        // 回款日期
+//        if (isset($param['receivables_datetime'])) {
+//            $startDate = strtotime($param['receivables_datetime']['start_date']);
+//            $endDate = strtotime($param['receivables_datetime']['end_date']);
+//            $whereArrReceivables['create_time'] = ['between', [$startDate, $endDate]];
+//        }
+        if (!empty($param['owner_user_id'])) {
+            $whereArr['tract.owner_user_id'] = array('eq', $param['owner_user_id']);
+        }
+        if (!empty($param['customer_id'])) {
+            $whereArr['tract.customer_id'] = array('eq', $param['customer_id']);
+        }
+        $balanceFlag = $param['balance'];
+        $list = $model->getAccounts($whereArr, $create_time, $balanceFlag);
 
         return resultArray(['data' => $list]);
+    }
+
+    /**
+     * 账款数据分析筛选字段
+     */
+    public function getSearchField()
+    {
+        $fields = array(
+            'contract_name' => '订单名称',
+            'contract_money' => '订单金额',
+            'customer_name' => '客户名称',
+            'money' => '发票金额',
+            'receivables_money' => '回款金额',
+            'receivables_datetime' => '回款日期',
+            'balance' => '欠款',
+        );
+        return resultArray(['data' => $fields]);
     }
 }

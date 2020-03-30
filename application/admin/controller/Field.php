@@ -57,6 +57,7 @@ class Field extends ApiCommon
             //'5' => ['types' => 'crm_contract','name' => '合同管理'],
             '5' => ['types' => 'crm_contract','name' => '订单管理'],
             '6' => ['types' => 'crm_receivables','name' => '回款管理'],
+            '7' => ['types' => 'crm_receivables_plan','name' => '发票管理'],
         ];
         $examine_types_arr = [];    
         switch ($param['type']) {
@@ -266,6 +267,10 @@ class Field extends ApiCommon
                             header('Content-Type:application/json; charset=utf-8');
                             exit(json_encode(['code'=>102,'error'=>'无权操作']));
                         }                        
+                        break;
+                    case 'crm_complaint' :
+                        $complaintPlanModel = new \app\crm\model\Complaint();
+                        $dataInfo = $complaintPlanModel->getDataById(intval($param['action_id']));
                         break;
                 } 
             }

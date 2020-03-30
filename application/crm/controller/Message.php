@@ -23,7 +23,7 @@ class Message extends ApiCommon
     {
         $action = [
             'permission'=>[''],
-            'allow'=>['num','todaycustomer','followleads','followcustomer','checkcontract','checkreceivables','remindreceivablesplan','endcontract']            
+            'allow'=>['num','todaycustomer','followleads','followcustomer','checkcontract','checkreceivables','checkreceivablesplan','remindreceivablesplan','endcontract','checkcomplaint']
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
@@ -71,13 +71,18 @@ class Message extends ApiCommon
         $checkContract = $this->checkContract();
         $data['checkContract'] = $checkContract['dataCount'] ? : ''; 
         $checkReceivables = $this->checkReceivables();
-        $data['checkReceivables'] = $checkReceivables['dataCount'] ? : ''; 
-        $remindReceivablesPlan = $this->remindReceivablesPlan();
-        $data['remindReceivablesPlan'] = $remindReceivablesPlan['dataCount'] ? : '';
+        $data['checkReceivables'] = $checkReceivables['dataCount'] ? : '';
+        $checkReceivablesPlan = $this->checkReceivablesPlan();
+        $data['checkReceivablesPlan'] = $checkReceivablesPlan['dataCount'] ? : '';
+        $checkComplaint = $this->checkComplaint();
+        $data['checkComplaint'] = $checkComplaint['dataCount'] ? : '';
+
+//        $remindReceivablesPlan = $this->remindReceivablesPlan();
+//        $data['remindReceivablesPlan'] = $remindReceivablesPlan['dataCount'] ? : '';
         if ($configData['contract_config'] == 1) {
             $endContract = $this->endContract();
             $data['endContract'] = $endContract['dataCount'] ? : '';  
-        }                                   
+        }
         return resultArray(['data' => $data]);
     }
 
@@ -203,8 +208,8 @@ class Message extends ApiCommon
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
         }
         switch ($type) {
-            case '1' : $param['check_status'] = ['lt','2']; break;
-            case '2' : $param['check_status'] = ['egt','2']; break;
+            case '1' : $param['check_status'] = ['lt','审核通过']; break;
+            case '2' : $param['check_status'] = ['egt','审核通过']; break;
         }
         $data = $contractModel->getDataList($param);
         if ($types == 'list') {
@@ -235,10 +240,10 @@ class Message extends ApiCommon
             $param['owner_user_id'] = array('in',getSubUserId(false));
         } else {
             $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
-        }          
+        }
         switch ($type) {
-            case '1' : $param['check_status'] = ['lt','2']; break;
-            case '2' : $param['check_status'] = ['egt','2']; break;
+            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'审核通过']; break;
+            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'审核通过']; break;
         }
         $data = $receivablesModel->getDataList($param);
         if ($types == 'list') {
@@ -272,6 +277,76 @@ class Message extends ApiCommon
             case '1' : $param['receivables_id'] = 0; $param['remind_date'] = array('elt',date('Y-m-d',time())); $param['return_date'] = array('egt',date('Y-m-d',time())); break;
             case '2' : $param['receivables_id'] = array('gt',0); break;
             case '3' : $param['receivables_id'] = 0; $param['remind_date'] = array('lt',date('Y-m-d',time())); break;
+        }
+        $data = $receivablesPlanModel->getDataList($param);
+        if ($types == 'list') {
+            return resultArray(['data' => $data]);
+        }
+        return $data;
+    }
+
+    /**
+     * 待审核客诉
+     * @author Michael_xu
+     * @return
+     */
+    public function checkComplaint()
+    {
+        $param = $this->param;
+        $userInfo = $this->userInfo;
+        $types = $param['types'];
+        $type = $param['type']?:1;
+        $isSub = $param['isSub'] ? : '';
+        unset($param['types']);
+        unset($param['type']);
+        unset($param['isSub']);
+        $complaintModel = model('Complaint');
+
+        if ($isSub) {
+//            foreach (getSubUserId(false) as $k=>$v){
+//                $temp[] = ['like','%'.$v.'%'];
+//            }
+//            $param['check_user_id'] = [$temp,'or'];
+            $param['create_user_id'] = array('in',getSubUserId(false));
+        } else {
+            $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
+        }
+        switch ($type) {
+            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'审核通过']; break;
+            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'审核通过']; break;
+        }
+        $data = $complaintModel->getMessageList($param);
+        if ($types == 'list') {
+            return resultArray(['data' => $data]);
+        }
+        return $data;
+    }
+
+    /**
+     * 待审核回款
+     * @author Michael_xu
+     * @return
+     */
+    public function checkReceivablesPlan()
+    {
+        $param = $this->param;
+        $userInfo = $this->userInfo;
+        $types = $param['types'];
+        $type = $param['type'] ? : 1;
+        $isSub = $param['isSub'] ? : '';
+        unset($param['types']);
+        unset($param['type']);
+        unset($param['isSub']);
+        $receivablesPlanModel = model('ReceivablesPlan');
+
+        if ($isSub) {
+            $param['owner_user_id'] = array('in',getSubUserId(false));
+        } else {
+            $param['check_user_id'] = ['like','%,'.$userInfo['id'].',%'];
+        }
+        switch ($type) {
+            case '1' : $param['check_status'] = ['condition'=>'lt','value'=>'审核通过']; break;
+            case '2' : $param['check_status'] = ['condition'=>'egt','value'=>'审核通过']; break;
         }
         $data = $receivablesPlanModel->getDataList($param);
         if ($types == 'list') {

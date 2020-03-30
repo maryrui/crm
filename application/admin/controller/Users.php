@@ -7,6 +7,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\Structure;
 use think\Request;
 use think\Session;
 use think\Hook;
@@ -25,7 +26,9 @@ class Users extends ApiCommon
         parent::_initialize();
         $action = [
             'permission'=>[],
-            'allow'=>['index','save','update','updatepwd','enables','read','getuserlist','updateimg','resetpassword','userlistbystructid','groups','groupsdel','tobeusers','structureuserlist','getuserlist','usernameedit']
+            'allow'=>['index','save','update','updatepwd','enables','read','getuserlist','updateimg','resetpassword',
+                'userlistbystructid','groups','groupsdel','tobeusers','structureuserlist','getuserlist','usernameedit',
+                'tree']
         ];
         Hook::listen('check_auth',$action);
 
@@ -37,7 +40,7 @@ class Users extends ApiCommon
 
 		$userInfo = $this->userInfo;
         //权限判断
-        $unAction = ['index','read','getuserlist','structureuserlist','updateimg','resetpassword','update'];
+        $unAction = ['index','read','getuserlist','structureuserlist','updateimg','resetpassword','update','tree'];
         $adminTypes = adminGroupTypes($userInfo['id']);
         if (!in_array(3,$adminTypes) && !in_array(1,$adminTypes) && !in_array(2,$adminTypes) && !in_array($a, $unAction)) {
             header('Content-Type:application/json; charset=utf-8');
@@ -55,6 +58,21 @@ class Users extends ApiCommon
         $userModel = model('User');
         $param = $this->param;  
         $data = $userModel->getDataList($param);
+        return resultArray(['data' => $data]);
+    }
+
+    /**
+     * 部门列表
+     * @author Michael_xu
+     * @param
+     * @return
+     */
+    public function tree()
+    {
+        $userModel = model('User');
+        $param = $this->param;
+        $type = $param['type'] ? 'tree' : '';
+        $data = $userModel->getTree($type);
         return resultArray(['data' => $data]);
     }
 
@@ -213,7 +231,7 @@ class Users extends ApiCommon
             $userList[$k]['username'] = $v['realname'];
             $userList[$k]['thumb_img'] = $v['thumb_img'] ? getFullPath($v['thumb_img']) : '';
         }
-        return resultArray(['data' => $userList ? : []]); 
+        return resultArray(['data' => $userList ? : []]);
     }
 
     /**
@@ -432,4 +450,13 @@ class Users extends ApiCommon
             return resultArray(['error' => '修改失败，请重试！']);
         }
     }
+
+    /**
+     * 员工批量导入
+     */
+//    public function userExcelImport()
+//    {
+//        $file = request()->file('file');
+//        var_dump($file);
+//    }
 }

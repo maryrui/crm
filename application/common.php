@@ -193,6 +193,7 @@ function where_arr($array = [], $m = '', $c = '', $a = '')
                     if (in_array($k, $check_field_arr)) {
                         $where[$c.$k] = field($v['value'], 'contains');
                     } else {
+                        $aa = $v;
                         $where[$c.$k] = field($v['value'], $v['condition']);
                     }
                 } elseif (in_array($v['condition'], ['is_empty','is_not_empty'])) {
@@ -897,6 +898,31 @@ function getmonthdays($time){
     return $days;
 }
 
+/**
+ * 计算两个时间戳之差
+ * @param $begin_time
+ * @param $end_time
+ * @return array
+ */
+function timeDiff( $begin_time, $end_time ){
+    if ( $begin_time < $end_time ) {
+        $starttime = $begin_time;
+        $endtime = $end_time;
+    } else {
+        $starttime = $end_time;
+        $endtime = $begin_time;
+    }
+    $timediff = $endtime - $starttime;
+    $days = intval( $timediff / 86400 );
+    $remain = $timediff % 86400;
+    $hours = intval( $remain / 3600 );
+    $remain = $remain % 3600;
+    $mins = intval( $remain / 60 );
+    $secs = $remain % 60;
+    $res = array( "day" => $days, "hour" => $hours, "min" => $mins, "sec" => $secs );
+    return $res;
+}
+
 /** 
  * 生成从开始时间到结束时间的日期数组
  * @param type，默认时间戳格式
@@ -1282,9 +1308,6 @@ function nextCheckData($user_id, $flow_id, $types, $types_id, $order_id, $check_
         $stepInfo = $examineStepModel->getStepByOrder($flow_id, $next_order_id); //审批步骤
         $next_step_user_ids = $examineStepModel->getUserByStep($stepInfo['step_id'], $user_id);
         $next_user_ids = stringToArray($next_step_user_ids);
-        if($types === 'crm_complaint' && $stepInfo['status'] === 9){
-            $next_user_ids = $examineStepModel->getComplaintStepUser($types_id, $next_user_ids);
-        }
     } else {
         $next_user_ids = array_unique(array_filter($sub_user_ids));
     }

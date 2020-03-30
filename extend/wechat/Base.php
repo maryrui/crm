@@ -38,7 +38,6 @@ class Base
 
         $resp = Curl::get($url);
         $data = json_decode($resp,true);
-        print_r($data);
         if(!isset($data['errcode'])){
             Cache::set("wechat_access_token",$data['access_token'],$data['expires_in']);
             return $data['access_token'];

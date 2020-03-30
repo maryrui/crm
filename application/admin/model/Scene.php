@@ -21,7 +21,7 @@ class Scene extends Common
 	protected $updateTime = false;
 	protected $autoWriteTimestamp = true;
 
-	private $types_arr = ['crm_leads','crm_customer','crm_customer_pool','crm_contacts','crm_product','crm_business','crm_contract','crm_receivables']; //支持场景的分类
+	private $types_arr = ['crm_leads','crm_customer','crm_customer_pool','crm_contacts','crm_product','crm_business','crm_contract','crm_receivables','crm_receivables_plan']; //支持场景的分类
 
 	protected $type = [
         'data'    =>  'array',

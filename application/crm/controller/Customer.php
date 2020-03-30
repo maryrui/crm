@@ -573,7 +573,7 @@ class Customer extends ApiCommon
         $fieldModel = new \app\admin\model\Field();
         $field_list = $fieldModel->getIndexFieldList('crm_customer', $userInfo['id']);
         // 文件名
-        $file_name = '5kcrm_customer_'.date('Ymd');
+        $file_name = 'crm_customer_'.date('Ymd');
         $param['pageType'] = 'all'; 
         $excelModel->exportCsv($file_name, $field_list, function($list) use ($param){
             $list = model('Customer')->getDataList($param);

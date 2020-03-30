@@ -156,7 +156,7 @@ class Examine extends ApiCommon
         if ($userInfo['id'] != $dataInfo['create_user_id']) {
             return resultArray(['error' => '没有权限']);
         }
-        if (!in_array($dataInfo['check_status'],['3','4'])) {
+        if ($dataInfo['check_status']!=0) {
             return resultArray(['error' => '当前状态为审批中或已审批通过，不可编辑']);
         }
         //审核判断（是否有符合条件的审批流）

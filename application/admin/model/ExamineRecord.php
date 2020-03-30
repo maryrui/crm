@@ -55,6 +55,17 @@ class ExamineRecord extends Common
         }
         $list = db('admin_examine_record')->where($param)->order('check_time asc')->select();
         foreach ($list as $k=>$v) {
+            if($param['types']=='crm_complaint'){
+                if($k==0){
+                    $complaintModel = new \app\crm\model\Complaint();
+                    $complaint = $complaintModel->getDataById($param['types_id']);
+                    $timeDiff = timeDiff($list[$k]['check_time'],strtotime($complaint['create_time']));
+                }else{
+                    $timeDiff = timeDiff($list[$k]['check_time'],$list[$k-1]['check_time']);
+                }
+                $wait_time = "{$timeDiff['day']}天{$timeDiff['hour']}小时{$timeDiff['min']}分钟{$timeDiff['sec']}秒";
+                $list[$k]['wait_time'] =$wait_time;
+            }
             $list[$k]['check_user_id_info'] = $userModel->getUserById($v['check_user_id']);
         }
         return $list ? : [];  	

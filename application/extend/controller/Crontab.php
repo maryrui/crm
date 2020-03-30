@@ -13,14 +13,18 @@ class Crontab
 
     public function index()
     {
-        $this->receivablesPlan();
         $this->customer();
-//        $this->business();
-//        $this->leads();
-//        $this->contacts();
-//        $this->contract();
+        $this->contacts();
+        $this->leads();
+        $this->receivablesPlan();
+        $this->business();
+        $this->contract();
     }
 
+    //{{first.DATA}}
+    //订单编号：{{keyword1.DATA}}
+    //更新时间：{{keyword2.DATA}}
+    //{{remark.DATA}}
     public function receivablesPlan()
     {
         $model = new \app\crm\model\ReceivablesPlan();
@@ -30,16 +34,14 @@ class Crontab
             $openId = $item["openid"];
             if($openId){
                 $data = array(
-                    'keyword1'=>"计划回款",
-                    'keyword2'=>$item['return_date'],
-                    'keyword3'=>"合同名称：".$item['name']."，回款金额：".$item['money']."，回款方式：".$item['return_type']
+                    'first'=>["value"=>"发票跟进提醒"],
+                    'keyword1'=>["value"=>$item['invoice_code']],
+                    'keyword2'=>["value"=>date('Y-m-s h:i:s', $item['update_time'])],
+                    'remark'=>["value"=>"订单名称：".$item['name']."，发票金额：".$item['money']."，支付方式：".$item['return_type']]
                 );
-                print_r($data);
-                $templateId ="";
-                $message->template($openId,$templateId,$data);
+                $message->template($openId,$data);
             }
         }
-
     }
 
     public function customer()
@@ -51,13 +53,12 @@ class Crontab
             $openId = $item["openid"];
             if($openId){
                 $data = array(
-                    'keyword1'=>"客户跟进",
-                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword3'=>"客户名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'first'=>["value"=>"客户跟进提醒"],
+                    'keyword1'=>["value"=>'无'],
+                    'keyword2'=>["value"=>date('Y-m-s h:i:s', $item['update_time'])],
+                    'remark'=>["value"=>"客户名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']]
                 );
-                print_r($data);
-                $templateId ="";
-                $message->template($openId,$templateId,$data);
+                $message->template($openId,$data);
             }
         }
     }
@@ -71,13 +72,12 @@ class Crontab
             $openId = $item["openid"];
             if($openId){
                 $data = array(
-                    'keyword1'=>"商机跟进",
-                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword3'=>"商机名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'first'=>["value"=>"合同跟进提醒"],
+                    'keyword1'=>["value"=>$item['crm_rcmkid']],
+                    'keyword2'=>["value"=>date('Y-m-s h:i:s', $item['update_time'])],
+                    'remark'=>["value"=>"合同名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']]
                 );
-                print_r($data);
-                $templateId ="";
-                $message->template($openId,$templateId,$data);
+                $message->template($openId,$data);
             }
         }
     }
@@ -91,13 +91,12 @@ class Crontab
             $openId = $item["openid"];
             if($openId){
                 $data = array(
-                    'keyword1'=>"线索跟进",
-                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword3'=>"线索名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'first'=>["value"=>"线索跟进提醒"],
+                    'keyword1'=>["value"=>'无'],
+                    'keyword2'=>["value"=>date('Y-m-s h:i:s', $item['update_time'])],
+                    'remark'=>["value"=>"线索名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']]
                 );
-                print_r($data);
-                $templateId ="";
-                $message->template($openId,$templateId,$data);
+                $message->template($openId,$data);
             }
         }
     }
@@ -111,13 +110,12 @@ class Crontab
             $openId = $item["openid"];
             if($openId){
                 $data = array(
-                    'keyword1'=>"联系人跟进",
-                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword3'=>"联系人名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'first'=>["value"=>"联系人跟进提醒"],
+                    'keyword1'=>["value"=>'无'],
+                    'keyword2'=>["value"=>date('Y-m-s h:i:s', $item['update_time'])],
+                    'remark'=>["value"=>"联系人名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']]
                 );
-                print_r($data);
-                $templateId ="";
-                $message->template($openId,$templateId,$data);
+                $message->template($openId,$data);
             }
         }
     }
@@ -131,13 +129,12 @@ class Crontab
             $openId = $item["openid"];
             if($openId){
                 $data = array(
-                    'keyword1'=>"合同跟进",
-                    'keyword2'=>date('Y-m-d H:i:s', $item['next_time']),
-                    'keyword3'=>"合同名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']
+                    'first'=>["value"=>"订单跟进提醒"],
+                    'keyword1'=>["value"=>$item['num']],
+                    'keyword2'=>["value"=>date('Y-m-s h:i:s', $item['update_time'])],
+                    'remark'=>["value"=>"订单名称：".$item['name']."，跟进内容：".$item['content'].",跟进方式：".$item['category']]
                 );
-                print_r($data);
-                $templateId ="";
-                $message->template($openId,$templateId,$data);
+                $message->template($openId,$data);
             }
         }
     }

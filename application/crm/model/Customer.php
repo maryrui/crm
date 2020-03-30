@@ -232,7 +232,7 @@ class Customer extends Common
         $list = Db::name('crm_customer')->alias('customer')
             ->join('__ADMIN_RECORD__ record','customer.customer_id=record.types_id')
             ->join('__ADMIN_USER__ user', 'user.id=record.create_user_id')
-            ->field('customer.name,record.next_time,record.content,record.category,user.openid')
+            ->field('customer.name,customer.update_time,record.next_time,record.content,record.category,user.openid')
             ->where($param)
             ->select();
         return $list;

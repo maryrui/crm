@@ -92,7 +92,15 @@ class Contract extends ApiCommon
         //流程审批人
         // $flow_user_id = $examineFlowModel->getUserByFlow($examineFlowData['flow_id'], $param['create_user_id']); 
         // $param['flow_user_id'] = $flow_user_id ? arrayToString($flow_user_id) : '';            
-
+        $todayTime = getTimeByType('today');
+        $list = $contractModel->where(['create_time'=>['between',[$todayTime[0],$todayTime[1]]]])->select();
+        $sn = 0;
+        if(count($list) >0){
+            $lastSn = $list[count($list)-1]["invoice_code"];
+            $sn =  intval(substr($lastSn,-4));
+        }
+        $num = substr(strval($sn+10001),1,4);
+        $param['num']='DD'.date("Ymd").$num;
         if ($contractModel->createData($param)) {
             return resultArray(['data' => '添加成功']);
         } else {
@@ -155,7 +163,7 @@ class Contract extends ApiCommon
         }        
        
         //已进行审批，不能编辑
-        if (!in_array($dataInfo['check_status'],['3','4'])) {
+        if ($dataInfo['check_status']!=0) {
             return resultArray(['error' => '当前状态为审批中或已审批通过，不可编辑']);
         }
         //将合同审批状态至为待审核，提交后重新进行审批

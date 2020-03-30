@@ -18,27 +18,77 @@ class Complaint extends Common
      * 我们约定每个模块的数据表都加上相同的前缀，比如CRM模块用crm作为数据表前缀
      */
     protected $name = 'crm_complaint';
+    protected $createTime = 'create_time';
+    protected $updateTime = 'update_time';
     protected $autoWriteTimestamp = true;
+    private $statusArr = ['0'=>'待审核','1'=>'审核中','2'=>'审核通过','3'=>'已拒绝','4'=>'已撤回'];
 
     public function getDataList($request)
     {
-        $params['examine.user_ids'] = $request['user_ids'];
-        $params['examine.structure_ids'] = $request['structure_ids'];
+        if ($request['order_type'] && $request['order_field']) {
+            $order = trim($request['order_field']) . ' ' . trim($request['order_type']);
+        } else {
+            $order = 'complaint.update_time desc';
+        }
 
         $list =db('crm_complaint')
             ->alias('complaint')
-            ->join('__ADMIN_EXAMINE_FLOW__ examine','complaint.flow_id=examine.flow_id')
-            ->whereOr($params)
+            ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
+            ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
+            ->where(function ($query)use ($request){
+                $query->where('complaint.create_user_id', $request['user_id'])
+                    ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
+            })
             ->field('complaint.*')
+            ->Distinct(true)
             ->limit(($request['page']-1)*$request['limit'], $request['limit'])
-            ->order("complaint.create_time desc")
+            ->order($order)
             ->select();
-        Db::table('crm_complaint')->getLastSql();
+        foreach ($list as $k => $v) {
+            $list[$k]['check_status_info'] = $this->statusArr[$v['check_status']];
+        }
+
         $dataCount =db('crm_complaint')
             ->alias('complaint')
-            ->join('admin_examine_flow examine','complaint.flow_id=examine.flow_id')
-            ->whereOr($params)
-            ->count();
+            ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
+            ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
+            ->where(function ($query)use ($request){
+                $query->where('complaint.create_user_id', $request['user_id'])
+                    ->whereor('step.user_id', array('like','%,'.$request['user_id'].',%'));
+            })
+            ->count('DISTINCT complaint.id');
+        $data['list'] = $list;
+        $data['dataCount'] = $dataCount ? : 0;
+        return $data;
+    }
+
+    public function getMessageList($request){
+        $request = $this->fmtRequest($request);
+        $requestMap = $request['map'] ?: [];
+        $map = where_arr($requestMap, 'crm', 'complaint', 'index');
+        if ($request['order_type'] && $request['order_field']) {
+            $order = trim($request['order_field']) . ' ' . trim($request['order_type']);
+        } else {
+            $order = 'complaint.update_time desc';
+        }
+
+        $list =db('crm_complaint')
+            ->alias('complaint')
+            ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
+            ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
+            ->where($map)
+            ->field('complaint.*')
+            ->Distinct(true)
+            ->limit(($request['page']-1)*$request['limit'], $request['limit'])
+            ->order($order)
+            ->select();
+
+        $dataCount =db('crm_complaint')
+            ->alias('complaint')
+            ->join('__ADMIN_EXAMINE_FLOW__ flow','complaint.flow_id=flow.flow_id')
+            ->join('__ADMIN_EXAMINE_STEP__ step','step.flow_id=flow.flow_id')
+            ->where($map)
+            ->count('DISTINCT complaint.id');
         $data['list'] = $list;
         $data['dataCount'] = $dataCount ? : 0;
         return $data;
@@ -48,10 +98,25 @@ class Complaint extends Common
     {
         $complaint = new Complaint();
         $param['create_time'] = time();
+
+        // 接收文件数据
+        $fileArr = $param['file'];
+        unset($param['file']);
+
         $complaint->data($param);
         $data = $complaint->save();
+        $complaintId = $complaint->id;
         if (!$data) {
             return resultArray(['error' => $complaint->getError()]);
+        }
+        //处理附件关系
+        if ($fileArr) {
+            $fileModel = new \app\admin\model\File();
+            $resData = $fileModel->createDataById($fileArr, 'crm_complaint', $complaintId);
+            if ($resData == false) {
+                $this->error = '附件上传失败';
+                return false;
+            }
         }
         return resultArray(['data' => '添加成功']);
     }
@@ -78,28 +143,5 @@ class Complaint extends Common
     }
 
 
-    public function getComplaintTypeList(){
-        $list = db('admin_complaint_type')->select();
-        return $list;
-    }
 
-    public function saveComplaintType($data){
-        $types = [];
-        foreach ($data as $k=>$v) {
-            $types[$k]['type'] = $v['type'];
-            $types[$k]['depart'] = $v['depart']? arrayToString($v['depart']) : '';
-            $types[$k]['create_time'] = time();
-        }
-        try {
-            db('admin_complaint_type')->where('1=1')->delete();
-            db('admin_complaint_type')->insertAll($types);
-            return true;
-        }catch(\Exception $e) {
-            return false;
-        }
-    }
-
-    public function getComplaintType($type){
-        return db('admin_complaint_type')->where(['type'=>$type])->find();
-    }
 }

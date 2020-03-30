@@ -58,6 +58,13 @@ class Receivables extends ApiCommon
     {
         $receivablesModel = model('Receivables');
         $param = $this->param;
+        $contractModel = model('Contract');
+        $contract = $contractModel->getDataById($param['contract_id']);
+        $check_status = $contract['check_status'];
+        if($check_status!=2){
+            return resultArray(['error' => '订单流程审批未结束或未通过！']);
+        }
+
         $userInfo = $this->userInfo;
         $examineStepModel = new \app\admin\model\ExamineStep();
         $param['create_user_id'] = $userInfo['id'];
@@ -147,7 +154,7 @@ class Receivables extends ApiCommon
         }
 
         //已进行审批，不能编辑
-        if (!in_array($dataInfo['check_status'],['3','4'])) {
+        if ($dataInfo['check_status']!=0) {
             return resultArray(['error' => '当前状态为审批中或已审批通过，不可编辑']);
         }
 
