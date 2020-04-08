@@ -93,6 +93,8 @@
                  :value="item.customer_id">
       </el-option>
     </el-select>
+    <!-- 展示合同名称 -->
+    <el-input v-model="business_name" v-if="showContractName" placeholder="合同名称" style="width:120px;"></el-input>
     <el-button @click.native="postFiltrateValue()"
                type="primary">搜索</el-button>
   </div>
@@ -136,6 +138,8 @@ export default {
       /** 合同状态 */
       businessOptions: [],
       businessStatusValue: '',
+        /*  合同名称 */
+        business_name: "",
       /** 产品类别 */
       productValue: [],
       productOptions: [],
@@ -194,6 +198,11 @@ export default {
     showProductSelect: {
       default: false,
       type: Boolean
+    },
+    // 展示合同名号称
+    showContractName: {
+        default: false,
+        type: Boolean
     }
   },
   mounted() {
@@ -323,8 +332,10 @@ export default {
             ? this.productValue[this.productValue.length - 1]
             : ''
       }
-
-      //展示回款状态  跟客户列表
+      if (this.showContractName) {
+          params.business_name = this.business_name
+      }
+      // 展示回款状态  跟客户列表
         if (this.showClient) {
             params.customer_id = this.client
         }
@@ -344,7 +355,7 @@ export default {
       }
       this.$emit('change', params)
     },
-      /*获取客户列表*/
+      /* 获取客户列表 */
       getClientList() {
           crmCustomerIndex({
               page: 1,
@@ -355,7 +366,6 @@ export default {
           })
       }
   },
-
   beforeDestroy() {}
 }
 </script>

@@ -162,7 +162,7 @@ export default {
       }
       return row[column.property]
     },
-    //当某一行被点击时会触发该事件
+    // 当某一行被点击时会触发该事件
     handleRowClick(row, column, event) {
       this.contractId = row.contract_id
       this.showFullDetail = true
@@ -178,6 +178,13 @@ export default {
     /** 新建 */
     createClick() {
       /** 客户 和 合同 下新建订单 */
+      if (this.detail.is_end < 1) {
+          this.$message({
+              message: "该合同未赢单,故不能创建订单！",
+              type: "warning"
+          })
+          return false
+      }
       if (this.crmType == 'business') {
         this.createActionInfo.data['customer'] = this.detail.customer_id_info
         this.createActionInfo.data['business'] = this.detail

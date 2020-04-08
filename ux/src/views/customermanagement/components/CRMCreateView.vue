@@ -379,7 +379,7 @@ export default {
                 element.disabled = false
                 var customerItem = item.value[0]
                 customerItem['form_type'] = 'customer'
-                customerItem['params'] = { check_status: 2 }
+                customerItem['params'] = { check_status: 2, is_end: 1 }
                 element['relation'] = customerItem
               } else {
                 element.disabled = true

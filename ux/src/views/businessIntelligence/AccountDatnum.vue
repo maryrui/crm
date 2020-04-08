@@ -3,6 +3,7 @@
          class="main-container">
         <filtrate-handle-view class="filtrate-bar"
                               :showUserSelect="true"
+                              :showContractName="true"
                               :showBalance="true"
                               :showClient="true"
                               moduleType="ranking"
@@ -41,6 +42,7 @@
     import rankingMixins from './mixins/ranking'
     import exportTable from './mixins/exportTable'
     import { getAccountDatnum } from '@/api/businessIntelligence/accountDatnum'
+    import { timestampToFormatTime } from '@/utils'
 
     export default {
         /** 账款数据分析 */
@@ -61,13 +63,16 @@
                     { field: 'name', name: '订单名称' },
                     { field: 'customer_name', name: '客户名称' },
                     { field: 'realname', name: '客户负责人' },
+                    { field: 'business_name', name: '合同名称' },
+                    { field: 'business_owner_realname', name: '合同负责人' },
                     { field: 'money', name: '订单金额' },
                     { field: 'invoice_code', name: '发票编号' },
                     { field: 'invoice_money', name: '发票金额' },
                     { field: 'debt', name: '欠款金额' },
                     { field: 'return_num', name: '回款编号' },
                     { field: 'return_money', name: '回款金额' },
-                    { field: 'return_date', name: '回款日期' }
+                    { field: 'return_date', name: '回款日期' },
+                    { field: 'return_precent', name: '回款百分比' }
                 ]
             }
         },
@@ -122,19 +127,19 @@
                         sums[index] = '总价'
                         return
                     }
-                    if (index === 1 || index === 2 || index === 3 || index === 5 || index === 8 || index === 10) {
+                    if (index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 7 || index === 10 || index === 12 || index === 13) {
                         sums[index] = ''
                         return
                     }
-                    if (index === 4) {
+                    if (index === 6) {
                         sums[index] = this.sum + '元'
                         return
                     }
-                    if (index === 6) {
+                    if (index === 8) {
                         sums[index] = this.codeSum + '元'
                         return
                     }
-                    if (index === 7) {
+                    if (index === 9) {
                         sums[index] = this.detSum + '元'
                         return
                     }
@@ -156,7 +161,7 @@
                 return sums
             },
             objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-                if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+                if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5 || columnIndex === 6 || columnIndex === 13) {
                     const _row = this.spanArr[rowIndex]
                     const _col = _row > 0 ? 1 : 0
                     return {
@@ -164,7 +169,7 @@
                         colspan: _col
                     }
                 }
-                if (columnIndex === 5 || columnIndex === 6 || columnIndex === 7) {
+                if (columnIndex === 7 || columnIndex === 8 || columnIndex === 9) {
                     const _row1 = this.codeArr[rowIndex]
                     const _col1 = _row1 > 0 ? 1 : 0
                     return {
@@ -189,13 +194,16 @@
                                     arr.push({
                                         contract_id: list[i].num,
                                         customer_name: list[i].customer_name,
+                                        business_owner_realname: list[i].business_owner_realname,
+                                        business_name: list[i].business_name,
+                                        return_precent: list[i].chargeback_rate,
                                         realname: list[i].realname,
                                         money: list[i].money,
                                         name: list[i].name,
                                         return_money: list[i].receivables_plan[j].receivables[m].money,
                                         invoice_money: list[i].receivables_plan[j].money,
                                         invoice_code: list[i].receivables_plan[j].invoice_code,
-                                        return_date: list[i].receivables_plan[j].receivables[m].return_time,
+                                        return_date: list[i].receivables_plan[j].receivables[m].return_time ? timestampToFormatTime(list[i].receivables_plan[j].receivables[m].return_time).split('T')[0] : 0,
                                         return_num: list[i].receivables_plan[j].receivables[m].number,
                                         debt: list[i].receivables_plan[j].balance
                                     })
@@ -204,6 +212,9 @@
                                 arr.push({
                                     contract_id: list[i].num,
                                     customer_name: list[i].customer_name,
+                                    business_owner_realname: list[i].business_owner_realname,
+                                    business_name: list[i].business_name,
+                                    return_precent: list[i].chargeback_rate,
                                     realname: list[i].realname,
                                     money: list[i].money,
                                     name: list[i].name,
@@ -220,6 +231,9 @@
                         arr.push({
                             contract_id: list[i].num,
                             customer_name: list[i].customer_name,
+                            business_owner_realname: list[i].business_owner_realname,
+                            business_name: list[i].business_name,
+                            return_precent: list[i].chargeback_rate,
                             realname: list[i].realname,
                             money: list[i].money,
                             name: list[i].name,
