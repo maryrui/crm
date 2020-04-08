@@ -34,9 +34,9 @@ const cache = {
   },
   /**
    * 移除登录信息
-   * @param {*}  
+   * @param {*}
    */
-  rmAxiosCache: function () {
+  rmAxiosCache: function() {
     Lockr.rm('authKey')
     Lockr.rm('sessionId')
   }

@@ -9,7 +9,6 @@ import {
   getAuth
 } from '@/utils/auth' // 验权
 
-
 const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
   localStorage.setItem("routerBefore", from.path)
